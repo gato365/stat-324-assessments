@@ -1,0 +1,150 @@
+---
+title: "Homework & Friday Quiz"
+format: pdf
+editor: visual
+---
+
+The `mtcars` dataset is a classic and widely used dataset in R that contains specifications and performance data for 32 different car models from the 1974 Motor Trend magazine. Each row represents a unique vehicle, and each column records a specific attribute related to engine performance, design, or efficiency. Some key variables include `mpg` (miles per gallon), `hp` (gross horsepower), `wt` (weight in 1000 lbs), `drat` (rear axle ratio), and `qsec` (quarter-mile time). Additionally, the dataset includes categorical variables encoded as numeric values, such as `cyl` (number of cylinders), `am` (transmission type), and `gear` (number of forward gears).
+
+This dataset is frequently used in regression modeling and statistical learning due to its compact size, real-world relevance, and mixture of quantitative and categorical variables. Analysts often model fuel efficiency (`mpg`) as a function of other variables to understand how engine power, vehicle weight, or gear ratios impact gas mileage. With its balance of complexity and interpretability, `mtcars` serves as a great playground for developing skills in exploratory data analysis, model selection, variable interpretation, and diagnostics in both teaching and applied settings.
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+
+library(dplyr)            ## Data Transformation   --- T
+library(ggplot2)          ## Data Visualization    --- V
+library(GGally)           ## Data Visualization    --- V
+
+```
+
+\newpage
+
+## 🔍 Exploratory Visualization
+
+```{r message=FALSE, warning=FALSE}
+mtcars %>% 
+  select(mpg, hp, wt, drat) %>% 
+  ggpairs()
+```
+
+\newpage
+
+## 📈 Model 1: `mpg ~ hp`
+
+```{r}
+model1 <- lm(mpg ~ hp, data = mtcars)
+summary(model1)
+```
+
+
+```{r echo=FALSE}
+ 
+# Metrics
+n <- nrow(mtcars)
+p <- length(coef(model1)) - 1
+RSS <- sum(residuals(model1)^2)
+RSE <- sqrt(RSS / (n - p - 1))
+R2 <- summary(model1)$r.squared
+adj_R2 <- summary(model1)$adj.r.squared
+aic_val <- AIC(model1)
+bic_val <- BIC(model1)
+
+model1_metrics <- data.frame(
+  type = "Model 1: mpg ~ hp",
+    RSS = round(RSS, 2),
+  RSE = round(RSE, 2),
+  R2 = round(R2, 2),
+  Adj_R2 = round(adj_R2, 2),
+  AIC = round(aic_val, 2),
+  BIC = round(bic_val, 2)
+) 
+model1_metrics
+```
+
+------------------------------------------------------------------------
+
+\newpage
+
+## 📈 Model 2: `mpg ~ hp + wt`
+
+```{r}
+model2 <- lm(mpg ~ hp + wt, data = mtcars)
+summary(model2)
+```
+
+
+```{r echo=FALSE}
+# Metrics
+p <- length(coef(model2)) - 1
+RSS <- sum(residuals(model2)^2)
+RSE <- sqrt(RSS / (n - p - 1))
+R2 <- summary(model2)$r.squared
+adj_R2 <- summary(model2)$adj.r.squared
+aic_val <- AIC(model2)
+bic_val <- BIC(model2)
+
+model2_metrics <- data.frame(
+  type = "Model 2: mpg ~ hp + wt",
+    RSS = round(RSS, 2),
+  RSE = round(RSE, 2),
+  R2 = round(R2, 2),
+  Adj_R2 = round(adj_R2, 2),
+  AIC = round(aic_val, 2),
+  BIC = round(bic_val, 2)
+)
+model2_metrics
+```
+
+```{r}
+# Partial F-test: Does adding wt help?
+anova(model1, model2)
+```
+
+------------------------------------------------------------------------
+
+\newpage
+
+## 📈 Model 3: `mpg ~ hp + wt + drat`
+
+```{r}
+model3 <- lm(mpg ~ hp + wt + drat, data = mtcars)
+summary(model3)
+```
+
+
+```{r echo=FALSE}
+# Metrics
+p <- length(coef(model3)) - 1
+RSS <- sum(residuals(model3)^2)
+RSE <- sqrt(RSS / (n - p - 1))
+
+R2 <- summary(model3)$r.squared
+adj_R2 <- summary(model3)$adj.r.squared
+aic_val <- AIC(model3)
+bic_val <- BIC(model3)
+
+model3_metrics <- data.frame(
+  type = "Model 3: mpg ~ hp + wt + drat",
+    RSS = round(RSS, 2),
+  RSE = round(RSE, 2),
+  R2 = round(R2, 2),
+  Adj_R2 = round(adj_R2, 2),
+  AIC = round(aic_val, 2),
+  BIC = round(bic_val, 2)
+)
+model3_metrics
+```
+
+```{r}
+# Partial F-test: Does adding drat help?
+anova(model2, model3)
+```
+
+------------------------------------------------------------------------
+
+\newpage
+
+## Model Comparison Summary
+
+```{r}
+bind_rows(model1_metrics, model2_metrics, model3_metrics)
+```
