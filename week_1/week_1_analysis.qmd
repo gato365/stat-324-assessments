@@ -1,5 +1,5 @@
 ---
-title: "Homework & Friday Quiz"
+title: "Homework 1"
 format: pdf
 editor: visual
 ---
@@ -35,7 +35,6 @@ model1 <- lm(mpg ~ hp, data = mtcars)
 summary(model1)
 ```
 
-
 ```{r echo=FALSE}
  
 # Metrics
@@ -70,7 +69,6 @@ model1_metrics
 model2 <- lm(mpg ~ hp + wt, data = mtcars)
 summary(model2)
 ```
-
 
 ```{r echo=FALSE}
 # Metrics
@@ -109,7 +107,6 @@ anova(model1, model2)
 model3 <- lm(mpg ~ hp + wt + drat, data = mtcars)
 summary(model3)
 ```
-
 
 ```{r echo=FALSE}
 # Metrics

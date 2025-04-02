@@ -1,0 +1,90 @@
+---
+title: "Homework 1 Solutions"
+format: pdf
+editor: visual
+---
+
+## Question 5
+
+**Question:** Write out the null and alternative hypotheses for the global F-test in Model 2 in words and symbols. What does this test tell us?
+
+### **Full Credit Answer**
+
+**In Words:**
+
+The global F-test for Model 2 tests whether the overall regression model is useful. Specifically, it tests whether at least one of the predictors (`hp`, `wt`) contributes significantly to explaining the variation in `mpg`.
+
+-   **Null hypothesis (H₀):** None of the predictors explain variation in `mpg`. That is, all regression coefficients (excluding the intercept) are zero.
+-   **Alternative hypothesis (H₁):** At least one predictor has a non-zero coefficient and contributes to the model.
+
+**In Symbols:**
+
+
+$$H_0: \beta_1 = \beta_2 = 0  $$
+-   **H₁:** At least one βᵢ ≠ 0 (for i = 1 or 2)
+
+
+$$H_1: \text{ At least one }\beta_i \neq \text{ (for i = 1 or 2)} $$
+------------------------------------------------------------------------
+\newpage
+
+### 📏 **Grading Rubric (Total: 2.25 points)**
+
+| Component                           | Criteria                                                                                            | Points   |
+|--------------------------|--------------------------|---------------------|
+| **A. Hypotheses in Words**          | Clear and correct description of what $H_0$ and $H_1$ mean in context of model utility                    | **0.75** |
+| **B. Hypotheses in Symbols**        | Symbols correctly reflect all slopes = 0 ($H_0$) vs at least one ≠ 0 ($H_1$)                              | **0.75** |
+| **C. Interpretation of the F-test** | Explains that the F-test assesses overall model usefulness / whether at least one predictor matters | **0.75** |
+
+------------------------------------------------------------------------
+
+### Example Partial Credit Scenarios
+
+-   **2.0 pts:** Fully correct words and symbols, but vague or incomplete interpretation of what the F-test means.
+-   **1.5 pts:** Only includes the hypotheses (words and symbols) but omits the interpretation.
+-   **1.0 pt or less:** Misstates the meaning of hypotheses (e.g., confuses individual t-tests with global F-test).
+
+\newpage
+
+## Question 8
+
+**Question** Based on the partial F-test comparing Model 2 and Model 3, should we include drat in the model? Justify your answer using statistical evidence and practical reasoning.
+
+------------------------------------------------------------------------
+
+### **Answer Key**
+
+**Short Answer:**\
+No, we should likely **exclude `drat`** from the model.
+
+**Justification Using Statistical Evidence:** 
+
+- The partial F-test comparing Model 2 (`mpg ~ hp + wt`) and Model 3 (`mpg ~ hp + wt + drat`) yielded:
+
+  - **F = 1.73**, **p-value = 0.1988** 
+  - This p-value is well above 0.05, indicating that **`drat` does not significantly improve** the model’s explanatory power. 
+  - The **coefficient for `drat`** in Model 3 was not statistically significant (p = 0.198755).
+
+
+
+**Justification Using Practical Reasoning:** 
+- Since `drat` does not contribute statistically and the change in adjusted $R^2$, AIC, and BIC between Models 2 and 3 is **minimal**, there is no strong evidence of practical gain. 
+
+- Including unnecessary variables can lead to overfitting and reduced model interpretability.
+
+### 📏 **Grading Rubric (Total: 2.25 points)**
+
+| Component                        | Criteria                                                                          | Points   |
+|--------------------------|--------------------------|---------------------|
+| **A. Statistical Justification** | Correctly interprets p-value from partial F-test and coefficient p-value          | **1.00** |
+| **B. Practical Justification**   | Explains why statistical insignificance also implies lack of practical importance | **0.75** |
+| **C. Conclusion**                | States a clear and justifiable recommendation (e.g., exclude `drat`)              | **0.50** |
+
+### Example Responses for Grading
+
+| Score           | Description                                                                                        |
+|--------------------------|----------------------------------------------|
+| **2.25**        | Fully correct interpretation of p-value, reference to lack of improvement, and practical reasoning |
+| **2.0**         | Misses a small point (e.g., forgets coefficient p-value or doesn’t mention model simplicity)       |
+| **1.5**         | Only gives statistical justification, no mention of practical relevance                            |
+| **1.0 or less** | Misinterprets the F-test or gives unsupported recommendation                                       |
