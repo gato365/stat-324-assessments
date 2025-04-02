@@ -1,5 +1,5 @@
 ---
-title: "Homework 1 Solutions"
+title: "Homework 1 Solutions - STAT 324  "
 format: pdf
 editor: visual
 ---
@@ -19,21 +19,18 @@ The global F-test for Model 2 tests whether the overall regression model is usef
 
 **In Symbols:**
 
+$$H_0: \beta_1 = \beta_2 = 0  $$ - **H₁:** At least one βᵢ ≠ 0 (for i = 1 or 2)
 
-$$H_0: \beta_1 = \beta_2 = 0  $$
--   **H₁:** At least one βᵢ ≠ 0 (for i = 1 or 2)
+## $$H_1: \text{ At least one }\beta_i \neq \text{ (for i = 1 or 2)} $$
 
-
-$$H_1: \text{ At least one }\beta_i \neq \text{ (for i = 1 or 2)} $$
-------------------------------------------------------------------------
 \newpage
 
 ### 📏 **Grading Rubric (Total: 2.25 points)**
 
 | Component                           | Criteria                                                                                            | Points   |
 |--------------------------|--------------------------|---------------------|
-| **A. Hypotheses in Words**          | Clear and correct description of what $H_0$ and $H_1$ mean in context of model utility                    | **0.75** |
-| **B. Hypotheses in Symbols**        | Symbols correctly reflect all slopes = 0 ($H_0$) vs at least one ≠ 0 ($H_1$)                              | **0.75** |
+| **A. Hypotheses in Words**          | Clear and correct description of what $H_0$ and $H_1$ mean in context of model utility              | **0.75** |
+| **B. Hypotheses in Symbols**        | Symbols correctly reflect all slopes = 0 ($H_0$) vs at least one ≠ 0 ($H_1$)                        | **0.75** |
 | **C. Interpretation of the F-test** | Explains that the F-test assesses overall model usefulness / whether at least one predictor matters | **0.75** |
 
 ------------------------------------------------------------------------
@@ -57,20 +54,17 @@ $$H_1: \text{ At least one }\beta_i \neq \text{ (for i = 1 or 2)} $$
 **Short Answer:**\
 No, we should likely **exclude `drat`** from the model.
 
-**Justification Using Statistical Evidence:** 
+**Justification Using Statistical Evidence:**
 
-- The partial F-test comparing Model 2 (`mpg ~ hp + wt`) and Model 3 (`mpg ~ hp + wt + drat`) yielded:
+-   The partial F-test comparing Model 2 (`mpg ~ hp + wt`) and Model 3 (`mpg ~ hp + wt + drat`) yielded:
 
-  - **F = 1.73**, **p-value = 0.1988** 
-  - This p-value is well above 0.05, indicating that **`drat` does not significantly improve** the model’s explanatory power. 
-  - The **coefficient for `drat`** in Model 3 was not statistically significant (p = 0.198755).
+    -   **F = 1.73**, **p-value = 0.1988**
+    -   This p-value is well above 0.05, indicating that **`drat` does not significantly improve** the model’s explanatory power.
+    -   The **coefficient for `drat`** in Model 3 was not statistically significant (p = 0.198755).
 
+**Justification Using Practical Reasoning:** - Since `drat` does not contribute statistically and the change in adjusted $R^2$, AIC, and BIC between Models 2 and 3 is **minimal**, there is no strong evidence of practical gain.
 
-
-**Justification Using Practical Reasoning:** 
-- Since `drat` does not contribute statistically and the change in adjusted $R^2$, AIC, and BIC between Models 2 and 3 is **minimal**, there is no strong evidence of practical gain. 
-
-- Including unnecessary variables can lead to overfitting and reduced model interpretability.
+-   Including unnecessary variables can lead to overfitting and reduced model interpretability.
 
 ### 📏 **Grading Rubric (Total: 2.25 points)**
 
