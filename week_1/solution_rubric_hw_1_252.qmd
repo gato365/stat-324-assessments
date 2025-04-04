@@ -4,23 +4,17 @@ format: pdf
 editor: visual
 ---
 
-
 **Question 12:** Provide the interpretation of the confidence interval.
 
-
-
-
-Solution: We are 99% confident that the population mean weekly grocery bill for all California residents during the first week of March 2024 is between \$246.28 and \$253.72. 
-
-
+**Solution:** We are 99% confident that the population mean weekly grocery bill for all California residents during the first week of March 2024 is between \$246.28 and \$253.72.
 
 ### ✅ **Confidence Interval Interpretation Rubric (Total: 1.25 points)**
 
-| **Component**                          | **Description**                                                                 | **Points** |
-|----------------------------------------|---------------------------------------------------------------------------------|------------|
-| **Confidence Level**                   | Student explicitly states **"99% confidence"**                                  | 0.25       |
-| **Population Parameter**               | Mentions the **population mean** as the target of inference                     | 0.25       |
-| **Context**                            | Includes clear context: **weekly grocery bill for all CA residents, March 2024**| 0.25       |
-| **Numerical Bounds**                   | Provides both lower and upper bounds: **$246.28 and $253.72**                  | 0.50       |
+| **Component**            | **Description**                                                                  | **Points** |
+|------------------|---------------------------------------|---------------|
+| **Confidence Level**     | Student explicitly states **"99% confidence"**                                   | 0.25       |
+| **Population Parameter** | Mentions the **population mean** as the target of inference                      | 0.25       |
+| **Context**              | Includes clear context: **weekly grocery bill for all CA residents, March 2024** | 0.25       |
+| **Numerical Bounds**     | Provides both lower and upper bounds: **\$246.28 and \$253.72**                  | 0.50       |
 
----
+------------------------------------------------------------------------

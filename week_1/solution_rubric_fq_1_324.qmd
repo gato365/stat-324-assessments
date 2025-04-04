@@ -1,0 +1,50 @@
+---
+title: "Solutions Friday Quiz 1 - STAT 324"
+format: pdf
+editor: visual
+---
+
+## **Q8 - Partial Slope Misinterpretation**
+
+**Question Text:** Explain what is wrong with this interpretation: "In Model 3 (mpg \~ wt + hp), the coefficient for hp is -0.03177, which means that increasing hp always increases mpg by this exact amount. Be as detailed as possible."
+
+### Ideal Answer: The interpretation is incorrect in two ways:
+
+1.  **Incorrect direction** – The coefficient for `hp` is negative (-0.03177), which indicates that as horsepower increases, **mpg decreases**, not increases.
+2.  **Failure to hold other variables constant** – In multiple linear regression, each coefficient (or partial slope) represents the effect of that variable **while holding all other variables constant**. So the interpretation should state that *for a fixed weight*, increasing `hp` by 1 unit is associated with a **decrease** in `mpg` by approximately 0.03177.
+3.  **Did not mention on average** – The interpretation should also clarify that this is an average effect, as the relationship may not hold for every individual observation.
+
+### Rubric (4 points total):
+
+| Points  | Criteria                                                                                                                                  |
+|--------------------------------|----------------------------------------|
+| 1.5 pts | Correctly identifies that the sign of the slope is negative (i.e., `hp` leads to a **decrease** in `mpg`)                                 |
+| 1.5 pts | Correctly explains that the coefficient reflects the effect of `hp` *holding weight constant* (i.e., partial slope interpretation in MLR) |
+| 1 pt    | Mentions that the coefficient is an average effect (i.e., it may not hold for every individual observation)                               |
+
+\newpage
+
+## **Q9 - Prefer Model 2?**
+
+**Question Text:**
+
+> Why might you prefer Model 2 (mpg \~ wt) over Model 1 (mpg \~ hp), even if both are simple linear regressions? Be as detailed as possible.
+
+### Ideal Answer: Model 2 is preferred over Model 1 based on several model fit criteria:
+
+-   **Higher R² and Adjusted R²**: Model 2 explains more variance in `mpg` than Model 1.
+-   **Lower RSS**: Model 2 has an RSS of 278.32 vs. 447.67 for Model 1, meaning Model 2 fits the data better.
+-   **Lower RSE (Residual Standard Error)**: Model 2 has 3.05 vs. 3.86 in Model 1, suggesting less spread in residuals.
+-   **Lower AIC/BIC**: Model 2 has a better trade-off between fit and complexity.
+
+All these indicators suggest that `wt` is a stronger predictor of `mpg` than `hp`, and Model 2 performs better across multiple metrics.
+
+### Rubric (4 points total):
+
+| Points | Criteria                                                            |
+|--------------------------------|----------------------------------------|
+| 1 pt   | Mentions lower RSS or lower RSE                                     |
+| 1 pt   | Mentions higher R² or adjusted R²                                   |
+| 2 pt   | Correct overall comparison or mentions `wt` is a stronger predictor |
+
+------------------------------------------------------------------------

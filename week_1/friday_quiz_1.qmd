@@ -4,8 +4,6 @@ format: pdf
 editor: visual
 ---
 
-
-
 The `mtcars` dataset is a classic and widely used dataset in R that contains specifications and performance data for 32 different car models from the 1974 Motor Trend magazine. Each row represents a unique vehicle, and each column records a specific attribute related to engine performance, design, or efficiency. Some key variables include `mpg` (miles per gallon), `hp` (gross horsepower), `wt` (weight in 1000 lbs), `drat` (rear axle ratio), and `qsec` (quarter-mile time). Additionally, the dataset includes categorical variables encoded as numeric values, such as `cyl` (number of cylinders), `am` (transmission type), and `gear` (number of forward gears).
 
 This dataset is frequently used in regression modeling and statistical learning due to its compact size, real-world relevance, and mixture of quantitative and categorical variables. Analysts often model fuel efficiency (`mpg`) as a function of other variables to understand how engine power, vehicle weight, or gear ratios impact gas mileage. With its balance of complexity and interpretability, `mtcars` serves as a great playground for developing skills in exploratory data analysis, model selection, variable interpretation, and diagnostics in both teaching and applied settings.
@@ -29,7 +27,6 @@ mtcars %>%
 ```
 
 \newpage
-
 
 ## 📈 Model 1: `mpg ~ hp`
 
@@ -62,14 +59,7 @@ model1_metrics <- data.frame(
 model1_metrics
 ```
 
-
-
-
-
-
-
 \newpage
-
 
 ## 📈 Model 2: `mpg ~ wt`
 
@@ -101,11 +91,6 @@ model2_metrics <- data.frame(
 ) 
 model2_metrics
 ```
-
-
-
-
-
 
 \newpage
 
@@ -140,6 +125,19 @@ model3_metrics <- data.frame(
 model3_metrics
 ```
 
+
+```{r}
+## Predict mpg when wt = 3 and hp = 110
+new_data <- data.frame(wt = 3, hp = 110)
+predicted_mpg <- predict(model3, newdata = new_data)
+print(predicted_mpg)
+```
+
+```{r}
+```
+
+
+
 ```{r}
 anova(model3)
 ```
@@ -148,10 +146,6 @@ anova(model3)
 anova(model2, model3)
 ```
 
-
-
-
-
 \newpage
 
 ## Model Comparison Summary
@@ -159,4 +153,3 @@ anova(model2, model3)
 ```{r}
 bind_rows(model1_metrics, model2_metrics, model3_metrics) 
 ```
-

@@ -1,0 +1,17 @@
+---
+title: "Solutions for Friday Quiz 1 - STAT 252"
+format: pdf
+editor: visual
+---
+
+**Question 3:** The p-value from the TS was less than 0.0001. Explain the type of evidence we have against the null hypothesis. Provide ample context to convey the message. Also, state your decision regarding the null hypothesis.
+
+**Solution:** Since the p-value from the test statistic is less than 0.0001, we have extremely strong evidence against the null hypothesis. In context, this means the data provides strong support that the average daily step count for users of this fitness tracker is different from 10,000 steps, as claimed by the industry standard. Therefore, we reject the null hypothesis and conclude that the mean number of steps taken by users of this tracker is significantly different from 10,000 steps per day.
+
+### **Rubric: Interpreting the p-value and stating a decision (Total: 3 points)**
+
+| **Component**                      | **Description**                                                                                                                      | **Points** |
+|-------------|----------------------------------------------|-------------|
+| **Type of Evidence**               | Clearly explains that a **p-value less than 0.0001** indicates **very strong/extremely strong evidence** against the null hypothesis | 1.0        |
+| **Contextual Explanation**         | Describes the context: testing the claim about the **average daily step count** compared to **10,000 steps**                         | 1.0        |
+| **Decision About Null Hypothesis** | Clearly states the decision: **reject the null hypothesis**                                                                          | 1.0        |
