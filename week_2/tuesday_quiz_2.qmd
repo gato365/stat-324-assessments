@@ -1,0 +1,30 @@
+---
+title: "Tuesday Quiz 2"
+format: pdf
+editor: visual
+---
+
+```{r message=FALSE, warning=FALSE}
+# Load packages
+library(ggplot2)
+library(dplyr)
+
+# Use a sample to simplify visualization
+set.seed(123)
+diamonds_sample <- diamonds %>%
+  sample_n(300) 
+
+# Fit multiple regression model
+model <- lm(price ~ carat +  x + y, data = diamonds_sample)
+```
+
+\newpage
+
+```{r}
+summary(model)
+```
+
+```{r}
+# Omnibus test (Global F-test)
+anova(model)
+```

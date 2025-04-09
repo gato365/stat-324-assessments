@@ -1,0 +1,220 @@
+---
+title: "Homework 2"
+format: html
+editor: visual
+---
+
+# `diamonds` Analysis
+
+```{r message=FALSE, warning=FALSE}
+# Load packages
+library(dplyr)            ## Data Transformation   --- T
+library(ggplot2)          ## Data Visualization    --- V & Data Extraction
+library(ggfortify)        ## Data Visualization    --- V
+library(broom)            ## Data Analysis         --- A
+library(lmtest)           ## Data Analysis         --- A
+
+
+# Use a sample to simplify visualization
+set.seed(123)
+diamonds_sample <- diamonds %>%
+  sample_n(300) 
+
+# Fit multiple regression model
+diamond_model_1 <- lm(price ~ carat, data = diamonds_sample) 
+diamond_model_2 <- lm(price ~ carat + x, data = diamonds_sample) 
+diamond_model_3 <- lm(price ~ carat + x + y, data = diamonds_sample) 
+```
+
+
+```{r}
+summarize_reg_model <- function(model,model_description) {
+  # Get number of observations and predictors
+  n <- length(residuals(model))
+  p <- length(coefficients(model)) - 1
+  
+  # 0) RSS 
+  RSS <- round(sum(residuals(model)^2),2)
+  
+  # 1) RSE
+  RSE <- round(sqrt(RSS / (n - p - 1)),2)
+  
+  # 2) R-Squared and Adjusted R-Squared
+  R2 <- round(summary(model)$r.squared,2)
+  adj_R2 <- round(summary(model)$adj.r.squared,2)
+  
+  # 3) AIC
+  aic_val <- round(AIC(model),2)
+  
+  # 4) BIC
+  bic_val <- round(BIC(model),2)
+  
+  # Create summary dataframe
+  mlr_metrics <- data.frame(
+    type = model_description,
+    RSS = RSS,
+    RSE = RSE,
+    R2 = R2,
+    Adj_R2 = adj_R2,
+    AIC = aic_val,
+    BIC = bic_val
+  )
+  
+  return(mlr_metrics)
+}
+
+```
+
+
+\newpage
+
+## Summary of Model 1
+
+```{r}
+summary(diamond_model_1)
+```
+
+\newpage
+
+## Summary of Model 2
+
+```{r}
+summary(diamond_model_2)
+```
+
+```{r}
+anova(diamond_model_1,diamond_model_2)
+```
+
+\newpage
+
+## Summary of Model 3
+
+```{r} 
+summary(diamond_model_3)
+```
+
+```{r}
+anova(diamond_model_2,diamond_model_3)
+```
+\newpage
+
+
+```{r}
+summary_diamond_model_1 <- summarize_reg_model(diamond_model_1, model_description = "Model 1: Price ~ Carat")
+summary_diamond_model_2 <- summarize_reg_model(diamond_model_2, model_description = "Model 2: Price ~ Carat + x")
+summary_diamond_model_3 <- summarize_reg_model(diamond_model_3, model_description = "Model 3: Price ~ Carat + x + y")
+
+bind_rows(
+  summary_diamond_model_1,
+  summary_diamond_model_2,
+  summary_diamond_model_3
+  )  
+  
+```
+
+## Assumptions of Model 3
+
+```{r}
+autoplot(diamond_model_3) + ## from ggfortify
+  theme_bw()
+```
+
+```{r}
+shapiro.test(resid(diamond_model_3)) ## From base R
+```
+
+```{r}
+dwtest(diamond_model_3)   ## From lmtest package
+```
+
+```{r}
+bptest(diamond_model_3) ## From lmtest package
+```
+
+
+\newpage
+
+# `mtcars` Analysis
+
+
+```{r message=FALSE, warning=FALSE}
+
+# Fit multiple regression models
+mtcars_model_1 <- lm(mpg ~ drat, data = mtcars)
+mtcars_model_2 <- lm(mpg ~ drat + wt, data = mtcars)
+mtcars_model_3 <- lm(mpg ~ drat + wt + hp, data = mtcars)
+```
+
+
+\newpage
+
+## Summary of Model 1: mpg ~ drat
+
+```{r}
+summary(mtcars_model_1)
+```
+
+\newpage
+
+## Summary of Model 2: mpg ~ drat + wt
+
+```{r}
+summary(mtcars_model_2)
+```
+
+```{r}
+anova(mtcars_model_1, mtcars_model_2)
+```
+
+\newpage
+
+## Summary of Model 3: mpg ~ drat + wt + hp
+
+```{r}
+summary(mtcars_model_3)
+```
+
+```{r}
+anova(mtcars_model_2, mtcars_model_3)
+```
+
+\newpage
+
+## Model Comparison Table
+
+```{r}
+summary_mtcars_model_1 <- summarize_reg_model(mtcars_model_1, model_description = "Model 1: mpg ~ drat")
+summary_mtcars_model_2 <- summarize_reg_model(mtcars_model_2, model_description = "Model 2: mpg ~ drat + wt")
+summary_mtcars_model_3 <- summarize_reg_model(mtcars_model_3, model_description = "Model 3: mpg ~ drat + wt + hp")
+
+bind_rows(
+  summary_mtcars_model_1,
+  summary_mtcars_model_2,
+  summary_mtcars_model_3
+)
+```
+
+
+
+
+## Assumptions of Model 3
+
+```{r}
+autoplot(mtcars_model_3) + ## from ggfortify
+  theme_bw()
+```
+
+```{r}
+shapiro.test(resid(mtcars_model_3)) ## From base R
+```
+
+```{r}
+dwtest(mtcars_model_3)   ## From lmtest package
+```
+
+```{r}
+bptest(mtcars_model_3) ## From lmtest package
+```
+
+
