@@ -1,10 +1,14 @@
 ---
 title: "Homework 2"
-format: html
+format: pdf
 editor: visual
 ---
 
 # `diamonds` Analysis
+
+The `diamonds` dataset, available in the **ggplot2** package, contains information on **53,940 diamonds**, detailing both their physical attributes and market prices. Each row represents a single diamond, with variables such as `price` (in US dollars), `carat` (weight), `cut` (quality rating from Fair to Ideal), `color` (ranging from J [worst] to D [best]), and `clarity` (from I1 [worst] to IF [best]). Additional numerical features include `depth` (the total depth percentage), `table` (top width relative to widest point), and the physical dimensions `x`, `y`, and `z` (measured in millimeters).
+
+To make our analysis more manageable and visually interpretable, we use a random sample of 300 diamonds from the dataset. This subset still captures the diversity and real-world complexity of the full dataset, allowing us to explore key relationships among variables without the computational overhead of analyzing all 53,940 observations.
 
 ```{r message=FALSE, warning=FALSE}
 # Load packages
@@ -25,7 +29,6 @@ diamond_model_1 <- lm(price ~ carat, data = diamonds_sample)
 diamond_model_2 <- lm(price ~ carat + x, data = diamonds_sample) 
 diamond_model_3 <- lm(price ~ carat + x + y, data = diamonds_sample) 
 ```
-
 
 ```{r}
 summarize_reg_model <- function(model,model_description) {
@@ -65,10 +68,9 @@ summarize_reg_model <- function(model,model_description) {
 
 ```
 
-
 \newpage
 
-## Summary of Model 1
+## Summary of Model 1: price ~ carat
 
 ```{r}
 summary(diamond_model_1)
@@ -76,7 +78,9 @@ summary(diamond_model_1)
 
 \newpage
 
-## Summary of Model 2
+## Summary of Model 2: price ~ carat + x
+
+
 
 ```{r}
 summary(diamond_model_2)
@@ -88,17 +92,17 @@ anova(diamond_model_1,diamond_model_2)
 
 \newpage
 
-## Summary of Model 3
+## Summary of Model 3: price ~ carat + x + y
 
-```{r} 
+```{r}
 summary(diamond_model_3)
 ```
 
 ```{r}
 anova(diamond_model_2,diamond_model_3)
 ```
-\newpage
 
+\newpage
 
 ```{r}
 summary_diamond_model_1 <- summarize_reg_model(diamond_model_1, model_description = "Model 1: Price ~ Carat")
@@ -132,11 +136,13 @@ dwtest(diamond_model_3)   ## From lmtest package
 bptest(diamond_model_3) ## From lmtest package
 ```
 
-
 \newpage
 
 # `mtcars` Analysis
 
+The `mtcars` dataset is a classic and widely used dataset in R that contains specifications and performance data for 32 different car models from the 1974 Motor Trend magazine. Each row represents a unique vehicle, and each column records a specific attribute related to engine performance, design, or efficiency. Some key variables include `mpg` (miles per gallon), `hp` (gross horsepower), `wt` (weight in 1000 lbs), `drat` (rear axle ratio), and `qsec` (quarter-mile time). Additionally, the dataset includes categorical variables encoded as numeric values, such as `cyl` (number of cylinders), `am` (transmission type), and `gear` (number of forward gears).
+
+This dataset is frequently used in regression modeling and statistical learning due to its compact size, real-world relevance, and mixture of quantitative and categorical variables. Analysts often model fuel efficiency (`mpg`) as a function of other variables to understand how engine power, vehicle weight, or gear ratios impact gas mileage. With its balance of complexity and interpretability, `mtcars` serves as a great playground for developing skills in exploratory data analysis, model selection, variable interpretation, and diagnostics in both teaching and applied settings.
 
 ```{r message=FALSE, warning=FALSE}
 
@@ -146,10 +152,9 @@ mtcars_model_2 <- lm(mpg ~ drat + wt, data = mtcars)
 mtcars_model_3 <- lm(mpg ~ drat + wt + hp, data = mtcars)
 ```
 
-
 \newpage
 
-## Summary of Model 1: mpg ~ drat
+## Summary of Model 1: mpg \~ drat
 
 ```{r}
 summary(mtcars_model_1)
@@ -157,7 +162,7 @@ summary(mtcars_model_1)
 
 \newpage
 
-## Summary of Model 2: mpg ~ drat + wt
+## Summary of Model 2: mpg \~ drat + wt
 
 ```{r}
 summary(mtcars_model_2)
@@ -169,7 +174,7 @@ anova(mtcars_model_1, mtcars_model_2)
 
 \newpage
 
-## Summary of Model 3: mpg ~ drat + wt + hp
+## Summary of Model 3: mpg \~ drat + wt + hp
 
 ```{r}
 summary(mtcars_model_3)
@@ -195,9 +200,6 @@ bind_rows(
 )
 ```
 
-
-
-
 ## Assumptions of Model 3
 
 ```{r}
@@ -216,5 +218,3 @@ dwtest(mtcars_model_3)   ## From lmtest package
 ```{r}
 bptest(mtcars_model_3) ## From lmtest package
 ```
-
-

@@ -1,0 +1,37 @@
+---
+title: "Homework 2 Solutions - STAT 252"
+format: pdf
+editor: visual
+---
+
+
+A cosmetics company is interested in assessing the effectiveness of their new anti-aging cream among customers aged 40 and above and seeing how it compares to their historical 70% efficacy standard. They randomly selected 300 customers from this age group and asked them to try the product for a month. After the trial period, they surveyed the customers to determine if they noticed a reduction in wrinkles. Out of the 300 participants, 180 reported a visible reduction in wrinkles after using the cream.
+
+**Question 6.** If the p-value is 0.0767, write a conclusion regarding this analysis in the context of the above scenario. Include the type of error that would be committed.
+
+
+
+**Solution:**
+
+
+
+Since the p-value is **0.0767**, which is between **0.05 and 0.10**, there is **some evidence against the null hypothesis**, but it is not strong.  
+
+At the **0.10 significance level**, we **reject the null hypothesis** and conclude that the **proportion of customers aged 40 and above who experienced a visible reduction in wrinkles is different from the historical 70% standard**.  
+
+By rejecting the null hypothesis when it is actually true, we may be committing a **Type I error**, meaning we incorrectly conclude that the cream's effectiveness has changed when it has not.
+
+
+
+**Rubric (Total: 2 points)**
+
+| **Component**                     | **Criteria**                                                                                                                                       | **Points** |
+|-----------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|------------|
+| **Contextual Conclusion**         | Includes comparison to significance level (0.10), decision to reject the null, and contextual conclusion about cream effectiveness                 | 1.0        |
+| **Error Type Identified**         | Correctly identifies and explains **Type I error** as the error made when rejecting a true null hypothesis                                          | 1.0        |
+
+
+
+
+
+
