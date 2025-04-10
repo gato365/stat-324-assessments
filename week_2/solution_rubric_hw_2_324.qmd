@@ -1,0 +1,84 @@
+---
+title: "Homework 2 Solutions - STAT 324"
+format: pdf
+editor: visual
+---
+
+## Question 7
+
+**Question 7:** How does the Shapiro-Wilk test differ from the Durbin-Watson test in checking model assumptions?
+
+**Total Points: 2.25**
+
+**Solution:**
+
+The Shapiro-Wilk test is used to check the normality of residuals in a regression model, while the Durbin-Watson test checks for autocorrelation in the residuals. The Shapiro-Wilk test evaluates whether the residuals follow a normal distribution, which is an assumption of linear regression. In contrast, the Durbin-Watson test assesses whether there is a correlation between residuals at different time points, which is important for time series data.
+
++--------------------------------------------------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Criteria                                               | Points          | Description                                                                                                                                                                         |
++========================================================+=================+=====================================================================================================================================================================================+
+| **Identifies the purpose of the Shapiro-Wilk test**    | **0.75**        | Clearly states that the Shapiro-Wilk test is used to assess **normality** of residuals.                                                                                             |
+|                                                        |                 |                                                                                                                                                                                     |
+|                                                        |                 | ✅ *Mentions it checks whether residuals follow a normal distribution.*                                                                                                             |
++--------------------------------------------------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **Identifies the purpose of the Durbin-Watson test**   | **0.75**        | Clearly states that the Durbin-Watson test is used to assess **autocorrelation** (serial correlation) in residuals.                                                                 |
+|                                                        |                 |                                                                                                                                                                                     |
+|                                                        |                 | ✅ *Specifies it checks for correlation between successive residuals.*                                                                                                              |
++--------------------------------------------------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| **Describes the key difference between the two tests** | **0.75**        | Explains that one test (Shapiro-Wilk) checks distribution shape (normality), while the other (Durbin-Watson) checks residual **dependence** across observations (often time-based). |
+|                                                        |                 |                                                                                                                                                                                     |
+|                                                        |                 | ✅ *Contextualizes that Durbin-Watson is particularly important for time series models.*                                                                                            |
++--------------------------------------------------------+-----------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+------------------------------------------------------------------------
+
+\newpage
+
+## Question 10
+
+Question 10: What do the AIC and BIC metrics tell us in the context of the mtcars models? What are their purposes?
+
+**Total Points: 2.25**
+
+Solution:
+
+AIC (Akaike Information Criterion) and BIC (Bayesian Information Criterion) are both used to compare models by balancing model fit with complexity. They penalize models for including too many predictors to help avoid overfitting. In the mtcars analysis, Model 3 has the lowest AIC and BIC values, which suggests it has the best balance between explanatory power and simplicity. These metrics are useful for selecting among multiple models, especially when R² alone may favor overly complex models.
+
++-------------------------------------------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+| Criteria                                              | Points           | Description                                                                                                                                       |
++=======================================================+==================+===================================================================================================================================================+
+| **Explains what AIC and BIC are (conceptually)**      | **0.75**         | Clearly describes that AIC and BIC are metrics used for model comparison that balance model fit and complexity.                                   |
+|                                                       |                  |                                                                                                                                                   |
+|                                                       |                  | ✅ *Mentions penalizing model complexity or avoiding overfitting.*                                                                                |
++-------------------------------------------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+| **Correct interpretation in context (mtcars models)** | **0.75**         | Applies AIC and BIC to the given model results correctly:                                                                                         |
+|                                                       |                  |                                                                                                                                                   |
+|                                                       |                  | ✅ *Model 3 has the lowest AIC and BIC → indicates best tradeoff between fit and simplicity.*                                                     |
+|                                                       |                  |                                                                                                                                                   |
+|                                                       |                  | ✅ *Model 1 has highest AIC/BIC → weakest model among the three.*                                                                                 |
++-------------------------------------------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+| **Purpose of AIC/BIC in model selection**             | **0.75**         | Clearly states that AIC and BIC are used to choose among competing models, particularly when the goal is **predictive performance or parsimony**. |
+|                                                       |                  |                                                                                                                                                   |
+|                                                       |                  | ✅ *May mention that lower is better; models are penalized for more parameters.*                                                                  |
++-------------------------------------------------------+------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+
+\newpage
+
+------------------------------------------------------------------------
+
+## Question 12 (Ignore)
+
+Question 12: Using Model 3 from the mtcars dataset and the observed mpg is equal to 24.8, predict mpg for a car with drat = 3.5, wt = 3.0, and hp = 120. What would be the error for this point?
+
+```{r}
+mtcars_model_3 <- lm(mpg ~ drat + wt + hp, data = mtcars)
+```
+
+```{r}
+new_data <- data.frame(drat = 3.5, wt = 3.0, hp = 120)
+predicted_value <- predict(mtcars_model_3, newdata = new_data)
+
+## The observed value was 24.8
+24.8 - predicted_value
+
+```

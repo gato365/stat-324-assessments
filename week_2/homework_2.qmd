@@ -6,7 +6,7 @@ editor: visual
 
 # `diamonds` Analysis
 
-The `diamonds` dataset, available in the **ggplot2** package, contains information on **53,940 diamonds**, detailing both their physical attributes and market prices. Each row represents a single diamond, with variables such as `price` (in US dollars), `carat` (weight), `cut` (quality rating from Fair to Ideal), `color` (ranging from J [worst] to D [best]), and `clarity` (from I1 [worst] to IF [best]). Additional numerical features include `depth` (the total depth percentage), `table` (top width relative to widest point), and the physical dimensions `x`, `y`, and `z` (measured in millimeters).
+The `diamonds` dataset, available in the **ggplot2** package, contains information on **53,940 diamonds**, detailing both their physical attributes and market prices. Each row represents a single diamond, with variables such as `price` (in US dollars), `carat` (weight), `cut` (quality rating from Fair to Ideal), `color` (ranging from J \[worst\] to D \[best\]), and `clarity` (from I1 \[worst\] to IF \[best\]). Additional numerical features include `depth` (the total depth percentage), `table` (top width relative to widest point), and the physical dimensions `x`, `y`, and `z` (measured in millimeters).
 
 To make our analysis more manageable and visually interpretable, we use a random sample of 300 diamonds from the dataset. This subset still captures the diversity and real-world complexity of the full dataset, allowing us to explore key relationships among variables without the computational overhead of analyzing all 53,940 observations.
 
@@ -70,7 +70,7 @@ summarize_reg_model <- function(model,model_description) {
 
 \newpage
 
-## Summary of Model 1: price ~ carat
+## Summary of Model 1: price \~ carat
 
 ```{r}
 summary(diamond_model_1)
@@ -78,9 +78,7 @@ summary(diamond_model_1)
 
 \newpage
 
-## Summary of Model 2: price ~ carat + x
-
-
+## Summary of Model 2: price \~ carat + x
 
 ```{r}
 summary(diamond_model_2)
@@ -92,7 +90,7 @@ anova(diamond_model_1,diamond_model_2)
 
 \newpage
 
-## Summary of Model 3: price ~ carat + x + y
+## Summary of Model 3: price \~ carat + x + y
 
 ```{r}
 summary(diamond_model_3)
