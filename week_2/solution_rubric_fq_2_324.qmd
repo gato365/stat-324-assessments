@@ -1,0 +1,55 @@
+---
+title: "Friday Quiz 2 Solutions - STAT 324"
+format: pdf
+editor: visual
+---
+
+
+## Question 10
+
+Question 10: 
+
+A student writes:
+
+“Since the overall (omnibus) F-test was significant, that means all the explanatory variables in the model are statistically significant.”
+
+In 1 - 2 sentences, explain why this interpretation is correct or incorrect and how it should be corrected.
+
+
+PTS: 4
+
+
+\newpage
+
+### **Model Solution:**
+
+> This interpretation is **incorrect**. A significant omnibus F-test only tells us that **at least one** explanatory variable is significantly associated with the response variable, **not all** of them.
+
+
+
+### **Rubric (Total: 4 Points)**
+
+| Key Criteria (Required for Full Credit)                                | Points |
+|---------------------------------------------------------------------------|--------|
+| **Clearly states that the interpretation is incorrect**                   | **2**  |
+| **Accurately explains that the F-test only confirms at least one predictor is significant** | **2**  |
+
+---
+
+### Full-Credit Example:
+> This is incorrect. A significant F-test only tells us that at least one variable is associated with the outcome, not all of them.
+
+---
+
+###  Partial Credit Examples:
+
+- **2 points:** “This is wrong because the F-test isn’t about all variables.”  
+   *(Recognizes incorrectness but lacks clarity or specificity)*
+
+- **0 points:** “This is correct because the F-test says they are all significant.”  
+   *(Misunderstanding and incorrect claim)*
+
+
+
+
+
