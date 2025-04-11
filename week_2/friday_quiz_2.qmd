@@ -74,6 +74,7 @@ summarize_reg_model <- function(model,model_description) {
 ```
 
 ## Review of Model Metrics
+
 ```{r echo=FALSE}
 # Fit multiple regression models
 school_model_1 <- lm(performance ~ study_group, data = school_df)
@@ -95,7 +96,7 @@ summary_df <- bind_rows(summary_model_1, summary_model_2, summary_model_3)
 summary_df %>%
   knitr::kable() %>% 
   ## Hold Position
-  kableExtra::kable_styling(latex_options = c("hold_position", "striped", "scale_down"),full_width = FALSE, font_size = 10) 
+  kableExtra::kable_styling(latex_options = c("hold_position", "scale_down"),full_width = FALSE, font_size = 10) 
   
   
 

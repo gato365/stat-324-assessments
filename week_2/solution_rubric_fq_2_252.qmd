@@ -1,0 +1,91 @@
+---
+title: "Friday Quiz 2 Solutions - STAT 252"
+format: pdf
+editor: visual
+---
+
+
+
+Context: A pharmaceutical company has developed a new pain relief medication and wants to assess its effectiveness compared to the current leading pain reliever in the market. They conducted a randomized controlled trial involving individuals suffering from chronic back pain. The company recruited 400 participants and randomly assigned them into two groups: Group A received the new medication, while Group B received the leading pain reliever. After six weeks of treatment, participants were asked to rate their pain levels on a scale of 0 to 100, with 0 indicating no pain and 100 indicating severe pain. The results indicated that the average pain score for Group A was 68.2, with a standard deviation of 15, while for Group B, it was 65.8, with a standard deviation of 17.
+
+
+
+
+\newpage
+
+## Question 9
+
+**Question 9:** State the null and the alternative hypotheses in the context of the problem using only words.
+
+
+
+
+### **1) Solution (Full-credit response)**
+
+**Null Hypothesis (H₀):**  
+There is **no difference in the population mean pain scores** between those who take the new medication (Group A) and those who take the current leading pain reliever (Group B).  
+Mathematically, this could be written as: but symbols are not required.:
+
+$$H_0: \mu_A = \mu_B$$
+
+**Alternative Hypothesis (H₁):**  
+There **is a difference in the population mean pain scores** between the new medication and the current leading pain reliever.  
+
+Mathematically: 
+
+$$H_1: \mu_A \ne \mu_B$$
+
+This expresses the company’s goal to determine whether the new medication differs in effectiveness from the current one **based on population averages**.
+
+
+
+### **2) Rubric (Total: 3 points)**
+
+| **Component**                              | **Criteria**                                                                                                                                       | **Points** |
+|--------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|------------|
+| **Null Hypothesis (H₀)**                   | States that the **population mean pain scores** are equal for both medications; symbols optional, but wording must refer to **population mean**    | 1.0        |
+| **Alternative Hypothesis (H₁)**            | States that the **population mean pain scores** differ between the two medications; again, symbols optional but concept must be clear              | 1.0        |
+| **Contextual Framing and Clarity**         | Clear phrasing in context (mentions **pain scores**, **new medication vs. current medication**, and compares **population means**)                 | 1.0        |
+
+**Note:**  
+- Full credit is awarded if hypotheses are correct **in words**, even if symbols are not provided.  
+- Deduct if student refers only to sample means or omits reference to **population-level inference**.
+
+\newpage
+
+
+## Question 10
+
+**Question 10:** If the p-value is 0.2543, write a conclusion regarding this analysis in the context of the above scenario. Include the type of error that would be committed.
+
+PTS: 3
+
+
+### **1) Solution (Full-credit response)**
+
+
+Since the p-value is **0.2543**, which is much greater than 0.10, we **fail to reject the null hypothesis**. This means we do **not have any statistical evidence** to conclude that the **population mean pain scores** differ between the new pain relief medication and the current leading pain reliever.
+
+In context, this suggests that the data do not provide convincing evidence that the new medication is more or less effective in reducing pain compared to the standard medication.
+
+By failing to reject the null hypothesis when there **actually is a difference**, we risk making a **Type II error** - concluding there is no difference in pain relief when, in reality, the new medication may actually be more or less effective.
+
+
+
+
+### **2) Rubric (Total: 3 points)**
+**Total: 3 points**
+
+| **Component**                     | **Criteria**                                                                                                                                       | **Points** |
+|-----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|------------|
+| **Decision about the null**       | Clearly states **fail to reject the null hypothesis** based on the p-value being greater than the significance level (e.g., 0.10 or 0.05)          | 1.0        |
+| **Contextual conclusion**         | States conclusion **in context**, referring to **population mean pain scores** and indicating **no statistically significant difference**         | 1.0        |
+| **Type of error identified**      | Correctly identifies that if we **fail to reject a false null hypothesis**, we risk making a **Type II error**                                     | 1.0        |
+
+---
+
+### 💡 **Helpful Notes for Grading:**
+- The **p-value = 0.2543** is too large to reject at conventional levels (e.g., 0.10), so the correct conclusion is to **fail to reject the null**.
+- Students must include context: pain scores, population means, and mention of the medications.
+- For full credit on error type, they must identify **Type II error** — the risk of concluding no difference when there actually is one.
+
