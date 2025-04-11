@@ -1,0 +1,126 @@
+---
+title: "Friday Quiz 2"
+format: pdf
+editor: visual
+---
+
+# School Data
+
+This synthetic dataset simulates data collected from a high school’s academic enrichment program, designed to explore how various student habits relate to academic success. In particular, we imagine researchers created three survey-based variables: **x1**, representing weekly hours spent in *peer-led study groups*; **x2**, weekly hours dedicated to *quiet individual study time*; and **x3**, weekly hours spent in *school-sponsored extracurricular clubs*. The outcome variable, **y**, represents the student’s final *academic performance index* for the term, scaled from 0 to 100.
+
+The data was generated in such a way that the three predictors are close to statistically independent (i.e., there's no strong correlation between them), allowing for a clean interpretation of each variable’s unique contribution to academic performance. For example, a student could study independently without necessarily being involved in peer groups or clubs, making these behaviors distinct. In this synthetic model, we assume that **individual study (x2)** has the strongest positive association with performance, **peer groups (x1)** have a moderate positive effect, and **extracurricular clubs (x3)** show a slight negative association—perhaps reflecting a trade-off in time. The goal of this simulation is to help students and teachers analyze how various independent efforts and activities can affect outcomes when not confounded by overlapping behaviors.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)                ## Data Transformation
+library(ggplot2)              ## Data Visualization
+library(GGally)               ## Data Visualization
+library(MASS)                 ## Multivariate Normal Distribution
+
+set.seed(123)
+
+sample_size <- 100
+
+# Define realistic school-based means
+real_means <- c(3, 7, 5)  # study_group, self_study, clubs
+
+# Independent variables with identity covariance
+X <- mvrnorm(n = sample_size, mu = real_means, Sigma = diag(3))
+
+# Response: y = 3 + 1*x1 + 2*x2 - 1*x3 + noise
+y <- 3 + X %*% c(1, 2, -1) + rnorm(sample_size) + 60
+
+
+# Build and round the data frame
+school_df  <- as.data.frame(bind_cols(y, X))
+colnames(school_df ) <- c("performance", "study_group", "self_study", "clubs")
+school_df <- round(school_df , 2)
+```
+
+```{r echo=FALSE}
+summarize_reg_model <- function(model,model_description) {
+  # Get number of observations and predictors
+  n <- length(residuals(model))
+  p <- length(coefficients(model)) - 1
+  
+  # 0) RSS 
+  RSS <- round(sum(residuals(model)^2),2)
+  
+  # 1) RSE
+  RSE <- round(sqrt(RSS / (n - p - 1)),2)
+  
+  # 2) R-Squared and Adjusted R-Squared
+  R2 <- round(summary(model)$r.squared,2)
+  adj_R2 <- round(summary(model)$adj.r.squared,2)
+  
+  # 3) AIC
+  aic_val <- round(AIC(model),2)
+  
+  # 4) BIC
+  bic_val <- round(BIC(model),2)
+  
+  # Create summary dataframe
+  mlr_metrics <- data.frame(
+    type = model_description,
+    RSS = RSS,
+    RSE = RSE,
+    R2 = R2,
+    Adj_R2 = adj_R2,
+    AIC = aic_val,
+    BIC = bic_val
+  )
+  
+  return(mlr_metrics)
+}
+```
+
+## Review of Model Metrics
+```{r echo=FALSE}
+# Fit multiple regression models
+school_model_1 <- lm(performance ~ study_group, data = school_df)
+school_model_2 <- lm(performance ~ study_group + self_study, data = school_df)
+school_model_3 <- lm(performance ~ study_group + self_study + clubs, data = school_df)
+
+# If you have a summarize_reg_model() function
+summary_model_1 <- summarize_reg_model(school_model_1,
+                                       "Model 1: Performance ~ Study Group")
+summary_model_2 <- summarize_reg_model(school_model_2,
+                                       "Model 2: Performance ~ Study Group + Self Study")
+summary_model_3 <- summarize_reg_model(school_model_3,
+                                       "Model 3: Performance ~ Study Group + Self Study + Clubs")
+
+# Combine summaries
+summary_df <- bind_rows(summary_model_1, summary_model_2, summary_model_3)
+
+# Display results
+summary_df %>%
+  knitr::kable() %>% 
+  ## Hold Position
+  kableExtra::kable_styling(latex_options = c("hold_position", "striped", "scale_down"),full_width = FALSE, font_size = 10) 
+  
+  
+
+```
+
+\newpage
+
+# Model Comparisons
+
+## Model Comparison 1
+
+```{r}
+anova(school_model_1, school_model_2)
+```
+
+## Model Comparison 2
+
+```{r}
+anova(school_model_2, school_model_3)
+```
+
+\newpage
+
+# Review of Selected of Final Model
+
+```{r}
+summary(school_model_3)
+```
