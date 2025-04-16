@@ -19,6 +19,6 @@ By rejecting the null hypothesis when it is actually true, we may be committing 
 **Rubric (Total: 2 points)**
 
 | **Component**             | **Criteria**                                                                                                                       | **Points** |
-|-------------|-----------------------------------------------|-------------|
+|---------------|------------------------------------------|---------------|
 | **Contextual Conclusion** | Includes comparison to significance level (0.10), decision to reject the null, and contextual conclusion about cream effectiveness | 1.0        |
 | **Error Type Identified** | Correctly identifies and explains **Type I error** as the error made when rejecting a true null hypothesis                         | 1.0        |

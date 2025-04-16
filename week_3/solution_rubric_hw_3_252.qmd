@@ -1,0 +1,28 @@
+---
+title: "Homework 3 Solutions - STAT 252"
+format: pdf
+editor: visual
+---
+
+## Question 12:
+
+**Question 12:** "The interpretation of the test statistic for a paired t-test is the number of standard deviations the difference between the population mean of the two independent groups is from 0" (Hint: there are 4 errors)
+
+### Solution:
+
+1.  **Paired t-test applies to dependent (not independent) groups** – The use of "two independent groups" is incorrect. Paired t-tests are used when the two sets of observations are related (e.g., before and after measurements on the same subjects).
+
+2.  **It should refer to the *mean of the paired differences*** – The test statistic in a paired t-test is based on the sample mean of the differences between paired observations, not on comparing the means of two groups.
+
+3.  **Population mean of paired differences, not population mean of two groups** – The null hypothesis in a paired t-test is about the population mean of the **differences**, not the difference between two separate population means.
+
+4.  **The phrase should mention the difference is measured in standard errors, not just "standard deviations"** – The test statistic represents the number of **standard errors** the sample mean difference is from 0, not just standard deviations.
+
+Points: 2
+
+### Rubric
+
+| **Component**                         | **Criteria**                                                                                                                                     | **Points** |
+|-------------|----------------------------------------------|-------------|
+| **Conceptual Error Identification**   | Identifies at least **3 of the 4 errors** clearly and correctly (e.g., independence vs. dependence, wrong parameter, wrong distributional basis) | 1.0        |
+| **Correct Reasoning and Terminology** | Explains why the errors are wrong using correct **terminology and logic** for paired t-tests (mean of differences, standard error, dependence)   | 1.0        |
