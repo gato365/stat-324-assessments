@@ -1,0 +1,191 @@
+---
+title: "Thursday Exam 1"
+format: docx
+editor: visual
+---
+
+
+
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(ggplot2)
+library(GGally)
+library(MASS)
+set.seed(123)
+```
+
+
+
+### **Background**
+
+You are working as a marketing analyst for a professional basketball team seeking to improve **ticket sales** through more effective promotional strategies. Over the course of a season, the team has run 100 marketing campaigns and recorded a variety of data points for each. These campaigns span digital outreach, physical advertising, and fan engagement tactics. Your job is to analyze the data and develop a regression model that helps predict total sales (`sales`) based on these different forms of marketing activity.
+
+The variables collected for each campaign include: the number of `email_clicks` generated from newsletters, the number of `social_media_mentions` observed across platforms, the amount of `ad_spend` used on digital platforms, the number of `merch_giveaways` distributed during events, the estimated `billboard_exposure` in terms of views, and the number of `tv_spots` aired during peak hours. Using this dataset, you will build and compare several linear regression models to assess which combinations of marketing efforts most effectively predict ticket sales. This data was created based on simulated data. 
+
+
+
+
+### **Data Generation**
+
+```{r}
+# Load necessary libraries
+library(MASS)      # For mvrnorm if needed, not used here
+library(dplyr)
+library(broom)
+library(ggfortify)
+library(ggplot2)
+library(lmtest)
+library(car)
+
+source(here::here("assessment_regression.R"))
+
+# ----------------------------
+# 1) Set seed for reproducibility
+# ----------------------------
+set.seed(324)
+
+# ----------------------------
+# 2) Generate response: ticket_sales
+# ----------------------------
+n <- 1000
+ticket_sales <- rnorm(n, mean = 500, sd = 100)  # avg revenue per campaign
+
+# ----------------------------
+# 3) Generate Model 1 and 2 predictors
+# x1: email_clicks (moderately related to sales)
+# x2: social_media_mentions (weakly related)
+# x3: ad_spend (strongest relation + correlated with x2)
+# ----------------------------
+email_clicks <-  0.6 * ticket_sales + rnorm(n, mean = 0, sd = 100)
+social_media_mentions <- 0.3 * ticket_sales + rnorm(n, mean = 0, sd = 120)
+ad_spend <- 0.7 * ticket_sales + 0.5 * social_media_mentions + rnorm(n, mean = 0, sd = 80)
+
+# ----------------------------
+# 4) Generate Model 3 predictors (weak, independent)
+# ----------------------------
+merch_giveaways <- 0.6 * ticket_sales + rnorm(n, 0, 150)
+billboard_exposure <- 0.5 * ticket_sales + rnorm(n, 0, 200)
+tv_spots <- 0.2 * ticket_sales + rnorm(n, 0, 50)
+
+# ----------------------------
+# 5) Create DataFrame
+# ----------------------------
+marketing_df <- data.frame(
+  ticket_sales = round(ticket_sales, 2),
+  email_clicks = round(email_clicks, 2),
+  social_media_mentions = round(social_media_mentions, 2),
+  ad_spend = round(ad_spend, 2),
+  merch_giveaways = round(merch_giveaways, 2),
+  billboard_exposure = round(billboard_exposure, 2),
+  tv_spots = round(tv_spots, 2)
+)
+
+# ----------------------------
+# 6) Correlation Matrix Check
+# ----------------------------
+round(cor(marketing_df), 2)
+
+```
+
+### **Model Building**
+
+```{r}
+# ----------------------------
+# 1) Model 1: email_clicks + social_media_mentions
+# ----------------------------
+model1 <- lm(ticket_sales ~ email_clicks + social_media_mentions, data = marketing_df)
+
+# ----------------------------
+# 2) Model 2: adds ad_spend, which is collinear with social_media_mentions
+# ----------------------------
+model2 <- lm(ticket_sales ~ email_clicks + social_media_mentions + ad_spend, data = marketing_df)
+
+# ----------------------------
+# 3) Model 3: uses weak and independent predictors only
+# ----------------------------
+model3 <- lm(ticket_sales ~ merch_giveaways + billboard_exposure + tv_spots, data = marketing_df)
+
+# ----------------------------
+# 4) Compare summaries
+# ----------------------------
+
+model_1_summary <- summarize_reg_model(model1,"ticket_sales ~ email_clicks + social_media_mentions")
+model_1_summary <- summarize_reg_model(model1,"ticket_sales ~ email_clicks + social_media_mentions")
+model_2_summary <- summarize_reg_model(model2,"ticket_sales ~ email_clicks + social_media_mentions + ad_spend")
+model_3_summary <- summarize_reg_model(model3,"ticket_sales ~ merch_giveaways + billboard_exposure + tv_spots")
+bind_rows(
+  model_1_summary,
+  model_2_summary,
+  model_3_summary
+)
+```
+
+```{r}
+summary(model1)
+```
+
+
+
+
+```{r}
+anova(model1,model2)
+```
+
+
+
+
+```{r}
+## Perform residual analysis plot
+autoplot(model1) + ## from ggfortify
+  theme_bw()
+```
+
+```{r}
+resettest(model1)                # From lmtest package
+dwtest(model1)                   # From lmtest package
+shapiro.test(resid(model1))      # Base R
+bptest(model1)                   # From lmtest package
+```
+
+
+
+
+**Model 1: VIF**
+```{r}
+vif(model1)
+```
+
+**Model 2: VIF**
+```{r}
+vif(model2)
+```
+
+
+**Model 3: VIF**
+```{r}
+vif(model3)
+```
+
+
+
+
+```{r}
+avPlots(model1)       ## from car package
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
