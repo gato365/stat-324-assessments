@@ -4,39 +4,30 @@ format: docx
 editor: visual
 ---
 
-
-
-
 ```{r setup, include=FALSE}
-library(dplyr)
-library(ggplot2)
-library(GGally)
-library(MASS)
+library(dplyr)          ## Data Transformation 
+library(ggplot2)        ## Data Visualization
+library(GGally)         ## Data Visualization
 set.seed(123)
 ```
-
-
 
 ### **Background**
 
 You are working as a marketing analyst for a professional basketball team seeking to improve **ticket sales** through more effective promotional strategies. Over the course of a season, the team has run 100 marketing campaigns and recorded a variety of data points for each. These campaigns span digital outreach, physical advertising, and fan engagement tactics. Your job is to analyze the data and develop a regression model that helps predict total sales (`sales`) based on these different forms of marketing activity.
 
-The variables collected for each campaign include: the number of `email_clicks` generated from newsletters, the number of `social_media_mentions` observed across platforms, the amount of `ad_spend` used on digital platforms, the number of `merch_giveaways` distributed during events, the estimated `billboard_exposure` in terms of views, and the number of `tv_spots` aired during peak hours. Using this dataset, you will build and compare several linear regression models to assess which combinations of marketing efforts most effectively predict ticket sales. This data was created based on simulated data. 
-
-
-
+The variables collected for each campaign include: the number of `email_clicks` generated from newsletters, the number of `social_media_mentions` observed across platforms, the amount of `ad_spend` used on digital platforms, the number of `merch_giveaways` distributed during events, the estimated `billboard_exposure` in terms of views, and the number of `tv_spots` aired during peak hours. Using this dataset, you will build and compare several linear regression models to assess which combinations of marketing efforts most effectively predict ticket sales. This data was created based on simulated data.
 
 ### **Data Generation**
 
-```{r}
+```{r echo=FALSE}
 # Load necessary libraries
-library(MASS)      # For mvrnorm if needed, not used here
-library(dplyr)
-library(broom)
-library(ggfortify)
-library(ggplot2)
-library(lmtest)
-library(car)
+
+library(dplyr)          ## Data Transformation
+library(ggfortify)      ## Data Visualization
+library(ggplot2)        ## Data Visualization
+library(broom)          ## Data Analysis
+library(lmtest)         ## Data Analysis 
+library(car)            ## Data Analysis
 
 source(here::here("assessment_regression.R"))
 
@@ -91,25 +82,18 @@ round(cor(marketing_df), 2)
 ### **Model Building**
 
 ```{r}
-# ----------------------------
-# 1) Model 1: email_clicks + social_media_mentions
-# ----------------------------
+## Model 1
 model1 <- lm(ticket_sales ~ email_clicks + social_media_mentions, data = marketing_df)
 
-# ----------------------------
-# 2) Model 2: adds ad_spend, which is collinear with social_media_mentions
-# ----------------------------
+## Model 2
 model2 <- lm(ticket_sales ~ email_clicks + social_media_mentions + ad_spend, data = marketing_df)
 
-# ----------------------------
-# 3) Model 3: uses weak and independent predictors only
-# ----------------------------
+## Model 3
 model3 <- lm(ticket_sales ~ merch_giveaways + billboard_exposure + tv_spots, data = marketing_df)
+```
 
-# ----------------------------
-# 4) Compare summaries
-# ----------------------------
 
+```{r}
 model_1_summary <- summarize_reg_model(model1,"ticket_sales ~ email_clicks + social_media_mentions")
 model_1_summary <- summarize_reg_model(model1,"ticket_sales ~ email_clicks + social_media_mentions")
 model_2_summary <- summarize_reg_model(model2,"ticket_sales ~ email_clicks + social_media_mentions + ad_spend")
@@ -121,71 +105,44 @@ bind_rows(
 )
 ```
 
+
+An employee at the company suggested that model 2 should be used for predicting ticket sales. 
+
+
 ```{r}
-summary(model1)
+summary(model2)
 ```
-
-
-
 
 ```{r}
 anova(model1,model2)
 ```
 
-
-
-
 ```{r}
 ## Perform residual analysis plot
-autoplot(model1) + ## from ggfortify
+autoplot(model2) + ## from ggfortify
   theme_bw()
 ```
 
+
+
+
 ```{r}
-resettest(model1)                # From lmtest package
-dwtest(model1)                   # From lmtest package
-shapiro.test(resid(model1))      # Base R
-bptest(model1)                   # From lmtest package
-```
-
-
-
-
-**Model 1: VIF**
-```{r}
-vif(model1)
+resettest(model2)                # From lmtest package
+dwtest(model2)                   # From lmtest package
+shapiro.test(resid(model2))      # Base R
+bptest(model2)                   # From lmtest package
 ```
 
 **Model 2: VIF**
+
 ```{r}
-vif(model2)
+vif(model2)   ## From car package
 ```
 
 
-**Model 3: VIF**
-```{r}
-vif(model3)
-```
-
-
+**Model 2: Partial Plots**
 
 
 ```{r}
-avPlots(model1)       ## from car package
+avPlots(model2)       ## From car package
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
