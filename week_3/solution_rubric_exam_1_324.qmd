@@ -1,0 +1,132 @@
+---
+title: "Exam 1 Solutions - STAT 324"
+format: pdf
+editor: visual
+---
+
+
+### ✅ **Question Prompt**  
+Write out the full regression equation for Model 2 using the estimated coefficients. Be as clear and explicit as possible, including the names of the variables and their estimated values. Then, interpret the coefficient for `email_clicks` in context.
+
+---
+
+### ✅ **Solution**
+
+**1. Regression Equation (in context):**
+
+$$
+\hat{y}_i = 119.1 + 1.172 x_{1i} + 0.03553 x_{2i} + 0.05249  x_{3i}
+$$
+
+$\hat{y}_i$ - `ticket_sales` (predicted number of ticket sales in a marketing campaign)
+
+
+$x_{1i}$ - `email_clicks` (number of email clicks in a marketing campaign)
+
+$x_{2i}$ - `social_media_mentions` (number of social media mentions in a marketing campaign)
+
+$x_{3i}$ - `ad_spend` (amount spent on ads in a marketing campaign)
+
+
+---
+
+**2. Interpretation of `email_clicks`:**
+
+Holding `social_media_mentions` and `ad_spend` constant, for each additional email click in a marketing campaign, the model predicts an increase of approximately **1.172 units** in `ticket_sales`.
+
+---
+
+### ✅ **Rubric (15 Points Total)**
+
+| Criteria                                                                                      | Points |
+|-----------------------------------------------------------------------------------------------|--------|
+| **Equation Format** – Writes full regression equation with all three predictors               | 5      |
+| • Includes correct coefficient for `Intercept`                                                | 1      |
+| • Includes correct coefficient for `email_clicks`                                             | 1      |
+| • Includes correct coefficient for `social_media_mentions`                                    | 1      |
+| • Includes correct coefficient for `ad_spend`                                                 | 1      |
+| • Uses correct notation for predicted value (`hat` or “predicted ticket_sales”)               | 1      |
+|                                                                                               |        |
+| **Interpretation of email_clicks** – Must include:                                            | 8      |
+| • Contextual variable name ("email clicks" or "email_clicks")                                 | 1      |
+| • Correct interpretation of slope (per 1 unit increase)                                       | 2      |
+| • Direction of effect (increase in ticket_sales)                                              | 2      |
+| • Holding all else constant or similar phrase ("controlling for other predictors")            | 2      |
+| • Units (some mention of "ticket sales" or campaign outcome in units)                         | 1      |
+|                                                                                               |        |
+| **Clarity and Completeness** – Well-written, not ambiguous, labeled variables                 | 2      |
+
+---
+
+
+
+
+
+
+\newpage
+
+
+### ✅ **Question Prompt**
+
+Using Model 2, predict the value of `ticket_sales` for a marketing campaign where there were **150 email clicks**, **223 social media mentions**, and **$623 in ad_spend**. Show your work.
+
+Explain what your answer means in the context of the problem.
+
+Then, explain whether this prediction should be trusted.
+
+---
+
+### ✅ **Solution**
+
+#### Step 1: Use the Model 2 Equation  
+$$
+\hat{y}_i = 119.1 + 1.172 x_{1i} + 0.03553 x_{2i} + 0.05249 x_{3i}
+$$
+
+Plug in the values:
+
+$$
+\hat{y}_i = 119.1 + 1.172(150) + 0.03553(223) + 0.05249(623)
+$$
+
+$$
+= 119.1 + 175.8 + 7.92419 + 32.69627
+$$
+
+$$
+\hat{y}_i \approx 335.52
+$$
+
+---
+
+#### Step 2: Interpret the Prediction
+
+Based on the regression model, a campaign with 150 email clicks, 223 social media mentions, and $623 spent on ads is expected (average) to generate approximately **336 ticket sales**.
+
+---
+
+#### Step 3: Should the Prediction Be Trusted?
+
+Yes, this prediction can be reasonably trusted because the input values (150 email clicks, 223 social media mentions, and $623 in ad spend) likely fall **within the range of the observed data** used to build the model. Since the prediction is not an extrapolation beyond the observed values and the model has a strong R² of 0.74, the estimate is likely reliable.
+
+---
+
+### ✅ **Rubric (15 Points Total)**
+
+| Criteria                                                                                      | Points |
+|-----------------------------------------------------------------------------------------------|--------|
+| **Correct Use of the Regression Equation**                                                    | 5      |
+| • Substitutes values into the full model equation correctly                                   | 2      |
+| • Performs correct arithmetic (may round slightly)                                            | 2      |
+| • Final prediction is clearly stated                                                          | 1      |
+|                                                                                               |        |
+| **Interpretation in Context**                                                                 | 5      |
+| • Clearly explains the predicted value as ticket sales                                        | 2      |
+| • Refers to the specific input values used (email clicks, mentions, ad spend)                | 2      |
+| • Uses plain language and connects it to a marketing campaign                                 | 1      |
+|                                                                                               |        |
+| **Assessment of Whether Prediction Should Be Trusted**                                        | 5      |
+| • Mentions range/realism of input values (within observed data)                               | 2      |
+| • Explains why prediction is likely valid (not extrapolated, strong model fit, etc.)          | 2      |
+| • Reasoning is thoughtful and clearly written                                                 | 1      |
+

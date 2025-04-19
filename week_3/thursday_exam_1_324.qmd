@@ -19,10 +19,12 @@ The variables collected for each campaign include: the number of `email_clicks` 
 
 ### **Data Generation**
 
-```{r echo=FALSE}
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Load necessary libraries
 
 library(dplyr)          ## Data Transformation
+library(tibble)         ## Data Transformation
+library(tidyr)          ## Data Transformation
 library(ggfortify)      ## Data Visualization
 library(ggplot2)        ## Data Visualization
 library(broom)          ## Data Analysis
@@ -40,7 +42,7 @@ set.seed(324)
 # 2) Generate response: ticket_sales
 # ----------------------------
 n <- 1000
-ticket_sales <- rnorm(n, mean = 500, sd = 100)  # avg revenue per campaign
+ticket_sales <- rnorm(n, mean = 500, sd = 55)  # avg revenue per campaign
 
 # ----------------------------
 # 3) Generate Model 1 and 2 predictors
@@ -48,16 +50,16 @@ ticket_sales <- rnorm(n, mean = 500, sd = 100)  # avg revenue per campaign
 # x2: social_media_mentions (weakly related)
 # x3: ad_spend (strongest relation + correlated with x2)
 # ----------------------------
-email_clicks <-  0.6 * ticket_sales + rnorm(n, mean = 0, sd = 100)
-social_media_mentions <- 0.3 * ticket_sales + rnorm(n, mean = 0, sd = 120)
-ad_spend <- 0.7 * ticket_sales + 0.5 * social_media_mentions + rnorm(n, mean = 0, sd = 80)
+email_clicks <-  0.6 * ticket_sales + rnorm(n, mean = 0, sd = 20)
+social_media_mentions <- 0.3 * ticket_sales + rnorm(n, mean = 0, sd = 70)
+ad_spend <- 0.7 * ticket_sales + 0.5 * social_media_mentions + rnorm(n, mean = 0, sd = 100)
 
 # ----------------------------
 # 4) Generate Model 3 predictors (weak, independent)
 # ----------------------------
-merch_giveaways <- 0.6 * ticket_sales + rnorm(n, 0, 150)
-billboard_exposure <- 0.5 * ticket_sales + rnorm(n, 0, 200)
-tv_spots <- 0.2 * ticket_sales + rnorm(n, 0, 50)
+merch_giveaways <- 0.6 * ticket_sales + rnorm(n, 0, 80)
+billboard_exposure <- 0.5 * ticket_sales + rnorm(n, 0, 30)
+tv_spots <- 0.2 * ticket_sales + rnorm(n, 0, 25)
 
 # ----------------------------
 # 5) Create DataFrame
@@ -72,11 +74,22 @@ marketing_df <- data.frame(
   tv_spots = round(tv_spots, 2)
 )
 
-# ----------------------------
-# 6) Correlation Matrix Check
-# ----------------------------
-round(cor(marketing_df), 2)
 
+```
+
+```{r}
+
+
+# Calculate min and max for each variable
+marketing_df %>%
+  summarise(
+    across(everything(), list(min = min, max = max), .names = "{.col}__{.fn}")
+  ) %>%
+  pivot_longer(cols = everything(),
+               names_to = c("variable", "stat"),
+               names_sep = "__") %>%
+  pivot_wider(names_from = stat, values_from = value) %>%
+  arrange(variable)
 ```
 
 ### **Model Building**
@@ -92,22 +105,29 @@ model2 <- lm(ticket_sales ~ email_clicks + social_media_mentions + ad_spend, dat
 model3 <- lm(ticket_sales ~ merch_giveaways + billboard_exposure + tv_spots, data = marketing_df)
 ```
 
-
 ```{r}
-model_1_summary <- summarize_reg_model(model1,"ticket_sales ~ email_clicks + social_media_mentions")
-model_1_summary <- summarize_reg_model(model1,"ticket_sales ~ email_clicks + social_media_mentions")
-model_2_summary <- summarize_reg_model(model2,"ticket_sales ~ email_clicks + social_media_mentions + ad_spend")
-model_3_summary <- summarize_reg_model(model3,"ticket_sales ~ merch_giveaways + billboard_exposure + tv_spots")
+model_1_summary <- summarize_reg_model(model1,"Model 1")
+model_2_summary <- summarize_reg_model(model2,"Model 2")
+model_3_summary <- summarize_reg_model(model3,"Model 3")
+
 bind_rows(
   model_1_summary,
   model_2_summary,
   model_3_summary
-)
+) 
 ```
 
+Note:
 
-An employee at the company suggested that model 2 should be used for predicting ticket sales. 
+Model 1 - `ticket_sales ~ email_clicks + social_media_mentions`
 
+Model 2 - `ticket_sales ~ email_clicks + social_media_mentions + ad_spend`
+
+Model 3 - `ticket_sales ~ merch_giveaways + billboard_exposure + tv_spots`
+
+\newpage
+
+**An employee at the company suggested that model 2 should be used for predicting ticket sales.**
 
 ```{r}
 summary(model2)
@@ -123,9 +143,6 @@ autoplot(model2) + ## from ggfortify
   theme_bw()
 ```
 
-
-
-
 ```{r}
 resettest(model2)                # From lmtest package
 dwtest(model2)                   # From lmtest package
@@ -139,9 +156,7 @@ bptest(model2)                   # From lmtest package
 vif(model2)   ## From car package
 ```
 
-
 **Model 2: Partial Plots**
-
 
 ```{r}
 avPlots(model2)       ## From car package
