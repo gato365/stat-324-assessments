@@ -1,6 +1,6 @@
 ---
 title: "Lab 1 Solutions - STAT 252"
-format: html
+format: pdf
 editor: visual
 ---
 
