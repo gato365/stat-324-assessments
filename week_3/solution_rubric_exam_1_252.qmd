@@ -1,0 +1,178 @@
+---
+title: "Exam 1 Solutions - STAT 252"
+format: pdf
+editor: visual
+---
+
+
+
+
+## Question 9
+
+A large online retailer is testing a new recommendation algorithm on a random sample of 5,000 customers over one month. For each customer, the researcher records whether the new algorithm led to at least one purchase (Yes or No). The data science team wants to find out if the proportion of customers who made at least one purchase under the new algorithm is significantly different than its target of 30%.  
+
+Provide the statistical technique, variable(s) of interest (mention the response and explanatory variables, if appropriate), and variable type(s).  A student provided this response.
+
+The statistical technique that should be used is two independent population means confidence interval in which the variables are whether the algorithm led to at least one purchase (the response variable which is categorical) and whether the new or old algorithm was used (explanatory variable which is categorical binary).
+
+Is there anything wrong with the student's statement? Explain. Correct the statement if it is incorrect.
+
+
+
+
+
+
+
+
+
+## **Solution (Full Credit – 18/18)**
+
+### **What’s wrong with the student’s statement:**
+
+The student made **multiple key errors**:
+
+1. **Incorrect statistical technique**:  
+   The student mentioned “two independent population means confidence interval,” which is **not appropriate**. This scenario involves testing a **single population proportion** (whether a customer made a purchase), **not means**, and there’s no comparison group provided (e.g., old vs. new algorithm).
+
+2. **Incorrect response variable description**:  
+   The response variable is correct in spirit (whether the algorithm led to at least one purchase), but the wording suggests a **cause-effect** that isn’t directly recorded. The actual **response variable is whether the customer made a purchase (Yes/No)**.
+
+3. **Incorrect explanatory variable**:  
+   The student incorrectly introduced an “old algorithm” — the scenario mentions only customers using the **new** algorithm. There is no explanatory variable being varied in this study. It’s a **one-sample test for a proportion**.
+
+---
+
+### **Corrected Version:**
+
+- **Statistical Technique**:  
+  The correct technique is a **one-sample z-test for a population proportion** (or equivalently, a confidence interval for a proportion), since we are testing whether the proportion of purchases under the new algorithm differs from a known target value (30%).
+
+- **Variables of Interest**:  
+  - **Response Variable**: Whether a customer made at least one purchase (Yes/No)  
+  - **Explanatory Variable**: *None explicitly stated*, since all customers received the new algorithm
+
+- **Variable Types**:  
+  - **Response Variable**: **Categorical (binary)**  
+  - **Explanatory Variable**: **Not applicable** in this one-group setup
+
+---
+
+## **Rubric (Total: 18 points)**
+
+| **Component**                                   | **Criteria**                                                                                              | **Points** |
+|--------------------------------------------------|-------------------------------------------------------------------------------------------------------------|------------|
+| **Statistical Technique (6 pts)**                | Correctly identifies it as a **one-sample z-test for a proportion** or a **confidence interval for a proportion** | 6          |
+| **Response Variable (4 pts)**                    | Identifies it as **whether or not the customer made a purchase**, and that it is **categorical (binary)**         | 2 for variable + 2 for type = 4 |
+| **Explanatory Variable (4 pts)**                 | Identifies that there is **no explanatory variable**, or clearly states it is **not applicable**                  | 2 for identifying presence/absence + 2 for correct justification = 4 |
+| **Critique of Student's Technique (2 pts)**      | Clearly explains why the **two independent means** method is inappropriate                                     | 2          |
+| **Critique of Student's Variable Description (2 pts)** | Explains the **incorrect mention of the old algorithm** and clarifies the **inappropriate pairing of variables**  | 2          |
+
+
+
+
+## Question 10
+
+A music psychology researcher is investigating the impact of different genres of background music on reading comprehension. The study involves two groups of college students: one group reads a complex academic text while listening to classical music who happens to be seniors in terms of credits, and the other group reads the same text while listening to ambient electronic music who happens to be freshmen in terms of credits. Each group consists of 80 randomly selected students from a large university.
+
+After reading the text for 8 hours, all participants took the same comprehension test and scored from 0 to 100. The researcher wants to determine if there's a significant difference in comprehension scores between the two music conditions.
+
+Sample statistics:
+
+1. Classical Music Group:
+   - Mean comprehension score: 72.5
+   - Standard deviation: 8.3
+   - Sample size: 80
+
+2. Ambient Electronic Music Group:
+   - Mean comprehension score: 69.8
+   - Standard deviation: 20.3
+   - Sample size: 80
+
+Provide the statistical technique, variable(s) of interest (mention the response and explanatory variables, if appropriate), and alternative hypothesis. What confounding variable(s) are present in this experiment? A student provided this response.
+
+The statistical technique would be Two Independent Population Mean confidence interval in which there are two variables music type (response variable) and the other variable is the score on the comprehension test (explanatory variable). The alternative hypothesis is that the sample mean of the differences in comprehension scores is equal to 0. There are no confounding variables in this experiment.
+
+Is there anything wrong with this statement? Explain. Correct the statement if it is incorrect.
+
+
+
+
+Here’s a **full solution** and **grading rubric (out of 18 points)** in **Markdown format**, assessing correctness of statistical technique, variables, hypothesis, and confounding variables, and evaluating the student’s response.
+
+---
+
+## **Solution (Full Credit – 18/18)**
+
+### **What's wrong with the student’s statement:**
+
+The student’s response contains **several conceptual errors**:
+
+---
+
+### ❌ **1. Incorrect identification of response and explanatory variables**
+- The student **reversed the variables**.
+  - **Correct**:
+    - **Response Variable**: **Comprehension score** (numeric, continuous)
+    - **Explanatory Variable**: **Music type** (categorical with two groups: classical vs. ambient electronic)
+
+---
+
+### ❌ **2. Incorrect statistical technique description**
+- The student correctly identifies the method **(two independent population means confidence interval or two-sample t-test)**, but refers to the test as a "confidence interval" without noting it’s a **comparison of means between two independent groups**.
+- They fail to mention **assumptions**, such as **equal or unequal variances** (especially relevant here, given the large difference in standard deviations: 8.3 vs. 20.3).
+
+---
+
+### ❌ **3. Incorrect alternative hypothesis**
+- The student wrote: *"The sample mean of the differences in comprehension scores is equal to 0"*, which is actually a **null hypothesis**.
+- The **correct alternative hypothesis** should be:
+  - **"The population mean comprehension scores differ between the two music conditions."**
+  - Or mathematically:  
+    \[
+    H_1: \mu_{\text{classical}} \ne \mu_{\text{ambient}}
+    \]
+
+---
+
+### ❌ **4. Incorrect statement about confounding**
+- The student states **"there are no confounding variables"**, which is incorrect.
+- The study confounds **music type with academic standing**:
+  - Classical group = **seniors**
+  - Ambient group = **freshmen**
+- This is a **classic confounding variable**, as **grade level could independently influence comprehension** (e.g., seniors might read more efficiently).
+
+---
+
+### ✅ **Corrected Version:**
+
+- **Statistical Technique**:  
+  A **two-sample t-test** (or confidence interval for the difference in **two independent population means**) should be used to compare the comprehension scores between the two music conditions. Because the standard deviations differ, a **Welch’s t-test** (unequal variances) may be more appropriate.
+
+- **Variables**:  
+  - **Response Variable**: Comprehension score (quantitative, 0–100 scale)  
+  - **Explanatory Variable**: Type of background music (categorical: classical vs. ambient electronic)
+
+- **Alternative Hypothesis**:  
+  The **population mean comprehension scores are different** between students listening to classical music and those listening to ambient electronic music.  
+  \[
+  H_1: \mu_{\text{classical}} \ne \mu_{\text{ambient}}
+  \]
+
+- **Confounding Variable**:  
+  **Academic level** (seniors vs. freshmen) is a **confounding variable**, because it is **associated with both the explanatory variable (music type)** and the **response (comprehension skill)**.
+
+---
+
+## **Rubric (Total: 18 points)**
+
+| **Component**                             | **Criteria**                                                                                                                     | **Points** |
+|-------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|------------|
+| **Statistical Technique (4 pts)**         | Identifies it as a **two-sample t-test** or a confidence interval for **two independent population means**                      | 4          |
+| **Response Variable (3 pts)**             | Correctly identifies **comprehension score** as the response and specifies it is **quantitative**                                | 3          |
+| **Explanatory Variable (3 pts)**          | Correctly identifies **music type** as the explanatory variable and specifies it is **categorical**                              | 3          |
+| **Alternative Hypothesis (4 pts)**        | Correctly states that the **population mean comprehension scores differ** across the two music types; uses clear logic/symbols  | 4          |
+| **Confounding Variable (4 pts)**          | Identifies that **academic level (senior vs. freshman)** is confounded with music type and explains why it is a confounder       | 4          |
+
+---
+
+Let me know if you’d like partial credit versions or sample incorrect student responses with targeted feedback.
