@@ -1,0 +1,35 @@
+---
+title: "Homework 4 Solutions - STAT 252"
+format: pdf
+editor: visual
+---
+
+
+## Question 12
+
+Cal Poly's Writing Center wants to evaluate the effectiveness of their services on students' GPA. To conduct this evaluation, they design a study involving a sample of students who utilized the Writing Center's services. They select 30 students who have used the Writing Center for two months and collect their GPA before and after utilizing the service. After the two-month period, they record the students' GPAs again. The mean difference in GPA (after - before) is 0.2, with a standard deviation of 0.3. The company wants to determine if there is a statistically significant difference in the GPAs before and after utilizing the Writing Center's services.
+
+
+Cal Poly’s Writing Center wants to perform a hypothesis test. Explain what the standard error they receive would mean in the context of the problem.
+
+
+
+
+### **Solution (Full Credit – 3/3)**
+
+The **standard error** measures the typical amount of variation we would expect in the **sample mean difference in GPA** (after − before) if we repeatedly took random samples of 30 students who used the Writing Center.  
+
+In context, it tells us how much the observed **average GPA increase of 0.2** might vary from the true population mean GPA difference due to random sampling. A smaller standard error would indicate more precise estimates of the average GPA improvement from using the Writing Center.
+
+
+
+### **Rubric: Interpreting Standard Error in Context (Total: 3 points)**
+
+| **Component**                      | **Criteria**                                                                                                                           | **Points** |
+|------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|------------|
+| **Definition of Standard Error**   | Correctly identifies the standard error as the typical variation in sample mean differences from sample to sample                      | 1.0        |
+| **Applies to Sample Mean Difference** | Specifies that the standard error applies to the **mean GPA difference (after − before)** in this paired sample setup                  | 1.0        |
+| **Contextual Interpretation**      | Connects standard error to **variation in estimating the true population mean GPA difference** for students who used the Writing Center | 1.0        |
+
+---
+
