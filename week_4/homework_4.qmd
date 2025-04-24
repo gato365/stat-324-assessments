@@ -1,0 +1,152 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+
+```{r message=FALSE, warning=FALSE}
+library(here)             ## Data Extraction       --- E
+library(ucimlrepo)        ## Data Extraction       --- E
+library(readr)            ## Data Extraction       --- E
+library(dplyr)            ## Data Transformation   --- T
+library(purrr)            ## Data Transformation   --- T
+library(ggplot2)          ## Data Visualization    --- V
+library(GGally)           ## Data Visualization    --- V
+library(ggfortify)        ## Data Visualization    --- V
+library(broom)            ## Data Analysis         --- A
+library(lmtest)           ## Data Analysis         --- A
+library(car)              ## Data Analysis         --- A  
+source(here("R", "assessment_regression.R")) 
+
+
+
+```
+
+
+
+```{r message=FALSE, warning=FALSE}
+wine_lst <- fetch_ucirepo(id = 109)
+wine_df <- wine_lst[["data"]][["features"]] %>% 
+  select(Alcohol, Color_intensity, Magnesium, Total_phenols) %>% 
+  rename(
+    alcohol = Alcohol,
+    color_intensity = Color_intensity,
+    magnesium = Magnesium,
+    total_phenols = Total_phenols
+  ) 
+
+```
+
+
+Alcohol, Color_intensity,Magnesium,Total_phenols 
+
+
+
+
+
+
+
+
+
+```{r message=FALSE, warning=FALSE}
+## Data Visualization
+GGally::ggpairs(wine_df, 
+         title = "Credit Data Pairwise Plot",
+         lower = list(continuous = wrap("points", alpha = 0.2)),
+         upper = list(continuous = wrap("cor", size = 3))) +
+  theme_bw()
+
+```
+
+
+
+```{r}
+m0 <- lm(alcohol ~ magnesium, data = wine_df)
+plot_scatter_resid(m0,wine_df,"Original y")
+```
+
+
+
+```{r}
+mod_1_wine_df <- wine_df %>%
+  mutate(log10_magnesium = log10(magnesium))
+
+
+m1 <- lm(alcohol  ~ log10_magnesium , data = mod_1_wine_df)
+plot_scatter_resid(m1,mod_1_wine_df,"log_10 x")
+```
+
+
+```{r}
+mod_3_credit_df <- mod_2_credit_df %>%
+  mutate(log_age = log10(age))
+
+
+m2 <- lm(log_credit_amount  ~ log_age, data = mod_3_credit_df )
+plot_scatter_resid(m2,mod_3_credit_df,"loglog")
+```
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------
+
+
+
+```{r}
+m3 <- lm(credit_amount ~ duration, data = mod_1_credit_df)
+plot_scatter_resid(m3,mod_1_credit_df,"Original y")
+```
+
+
+
+```{r}
+
+
+m4 <- lm(log_credit_amount  ~ duration, data = mod_2_credit_df )
+plot_scatter_resid(m4,mod_2_credit_df,"log_10 y")
+```
+
+
+```{r}
+mod_4_credit_df <- mod_2_credit_df %>%
+  mutate(log_duration = log10(duration))
+
+
+m5 <- lm(log_credit_amount  ~ log_duration, data = mod_4_credit_df )
+plot_scatter_resid(m5,mod_4_credit_df,"loglog")
+```
+
+
+
+```{r}
+############################################################
+#  Equal Variance Assumption
+############################################################
+bp <- map_dbl(list(m0, m1, m2, m3, m4, m5), ~ bptest(.x)$p.value)
+names(bp) <- c("y-original x-age", "y-log x-age", "y-log x-log age",
+               "y-original x-duration", "y-log x-duration", "y-log x-log duration")
+print(round(bp, 4))
+```
+
+
+
+
+```{r}
+############################################################
+#   Linearity Assumption
+############################################################
+
+rm <- map_dbl(list(m0, m1, m2, m3, m4, m5), ~ resettest(.x)$p.value)
+names(rm) <- c("y-original x-age", "y-log x-age", "y-log x-log age",
+               "y-original x-duration", "y-log x-duration", "y-log x-log duration")
+print(round(rm, 4))
+
+```
+

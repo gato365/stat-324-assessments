@@ -23,6 +23,6 @@ Points: 2
 ### Rubric
 
 | **Component**                         | **Criteria**                                                                                                                                     | **Points** |
-|-------------|----------------------------------------------|-------------|
+|---------------|------------------------------------------|---------------|
 | **Conceptual Error Identification**   | Identifies at least **3 of the 4 errors** clearly and correctly (e.g., independence vs. dependence, wrong parameter, wrong distributional basis) | 1.0        |
 | **Correct Reasoning and Terminology** | Explains why the errors are wrong using correct **terminology and logic** for paired t-tests (mean of differences, standard error, dependence)   | 1.0        |
