@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.10.2)  25 APR 2025 08:45
+This is XeTeX, Version 3.141592653-2.6-0.999996 (TeX Live 2024) (preloaded format=xelatex 2024.10.2)  25 APR 2025 15:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1067,10 +1067,6 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 
 
 ]
-Overfull \hbox (6.52945pt too wide) in paragraph at lines 243--244
-[]\TU/lmr/bx/n/10.95 Points  
- []
-
 ! Missing $ inserted.
 <inserted text> 
                 $

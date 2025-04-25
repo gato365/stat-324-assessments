@@ -35,7 +35,9 @@ ggplot(df_outlier, aes(x = x, y = y)) +
   geom_smooth(method = "lm", se = FALSE, color = "blue") +
   ggtitle("Example - 1") +
   theme_bw() +
-  theme(plot.title = element_text(hjust = 0.5)) 
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.ticks = element_blank(),
+        axis.text = element_blank())  
 ```
 
 
@@ -65,7 +67,9 @@ ggplot(df_leverage, aes(x = x, y = y)) +
   geom_smooth(method = "lm", se = FALSE, color = "red") +
   ggtitle("Example - 2") +
   theme_bw() +
-  theme(plot.title = element_text(hjust = 0.5)) 
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.ticks = element_blank(),
+        axis.text = element_blank())   
   
 ```
 
@@ -97,7 +101,9 @@ ggplot(df_influence, aes(x = x, y = y)) +
   geom_smooth(method = "lm", se = FALSE, color = "black") +
   ggtitle("Example - 3") +
   theme_bw() +
-  theme(plot.title = element_text(hjust = 0.5)) 
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.ticks = element_blank(),
+        axis.text = element_blank())  
   
 ```
 
@@ -111,8 +117,7 @@ Example 4 below presents the residuals plotted against the predicted (fitted) yi
 
 
 ```{r echo=FALSE}
-# Load necessary library
-library(ggplot2)
+
 
 # 4. Good Residual Plot
 set.seed(42)
@@ -134,7 +139,9 @@ ggplot(df_good_resid, aes(x = fitted, y = residuals)) +
        x = "Fitted Values",
        y = "Residuals") +
   theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank())  
 
 
 ```
@@ -188,7 +195,9 @@ ggplot(df_bad_resid, aes(x = fitted, y = residuals)) +
        x = "Fitted Values",
        y = "Residuals") +
   theme_minimal() +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.ticks.x = element_blank(),
+        axis.text.x = element_blank()) 
 
 
 ```
