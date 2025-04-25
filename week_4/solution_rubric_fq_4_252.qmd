@@ -1,0 +1,58 @@
+---
+title: "Friday Quiz 4 Solutions - STAT 252"
+format: pdf
+editor: visual
+---
+
+## Question 10
+
+
+Use the following information for question 10:
+
+Panda Express aims to assess the potential success of a new line of plant-based entrees compared to their classic menu options among health-conscious Cal Poly students. To conduct this evaluation, they select a sample of 1500 students at random. Among them, 1000 participants try the new plant-based entrees, while the remaining 500 are given the traditional menu items. After sampling the dishes, participants are asked to indicate their satisfaction level with the food they tried. Among those who tried the new plant-based entrees, 725 out of 1000 expressed satisfaction, while among those who tried the traditional menu items, 300 out of 500 reported satisfaction. Panda Express seeks to determine if there is a statistically significant difference in customer satisfaction among Cal Poly students between these two menu options.
+
+## Sample Proportions: phat_1 = 0.725; phat_2 = 0.600
+
+## Standard Error = 0.02547875
+
+
+Calculate the test statistic. Interpret this value in the context of the problem.
+
+
+
+Here’s a **full solution and 4-point rubric** in **Markdown format** for the question asking students to compute and interpret the **test statistic** for comparing two proportions.
+
+---
+
+## **Solution (Full Credit – 4/4)**
+
+### **Step 1: Compute the Test Statistic**
+We use the formula for a two-sample z-test for proportions:
+$$
+TS = \frac{\hat{p}_1 - \hat{p}_2}{SE}
+$$
+
+
+$$
+TS = \frac{0.725 - 0.600}{0.02547875} \approx \frac{0.125}{0.02547875} \approx 4.91
+$$
+
+### **Step 2: Interpretation**
+A test statistic of **approximately 4.91** means that the observed difference in satisfaction proportions (between plant-based and traditional options) is **4.91 standard errors above what we would expect** under the assumption that there is **no true difference** in satisfaction levels.
+
+In context, this suggests that the observed satisfaction gap (72.5% vs. 60%) is **much larger than what we would expect from random variation alone**, providing **strong statistical evidence** that Cal Poly students are **more satisfied with the plant-based entrees** compared to the traditional menu.
+
+---
+
+## **Rubric: Test Statistic and Interpretation (Total: 4 points)**
+
+| **Component**                          | **Criteria**                                                                                                                    | **Points** |
+|----------------------------------------|---------------------------------------------------------------------------------------------------------------------------------|------------|
+| **Correct Formula Applied**            | Correctly sets up the two-sample z-test formula using \( \frac{\hat{p}_1 - \hat{p}_2}{SE} \)                                    | 1.0        |
+| **Correct Numerical Calculation**      | Correctly calculates \( z \approx 4.91 \), or shows accurate arithmetic using provided values                                  | 1.0        |
+| **General Interpretation of Z-Score**  | Explains what the test statistic means: how far the observed difference is from the null, in standard errors                    | 1.0        |
+| **Contextual Interpretation**          | Connects z-score back to the specific comparison between **plant-based vs. traditional satisfaction levels** among students     | 1.0        |
+
+---
+
+Let me know if you’d like a follow-up question on p-value or decision-making using this test statistic!
