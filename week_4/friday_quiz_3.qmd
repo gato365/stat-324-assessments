@@ -1,0 +1,209 @@
+---
+title: "Friday Quiz 3"
+format: docx
+editor: visual
+---
+
+
+
+```{r echo=FALSE}
+library(ggplot2)                  ## Data Visulization
+```
+
+
+
+## **Example 1:**
+
+Imagine a horticultural researcher meticulously tracking the growth of various tomato plants in community gardens across the region. They've diligently recorded the hours of direct sunlight each garden receives and the final height of the mature plants. The data reveals a generally positive trend: more sun usually means taller plants. However, one particular garden, despite receiving a seemingly adequate amount of sunlight, yielded a surprisingly short average plant height compared to its peers. This anomaly has the researcher wondering if there might be a specific environmental factor, measurement error, or even a different plant variety at play in that location.
+
+The following plot (Example 1) visualizes the relationship between sunlight exposure and plant height.
+
+```{r echo=FALSE}
+set.seed(42)
+
+# 1. Outlier detection
+x1 <- rnorm(50, mean = 10, sd = 2)
+y1 <- 2 * x1 + rnorm(50, sd = 2)
+# Add an outlier
+x1 <- c(x1, 15)
+y1 <- c(y1, 10)
+
+df_outlier <- data.frame(x = x1, y = y1)
+
+ggplot(df_outlier, aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  ggtitle("Example - 1") +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5)) 
+```
+
+
+
+## **Example 2:**
+
+Consider a marketing consultancy working with numerous small, independent bookstores. They're investigating the effectiveness of different marketing budgets on overall sales revenue. For most bookstores, there's a moderate correlation between spending on advertising and the resulting sales. However, two bookstores stand out. One invested significantly more in a targeted online campaign, while another allocated a larger budget to local community events and partnerships. The consultancy is keen to understand if these higher investments yielded proportionally higher returns compared to the more typical spending patterns.
+
+The following plot (Example 2) illustrates the connection between marketing budget and total sales revenue.
+
+
+
+
+```{r echo=FALSE}
+# 2. Leverage
+x2 <- c(runif(50, 0, 10))
+y2 <- c(2 * x2 + rnorm(50, sd = 2))  # High x-value but normal y-value
+
+# Add an outlier
+x2 <- c(x2, 5, 6)
+y2 <- c(y2, 30, -3)
+
+df_leverage <- data.frame(x = x2, y = y2)
+
+ggplot(df_leverage, aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  ggtitle("Example - 2") +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5)) 
+  
+```
+
+
+
+## **Example 3:**
+
+Picture a customer service analyst at an online electronics retailer examining the relationship between the time it takes for an order to be delivered and the customer satisfaction scores reported after delivery. Generally, faster delivery times correlate with happier customers. However, one particular customer experienced a notably long delivery delay due to unforeseen logistical challenges, yet surprisingly submitted a very high satisfaction rating, praising the exceptional communication and problem-solving efforts of the support team. This unusual instance prompts the analyst to consider if certain service aspects can outweigh the impact of delivery speed on customer perception.
+
+The following plot (Example 3) displays delivery times against customer satisfaction scores.
+
+```{r echo=FALSE}
+# 3. Influence
+n3 <- 20
+x3 <- c(runif(n3, 0, 10))
+y3 <- c(-4 * x3 + rnorm(n3, sd = 1.5))  # High x-value and weird y-value
+
+# Add an outlier
+x3 <- c(x3,  6)
+y3 <- c(y3, -3)
+
+
+df_influence <- data.frame(x = x3, y = y3)
+
+
+
+ggplot(df_influence, aes(x = x, y = y)) +
+  geom_point(color =  "red") +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  ggtitle("Example - 3") +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5)) 
+  
+```
+
+
+
+## **Example 4:**
+
+Envision an agricultural scientist conducting a large-scale experiment across numerous experimental farm plots, testing the impact of varying levels of a new fertilizer on corn yield. After developing a statistical model to predict yield based on fertilizer application, the scientist examines the differences between the actual observed yields and the yields predicted by the model. These differences, or residuals, appear to be randomly scattered above and below zero, with no discernible pattern or clumping, suggesting that the linear model effectively captures the underlying relationship between fertilizer use and crop output.
+
+Example 4 below presents the residuals plotted against the predicted (fitted) yield values and the histogram of these residuals.
+
+
+```{r echo=FALSE}
+# Load necessary library
+library(ggplot2)
+
+# 4. Good Residual Plot
+set.seed(42)
+n4 <- 300
+x_good <- seq(0, 10, length.out = n4)
+y_good <- 3 * x_good + rnorm(n4, sd = 0.98)
+model_good <- lm(y_good ~ x_good)
+
+# Create data frame for residuals
+df_good_resid <- data.frame(
+  fitted = fitted(model_good),
+  residuals = resid(model_good)
+)
+
+ggplot(df_good_resid, aes(x = fitted, y = residuals)) +
+  geom_point() +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "Example 4: Residual Plot vs. Fitted Values",
+       x = "Fitted Values",
+       y = "Residuals") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+
+
+```{r echo=FALSE}
+ggplot(df_good_resid, aes(x = residuals)) +
+  geom_histogram(bins = 20, color = "black", fill = "lightblue") +
+  labs(title = "Example 4: Histrogram of Residuals",
+       x = "Residuals",
+       y = "Count") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+
+
+## **Example 5:** 
+
+Imagine researchers in a health and fitness study investigating how the number of hours a person exercises per week relates to their total cholesterol levels. While their statistical model seems to provide a reasonable fit for individuals with lower exercise levels, they observe that as exercise hours increase, the spread or variability in cholesterol levels among participants becomes much wider. Furthermore, they notice that for those who exercise more, the model tends to underestimate their cholesterol levels more frequently than overestimating.
+
+The following plot (Example 5) displays the residuals against the fitted cholesterol values, alongside a histogram of these residuals.
+
+
+
+
+```{r echo=FALSE}
+# 5. Bad Residual Plot (Heteroscedasticity)
+set.seed(42)
+n5 <- 100
+x_bad <- seq(0, 10, length.out = n5)
+
+# Generate right-skewed errors
+error_skewed <- rexp(n5, rate = 1/2) - 2  # Shifted exponential to center closer to 0
+# Why subtract 2? Otherwise, all errors are positive. Shifting centers it near 0 but still skewed right.
+
+y_bad <- 3 * x_bad + error_skewed
+model_bad <- lm(y_bad ~ x_bad)
+
+# Create data frame for residuals
+df_bad_resid <- data.frame(
+  fitted = fitted(model_bad),
+  residuals = resid(model_bad)
+)
+
+ggplot(df_bad_resid, aes(x = fitted, y = residuals)) +
+  geom_point() +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(title = "Example 5: Residual Plot vs. Fitted Values",
+       x = "Fitted Values",
+       y = "Residuals") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+```
+
+
+
+
+```{r echo=FALSE}
+ggplot(df_bad_resid, aes(x = residuals)) +
+  geom_histogram(bins = 20, color = "black", fill = "pink") +
+  labs(title = "Example 5: Histrogram of Residuals",
+       x = "Residuals",
+       y = "Count") +
+  theme_minimal()  +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
