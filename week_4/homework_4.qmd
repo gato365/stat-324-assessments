@@ -25,12 +25,9 @@ Cereal %>%
 ```
 
 ```{r}
-
 # Fit the linear model using the lm() function
 lm_cereal <- lm(Calories ~ Sugar, data = Cereal)
-
 summary(lm_cereal)
-
 
 ```
 
@@ -58,13 +55,12 @@ ggplot(augmented_cereal, aes(x =.fitted, y =.resid)) +
   labs(title = "Residuals vs. Fitted Values (Calories ~ Sugar Model)",
        x = "Fitted Values (Predicted Calories)",
        y = "Residuals") +
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
-
-
-
 (Answer Key)
+
 ```{r}
 n_cereal <- nrow(cereal_data)
 p_cereal <- 2 # Intercept + Sugar coefficient
@@ -74,23 +70,17 @@ resid_sd_cereal <- sd(augmented_cereal$.resid)
 
 ```
 
-
-
-
-
 **Leverage** (Answer Key)
+
 ```{r}
 leverage_threshold_cereal
 ```
 
-
 **Cooks Distance** (Answer Key)
+
 ```{r}
 cooks_threshold_cereal
 ```
-
-
-
 
 ```{r}
 augmented_cereal %>% 
@@ -99,8 +89,7 @@ augmented_cereal %>%
   round(3)
 ```
 
-
-----------------------------
+------------------------------------------------------------------------
 
 
 
@@ -113,13 +102,11 @@ ggplot(mtcars, aes(x = wt, y = mpg)) +
        subtitle = "Red: Linear Fit, Blue: LOESS Fit",
        x = "Weight (1000 lbs)",
        y = "Miles Per Gallon (mpg)") +
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
-
 Explain Lowess
-
-
 
 ```{r}
 # Fit the initial linear model
@@ -129,8 +116,6 @@ lm_mtcars_orig <- lm(mpg ~ wt, data = mtcars_data)
 summary(lm_mtcars_orig)
 
 ```
-
-
 
 
 
@@ -146,8 +131,46 @@ ggplot(augmented_mtcars, aes(x =.fitted, y =.resid)) +
   labs(title = "Residuals vs. Fitted Values (mpg ~ wt Model)",
        x = "Fitted Values (Predicted mpg)",
        y = "Residuals") +
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(hjust = 0.5))
 ```
+
+
+
+(Answer Key)
+
+```{r}
+n_mtcars <- nrow(mtcars)
+p_mtcars <- 1 # Intercept + Sugar coefficient
+leverage_threshold_mtcars <- 2 * p_mtcars / n_mtcars
+cooks_threshold_mtcars <- 4 / n_mtcars
+
+
+```
+
+**Leverage** (Answer Key)
+
+```{r}
+leverage_threshold_mtcars
+```
+
+**Cooks Distance** (Answer Key)
+
+```{r}
+cooks_threshold_mtcars
+```
+
+```{r}
+augmented_mtcars %>% 
+  arrange(desc(.cooksd)) %>% 
+  head(10) %>% 
+  round(3)
+```
+
+------------------------------------------------------------------------
+
+
+
 
 
 
@@ -167,24 +190,18 @@ ggplot(mtcars_data, aes(x = log_wt, y = mpg)) +
   geom_smooth(method = "loess", se = FALSE, color = "blue") +
   labs(title = "Fuel Efficiency (mpg) vs. Log(Weight)",
        subtitle = "Red: Linear Fit, Blue: LOESS Fit",
-       x = "Natural Logarithm of Weight (log(1000 lbs))",
+       x = "Log 10 - Weight (log(1000 lbs))",
        y = "Miles Per Gallon (mpg)") +
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(hjust = 0.5))
 ```
-
-
-
 
 ```{r}
 # Fit the linear model using log_wt as the predictor
 lm_mtcars_transformed <- lm(mpg ~ log_wt, data = mtcars_data)
-
 # Display the model summary
 summary(lm_mtcars_transformed)
 ```
-
-
-
 
 ```{r}
 augmented_mtcars_transformed <- augment(lm_mtcars_transformed)
@@ -197,8 +214,56 @@ ggplot(augmented_mtcars_transformed, aes(x =.fitted, y =.resid)) +
   labs(title = "Residuals vs. Fitted Values (mpg ~ log_wt Model)",
        x = "Fitted Values (Predicted mpg)",
        y = "Residuals") +
-  theme_minimal()
+  theme_minimal() + 
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
+
+
+
+
+
+
+(Answer Key)
+
+```{r}
+n_mtcars <- nrow(mtcars)
+p_mtcars <- 1 # Intercept + Sugar coefficient
+leverage_threshold_mtcars <- 2 * p_mtcars / n_mtcars
+cooks_threshold_mtcars <- 4 / n_mtcars
+
+
+```
+
+**Leverage** (Answer Key)
+
+```{r}
+leverage_threshold_mtcars
+```
+
+**Cooks Distance** (Answer Key)
+
+```{r}
+cooks_threshold_mtcars
+```
+
+```{r}
+augmented_mtcars_transformed %>% 
+  select(-.rownames) %>% 
+  arrange(desc(.cooksd)) %>% 
+  head(10) %>% 
+  round(3)
+```
+
+
+
+
+
+
+
+
+
+
+How many points were above the line
 
 
