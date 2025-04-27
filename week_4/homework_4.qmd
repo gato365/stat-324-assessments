@@ -15,11 +15,9 @@ library(broom)                              ## Data Analysis
 source(here("R","assessment_regression.R"))
 ```
 
-
 ## `Cereal` dataset
+
 The Cereal dataset contains nutritional information about different breakfast cereals, including variables like Calories, Sugar content, and Fiber. It allows us to explore how certain ingredients, like Sugar, are related to the overall calorie count of cereals. This dataset is useful for practicing regression, diagnostics, and understanding when transformations might be needed to better model relationships.
-
-
 
 ```{r}
 Cereal %>% 
@@ -88,8 +86,6 @@ augmented_cereal %>%
   round(3)
 ```
 
-
-
 ## `mtcars` dataset
 
 The `mtcars` dataset is a classic and widely used dataset in R that contains specifications and performance data for 32 different car models from the 1974 Motor Trend magazine. Each row represents a unique vehicle, and each column records a specific attribute related to engine performance, design, or efficiency. Some key variables include `mpg` (miles per gallon), `hp` (gross horsepower), `wt` (weight in 1000 lbs), `drat` (rear axle ratio), and `qsec` (quarter-mile time). Additionally, the dataset includes categorical variables encoded as numeric values, such as `cyl` (number of cylinders), `am` (transmission type), and `gear` (number of forward gears).
@@ -120,13 +116,9 @@ summary(lm_mtcars_orig)
 
 ```
 
-
 ```{r}
 summarize_reg_model(lm_mtcars_orig,"mpg ~ wt Model")
 ```
-
-
-
 
 ```{r}
 augmented_mtcars <- augment(lm_mtcars_orig)
@@ -166,6 +158,7 @@ cooks_threshold_mtcars
 
 ```{r}
 augmented_mtcars %>% 
+  select(-.rownames) %>%
   arrange(desc(.cooksd)) %>% 
   head(10) %>% 
   round(3)
@@ -199,16 +192,9 @@ lm_mtcars_transformed <- lm(mpg ~ log10_wt, data = mtcars_data)
 summary(lm_mtcars_transformed)
 ```
 
-
-
-
 ```{r}
 summarize_reg_model(lm_mtcars_transformed, "mpg ~ log10_wt Model")
 ```
-
-
-
-
 
 ```{r}
 augmented_mtcars_transformed <- augment(lm_mtcars_transformed)
@@ -253,5 +239,3 @@ augmented_mtcars_transformed %>%
   head(10) %>% 
   round(3)
 ```
-
-

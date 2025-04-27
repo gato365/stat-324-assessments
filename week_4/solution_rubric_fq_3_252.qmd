@@ -43,7 +43,7 @@ In context, this suggests that the observed satisfaction gap (72.5% vs. 60%) is 
 ## **Rubric: Test Statistic and Interpretation (Total: 4 points)**
 
 | **Component**                         | **Criteria**                                                                                                                | **Points** |
-|--------------|---------------------------------------------|--------------|
+|---------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|------------|
 | **Correct Formula Applied**           | Correctly sets up the two-sample z-test formula using ( \frac{\hat{p}_1 - \hat{p}_2}{SE} )                                  | 1.0        |
 | **Correct Numerical Calculation**     | Correctly calculates ( z \approx 4.91 ), or shows accurate arithmetic using provided values                                 | 1.0        |
 | **General Interpretation of Z-Score** | Explains what the test statistic means: how far the observed difference is from the null, in standard errors                | 1.0        |
