@@ -1,22 +1,25 @@
 ---
 title: "Homework 4"
-format: pdf
+format: docx
 editor: visual
 ---
 
-Explore 5 Data Sets to Help with classes
-
-2 From Statcalpolypackage 2 from base R 1 from another place
-
 ```{r warning=FALSE, message=FALSE}
-
+library(here)                               ## File Path Management
 library(statcalpolypackage)                 ## Data Extraction
 library(gato365dsh2024)                     ## Data Extraction
 library(dplyr)                              ## Data Transformation
 library(ggplot2)                            ## Data Visualization
 library(GGally)                             ## Data Visualization
 library(broom)                              ## Data Analysis
+source(here("R","assessment_regression.R"))
 ```
+
+
+## `Cereal` dataset
+The Cereal dataset contains nutritional information about different breakfast cereals, including variables like Calories, Sugar content, and Fiber. It allows us to explore how certain ingredients, like Sugar, are related to the overall calorie count of cereals. This dataset is useful for practicing regression, diagnostics, and understanding when transformations might be needed to better model relationships.
+
+
 
 ```{r}
 Cereal %>% 
@@ -34,8 +37,7 @@ summary(lm_cereal)
 ```{r}
 augmented_cereal <- augment(lm_cereal)
 
-# Plot histogram of residuals
-# We use the.resid column from the augmented data frame.
+
 ggplot(augmented_cereal, aes(x =.resid)) +
   geom_histogram(binwidth = 5, fill = "lightblue", color = "black", boundary = 0) + # Adjusted binning
   labs(title = "Histogram of Residuals (Calories ~ Sugar Model)",
@@ -46,9 +48,6 @@ ggplot(augmented_cereal, aes(x =.resid)) +
 ```
 
 ```{r}
-# Scatter plot of Residuals vs. Fitted values
-# This plot helps check for non-constant variance (heteroscedasticity - look for funnel shapes)
-# and remaining non-linearity (look for curved patterns).
 ggplot(augmented_cereal, aes(x =.fitted, y =.resid)) +
   geom_point(alpha = 0.7) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") + # Reference line at zero residual
@@ -63,7 +62,7 @@ ggplot(augmented_cereal, aes(x =.fitted, y =.resid)) +
 
 ```{r}
 n_cereal <- nrow(Cereal)
-p_cereal <- 1 # Intercept + Sugar coefficient
+p_cereal <- 1 
 leverage_threshold_cereal <- 2 * p_cereal / n_cereal
 cooks_threshold_cereal <- 4 / n_cereal
 resid_sd_cereal <- sd(augmented_cereal$.resid)
@@ -89,7 +88,11 @@ augmented_cereal %>%
   round(3)
 ```
 
-------------------------------------------------------------------------
+
+
+## `mtcars` dataset
+
+The `mtcars` dataset is a classic and widely used dataset in R that contains specifications and performance data for 32 different car models from the 1974 Motor Trend magazine. Each row represents a unique vehicle, and each column records a specific attribute related to engine performance, design, or efficiency. Some key variables include `mpg` (miles per gallon), `hp` (gross horsepower), `wt` (weight in 1000 lbs), `drat` (rear axle ratio), and `qsec` (quarter-mile time). Additionally, the dataset includes categorical variables encoded as numeric values, such as `cyl` (number of cylinders), `am` (transmission type), and `gear` (number of forward gears).
 
 ```{r}
 ggplot(mtcars, aes(x = wt, y = mpg)) +
@@ -104,7 +107,9 @@ ggplot(mtcars, aes(x = wt, y = mpg)) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-Explain Lowess
+**LOESS (Locally Estimated Scatterplot Smoothing)** fits many small, simple models to localized sections of the data instead of assuming one global line.\
+It creates a smooth curve that captures bends and changes in the relationship between variables.\
+LOESS is important because it helps reveal patterns that a simple linear model might miss, especially when the true relationship is nonlinear.
 
 ```{r}
 # Fit the initial linear model
@@ -115,14 +120,20 @@ summary(lm_mtcars_orig)
 
 ```
 
+
+```{r}
+summarize_reg_model(lm_mtcars_orig,"mpg ~ wt Model")
+```
+
+
+
+
 ```{r}
 augmented_mtcars <- augment(lm_mtcars_orig)
-# Scatter plot of Residuals vs. Fitted values
-# This plot helps check for non-constant variance (heteroscedasticity - look for funnel shapes)
-# and remaining non-linearity (look for curved patterns).
+
 ggplot(augmented_mtcars, aes(x =.fitted, y =.resid)) +
   geom_point(alpha = 0.7) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "red") + # Reference line at zero residual
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") + 
   labs(title = "Residuals vs. Fitted Values (mpg ~ wt Model)",
        x = "Fitted Values (Predicted mpg)",
        y = "Residuals") +
@@ -134,7 +145,7 @@ ggplot(augmented_mtcars, aes(x =.fitted, y =.resid)) +
 
 ```{r}
 n_mtcars <- nrow(mtcars)
-p_mtcars <- 1 # Intercept + Sugar coefficient
+p_mtcars <- 1 
 leverage_threshold_mtcars <- 2 * p_mtcars / n_mtcars
 cooks_threshold_mtcars <- 4 / n_mtcars
 
@@ -163,13 +174,13 @@ augmented_mtcars %>%
 ------------------------------------------------------------------------
 
 ```{r}
-# Create a new variable log_wt using dplyr::mutate
-mtcars_data <- mtcars %>%
-  mutate(log_wt = log(wt))
 
-# Visualize the relationship with the transformed variable: mpg vs. log(wt)
-# Again, show both linear and LOESS fits to assess if linearity improved.
-ggplot(mtcars_data, aes(x = log_wt, y = mpg)) +
+mtcars_data <- mtcars %>%
+  mutate(log10_wt = log10(wt))
+
+
+
+ggplot(mtcars_data, aes(x = log10_wt, y = mpg)) +
   geom_point(alpha = 0.7) +
   geom_smooth(method = "lm", se = FALSE, color = "red", linetype = "dashed") +
   geom_smooth(method = "loess", se = FALSE, color = "blue") +
@@ -182,21 +193,30 @@ ggplot(mtcars_data, aes(x = log_wt, y = mpg)) +
 ```
 
 ```{r}
-# Fit the linear model using log_wt as the predictor
-lm_mtcars_transformed <- lm(mpg ~ log_wt, data = mtcars_data)
-# Display the model summary
+
+lm_mtcars_transformed <- lm(mpg ~ log10_wt, data = mtcars_data)
+
 summary(lm_mtcars_transformed)
 ```
 
+
+
+
+```{r}
+summarize_reg_model(lm_mtcars_transformed, "mpg ~ log10_wt Model")
+```
+
+
+
+
+
 ```{r}
 augmented_mtcars_transformed <- augment(lm_mtcars_transformed)
-# Scatter plot of Residuals vs. Fitted values
-# This plot helps check for non-constant variance (heteroscedasticity - look for funnel shapes)
-# and remaining non-linearity (look for curved patterns).
+
 ggplot(augmented_mtcars_transformed, aes(x =.fitted, y =.resid)) +
   geom_point(alpha = 0.7) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "red") + # Reference line at zero residual
-  labs(title = "Residuals vs. Fitted Values (mpg ~ log_wt Model)",
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") + 
+  labs(title = "Residuals vs. Fitted Values (mpg ~ lo10g_wt Model)",
        x = "Fitted Values (Predicted mpg)",
        y = "Residuals") +
   theme_minimal() + 
@@ -207,7 +227,7 @@ ggplot(augmented_mtcars_transformed, aes(x =.fitted, y =.resid)) +
 
 ```{r}
 n_mtcars <- nrow(mtcars)
-p_mtcars <- 1 # Intercept + Sugar coefficient
+p_mtcars <- 1 
 leverage_threshold_mtcars <- 2 * p_mtcars / n_mtcars
 cooks_threshold_mtcars <- 4 / n_mtcars
 
@@ -234,4 +254,4 @@ augmented_mtcars_transformed %>%
   round(3)
 ```
 
-How many points were above the line
+

@@ -125,7 +125,6 @@ model3_metrics <- data.frame(
 model3_metrics
 ```
 
-
 ```{r}
 ## Predict mpg when wt = 3 and hp = 110
 new_data <- data.frame(wt = 3, hp = 110)
@@ -135,8 +134,6 @@ print(predicted_mpg)
 
 ```{r}
 ```
-
-
 
 ```{r}
 anova(model3)
