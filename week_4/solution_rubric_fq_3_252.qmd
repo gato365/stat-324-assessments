@@ -1,6 +1,6 @@
 ---
 title: "Friday Quiz 3 Solutions - STAT 252"
-format: pdf
+format: docx
 editor: visual
 ---
 
@@ -24,13 +24,18 @@ Here’s a **full solution and 4-point rubric** in **Markdown format** for the q
 
 ### **Step 1: Compute the Test Statistic**
 
-We use the formula for a two-sample z-test for proportions: $$
-TS = \frac{\hat{p}_1 - \hat{p}_2}{SE}
+We use the formula for a two-sample z-test for proportions: 
+
+
+
+$$
+\text{TS} = \frac{\hat{p}_1 - \hat{p}_2}{SE}
 $$
 
 $$
-TS = \frac{0.725 - 0.600}{0.02547875} \approx \frac{0.125}{0.02547875} \approx 4.91
+\text{TS} = \frac{0.725 - 0.600}{0.02547875} \approx \frac{0.125}{0.02547875} \approx 4.91
 $$
+
 
 ### **Step 2: Interpretation**
 
@@ -43,12 +48,8 @@ In context, this suggests that the observed satisfaction gap (72.5% vs. 60%) is 
 ## **Rubric: Test Statistic and Interpretation (Total: 4 points)**
 
 | **Component**                         | **Criteria**                                                                                                                | **Points** |
-|---------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|------------|
+|--------------|---------------------------------------------|--------------|
 | **Correct Formula Applied**           | Correctly sets up the two-sample z-test formula using ( \frac{\hat{p}_1 - \hat{p}_2}{SE} )                                  | 1.0        |
 | **Correct Numerical Calculation**     | Correctly calculates ( z \approx 4.91 ), or shows accurate arithmetic using provided values                                 | 1.0        |
 | **General Interpretation of Z-Score** | Explains what the test statistic means: how far the observed difference is from the null, in standard errors                | 1.0        |
 | **Contextual Interpretation**         | Connects z-score back to the specific comparison between **plant-based vs. traditional satisfaction levels** among students | 1.0        |
-
-------------------------------------------------------------------------
-
-Let me know if you’d like a follow-up question on p-value or decision-making using this test statistic!
