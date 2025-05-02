@@ -1,0 +1,75 @@
+---
+title: "Friday Quiz 4 Solutions - STAT 324"
+format: pdf
+editor: visual
+---
+
+
+
+Here are **model solutions and rubrics** for your three open-ended questions — aligned with your STAT 324 objectives and ready for grading in Canvas:
+
+---
+
+### ✅ Q8 – *Interpreting Coefficients Post-Transformation*
+
+**Model Answer (Full Credit – 3/3):**
+
+The slope of 0.004 means that for every 1-unit increase in RPM, the log₁₀ of vibration increases by 0.004. Since the model is in log₁₀(y), this means vibration intensity increases **multiplicatively** — specifically, by a factor of 10^0.004 ≈ 1.0092 (about 0.92%) for each additional RPM.
+The intercept of –0.75 means that when RPM = 0, the predicted log₁₀(vibration) is –0.75, which corresponds to a vibration intensity of about 0.18 m/s². However, this is outside the range of typical RPMs and should not be interpreted literally.
+
+**Rubric:**
+
+| Component                                                                   | Points |
+| --------------------------------------------------------------------------- | ------ |
+| Correct interpretation of slope (multiplicative change per RPM)             | 1      |
+| Clear back-transformation from log₁₀ to original scale                      | 1      |
+| Reasonable interpretation of intercept with acknowledgment of extrapolation | 1      |
+
+---
+
+### ✅ Q9 – *Prediction at 1500 RPM*
+
+**Model Answer (Full Credit – 3/3):**
+
+We are given the model:
+**log₁₀(vibration) = –0.75 + 0.004 × RPM**
+
+Substituting RPM = 1500:
+log₁₀(vibration) = –0.75 + 0.004 × 1500 = –0.75 + 6 = **5.25**
+
+Now back-transform to the original scale:
+vibration = 10^5.25 ≈ **177827.94 m/s²**
+
+So, a machine running at 1500 RPM is predicted to have a vibration intensity of about **177,828 m/s²**.
+
+**Rubric:**
+
+| Component                                               | Points |
+| ------------------------------------------------------- | ------ |
+| Correct substitution and linear calculation of log₁₀(y) | 1      |
+| Correct back-transformation using exponentiation        | 1      |
+| Final answer with units and context                     | 1      |
+
+---
+
+### ✅ Q10 – *Interpreting the Impact of WLS*
+
+**Model Answer (Full Credit – 3/3):**
+
+1. **Why WLS was needed**: The residual vs. fitted plot showed a fan shape, suggesting increasing variance of residuals — a violation of the constant variance (homoscedasticity) assumption. WLS was used to give less weight to points with higher residual variance.
+
+2. **Effect on estimation**: WLS minimizes the **weighted** sum of squared residuals instead of treating all points equally. This adjusts the regression line to better fit the **more reliable points**, reducing the influence of high-variance observations.
+
+3. **Impact on assumptions**: WLS helps correct heteroscedasticity. After applying WLS, the residual spread appeared more uniform across fitted values, making assumption checks more valid and improving inference accuracy.
+
+**Rubric:**
+
+| Component                                                     | Points |
+| ------------------------------------------------------------- | ------ |
+| Clear explanation of why OLS failed and WLS was needed        | 1      |
+| Accurate description of how WLS adjusts the fitting process   | 1      |
+| Discussion of improved assumption checks or plot improvements | 1      |
+
+---
+
+Let me know if you want to export this to CSV or JSON for Canvas import!
