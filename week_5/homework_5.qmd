@@ -22,7 +22,7 @@ source(here("R","assessment_regression.R"))
 
 
 
-**Question:** Fit a linear regression model to predict `mpg` using `horsepower`. How well does the model fit the data, and what does the residual plot suggest about the relationship between the two variables?
+**Question:** *Fit a linear regression model to predict `mpg` using `horsepower`. How well does the model fit the data, and what does the residual plot suggest about the relationship between the two variables?*
 
 
 
@@ -30,7 +30,6 @@ source(here("R","assessment_regression.R"))
 
 ## Summary Statistics
 ```{r}
-
 auto_df <- Auto %>% drop_na()
 
 # Summary statistics: mean, sd, min, max
@@ -49,15 +48,20 @@ summary_stats <- auto_df %>%
     values_to = "value"
   ) 
 
-# Compute correlation
+summary_stats
+```
+[Summarize information about these numbers]
+
+```{r}
+ # Compute correlation
 cor_val <- auto_df %>%
   summarise(correlation = cor(mpg, horsepower))
 
-# View results
-summary_stats
 cor_val
-
 ```
+
+[Summarize information about the correlation being negative]
+
 
 ## Visualization
 
@@ -75,17 +79,25 @@ ggplot(auto_df, aes(x = horsepower, y = mpg)) +
 ```
 
 
-Based on the graphic we should transform y but we should transform x
+[Based on the graphic we should transform y but we should transform x, say this in a well provided manner]
 
 ## Analysis
+
 ### Regular Model
 ```{r}
 model_0 <- lm(mpg ~ horsepower, data = auto_df)
 summary(model_0)
 ```
+
+[Interpretation of regressions coefficients, both y-intercept and slope and make sure to say expected value or on average]
+
 ```{r message=FALSE, warning=FALSE}
 plot_scatter_resid(model_0,auto_df ,"Original")   
 ```
+
+[Interpretation of Plots (scatter and residual) ]
+
+
 
 ### Transformations
 
@@ -97,23 +109,46 @@ mod_1_auto_df <- auto_df %>%
   )
 ```
 
-```{r}
-# Linear model with log10(horsepower)
-model_1 <- lm(mpg ~ log_hp, data = mod_1_auto_df)
-summary(model_1)
-```
-```{r message=FALSE, warning=FALSE}
-plot_scatter_resid(model_1,mod_1_auto_df ,"Natural Log")   
-```
+[Mention How we adhoc selected these transformations and we could have done power transformation but we decided not to since we did not learn them]
+
+
+#### Square Root of *hp*
 
 ```{r}
 # Linear model with sqrt(horsepower)
 model_2 <- lm(mpg ~ sqrt_hp, data = mod_1_auto_df)
 summary(model_2)
 ```
+
+[Interpretation of regressions coefficients, noting a square root has been applied, both y-intercept and slope and make sure to say expected value or on average]
+
 ```{r message=FALSE, warning=FALSE}
 plot_scatter_resid(model_2,mod_1_auto_df ,"Square Root")   
 ```
+
+
+[Interpretation of Plots (scatter and residual) regarding transformation ]
+
+
+#### Natural Log of *hp*
+
+
+```{r}
+# Linear model with log10(horsepower)
+model_1 <- lm(mpg ~ log_hp, data = mod_1_auto_df)
+summary(model_1)
+```
+
+[Interpretation of regressions coeffcients, noting a natural log has been applied, both y-intercept and slope and make sure to say expected value or on average]
+
+```{r message=FALSE, warning=FALSE}
+plot_scatter_resid(model_1,mod_1_auto_df ,"Natural Log")   
+```
+
+
+[Interpretation of Plots (scatter and residual) regarding transformation ]
+
+
 
 ### Interpretation of Results
 
@@ -124,13 +159,14 @@ summary_model_2 <- summarize_reg_model(model_2,'sqrt_hp')
 
 
 bind_rows(
-  summary_model_0,summary_model_1,
+  summary_model_0,
+  summary_model_1,
   summary_model_2
 )
 
 ```
 
-
+[Interpretation of best model]
 
 
 ### Box-Cox Transformation
