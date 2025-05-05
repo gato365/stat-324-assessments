@@ -4,11 +4,9 @@ format: docx
 editor: visual
 ---
 
-
 ## Description
 
 The `Auto` dataset from the ISLR2 package contains information on various automobile models from the 1970s and 1980s, providing a useful context for exploring relationships between vehicle characteristics and fuel efficiency. It includes **392 observations** on **nine variables**, such as `mpg` (miles per gallon), `horsepower`, `weight`, `acceleration`, `displacement`, `cylinders`, and `year`. These variables are a mix of quantitative and categorical data, with the `name` column identifying each car model. The dataset is particularly valuable for regression analysis due to its real-world relevance and the presence of nonlinear relationships, multicollinearity, and opportunities for transformation—making it ideal for studying how predictor variables influence fuel efficiency.
-
 
 ```{r message=FALSE, warning=FALSE}
 library(here)                               ## File Path Management
@@ -20,15 +18,10 @@ library(broom)                              ## Data Analysis
 source(here("R","assessment_regression.R"))
 ```
 
-
-
 **Question:** *Fit a linear regression model to predict `mpg` using `horsepower`. How well does the model fit the data, and what does the residual plot suggest about the relationship between the two variables?*
 
-
-
-
-
 ## Summary Statistics
+
 ```{r}
 auto_df <- Auto %>% drop_na()
 
@@ -50,7 +43,8 @@ summary_stats <- auto_df %>%
 
 summary_stats
 ```
-[Summarize information about these numbers]
+
+\[Summarize information about these numbers\]
 
 ```{r}
  # Compute correlation
@@ -60,8 +54,7 @@ cor_val <- auto_df %>%
 cor_val
 ```
 
-[Summarize information about the correlation being negative]
-
+\[Summarize information about the correlation being negative\]
 
 ## Visualization
 
@@ -78,26 +71,24 @@ ggplot(auto_df, aes(x = horsepower, y = mpg)) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-
-[Based on the graphic we should transform y but we should transform x, say this in a well provided manner]
+\[Based on the graphic we should transform y but we should transform x, say this in a well provided manner\]
 
 ## Analysis
 
 ### Regular Model
+
 ```{r}
 model_0 <- lm(mpg ~ horsepower, data = auto_df)
 summary(model_0)
 ```
 
-[Interpretation of regressions coefficients, both y-intercept and slope and make sure to say expected value or on average]
+\[Interpretation of regressions coefficients, both y-intercept and slope and make sure to say expected value or on average\]
 
 ```{r message=FALSE, warning=FALSE}
 plot_scatter_resid(model_0,auto_df ,"Original")   
 ```
 
-[Interpretation of Plots (scatter and residual) ]
-
-
+\[Interpretation of Plots (scatter and residual) \]
 
 ### Transformations
 
@@ -109,8 +100,7 @@ mod_1_auto_df <- auto_df %>%
   )
 ```
 
-[Mention How we adhoc selected these transformations and we could have done power transformation but we decided not to since we did not learn them]
-
+\[Mention How we adhoc selected these transformations and we could have done power transformation but we decided not to since we did not learn them\]
 
 #### Square Root of *hp*
 
@@ -120,18 +110,15 @@ model_2 <- lm(mpg ~ sqrt_hp, data = mod_1_auto_df)
 summary(model_2)
 ```
 
-[Interpretation of regressions coefficients, noting a square root has been applied, both y-intercept and slope and make sure to say expected value or on average]
+\[Interpretation of regressions coefficients, noting a square root has been applied, both y-intercept and slope and make sure to say expected value or on average\]
 
 ```{r message=FALSE, warning=FALSE}
 plot_scatter_resid(model_2,mod_1_auto_df ,"Square Root")   
 ```
 
-
-[Interpretation of Plots (scatter and residual) regarding transformation ]
-
+\[Interpretation of Plots (scatter and residual) regarding transformation \]
 
 #### Natural Log of *hp*
-
 
 ```{r}
 # Linear model with log10(horsepower)
@@ -139,16 +126,13 @@ model_1 <- lm(mpg ~ log_hp, data = mod_1_auto_df)
 summary(model_1)
 ```
 
-[Interpretation of regressions coeffcients, noting a natural log has been applied, both y-intercept and slope and make sure to say expected value or on average]
+\[Interpretation of regressions coeffcients, noting a natural log has been applied, both y-intercept and slope and make sure to say expected value or on average\]
 
 ```{r message=FALSE, warning=FALSE}
 plot_scatter_resid(model_1,mod_1_auto_df ,"Natural Log")   
 ```
 
-
-[Interpretation of Plots (scatter and residual) regarding transformation ]
-
-
+\[Interpretation of Plots (scatter and residual) regarding transformation \]
 
 ### Interpretation of Results
 
@@ -166,12 +150,8 @@ bind_rows(
 
 ```
 
-[Interpretation of best model]
-
+\[Interpretation of best model\]
 
 ### Box-Cox Transformation
 
-
 A Box-Cox transformation should not be used here because it is only applicable to the **response variable** (`y`), and `horsepower` is the **predictor**. Applying Box-Cox to `x` violates its assumptions and intended use.
-
-

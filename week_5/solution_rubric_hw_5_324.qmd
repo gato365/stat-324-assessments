@@ -1,0 +1,77 @@
+---
+title: "Homework 5 Solutions - STAT 324"
+format: docx
+editor: visual
+---
+
+# Solutions and Grading Rubric
+
+Each of the following open-ended questions is worth **1 point**. Partial credit may be awarded based on the rubric criteria.
+
+---
+
+## Q1. Residual vs. Fitted Plot – Model 0
+
+**Solution:**
+
+The residual vs. fitted plot for the untransformed model (mpg ~ horsepower) likely shows a curved pattern, indicating a violation of the linearity assumption. There is also evidence of non-constant variance (heteroscedasticity), where residual spread increases or decreases across the range of fitted values.
+
+**Rubric:**
+
+| Criterion                                              | Points |
+|--------------------------------------------------------|--------|
+| Identifies curvature/nonlinearity                      | 0.5    |
+| Identifies heteroscedasticity or changing variance     | 0.5    |
+
+---
+
+## Q2. Interpretation of Slope with sqrt(horsepower)
+
+**Solution:**
+
+The slope represents the expected change in mpg for a one-unit increase in the **square root** of horsepower. Since the predictor is transformed, this means a unit increase in `sqrt(horsepower)` corresponds to a larger increase in raw horsepower at higher values. The interpretation must reflect this non-linear scaling.
+
+Example: “For every 1-unit increase in sqrt(horsepower), the expected mpg decreases by [slope] units, on average.”
+
+**Rubric:**
+
+| Criterion                                                             | Points |
+|-----------------------------------------------------------------------|--------|
+| Acknowledges that the predictor is transformed (sqrt)                 | 0.5    |
+| Provides a correct contextual interpretation of slope in transformed scale | 0.5    |
+
+---
+
+## Q3. Prediction with log(horsepower)
+
+**Solution:**
+
+Students should apply the model equation using `log(200)` (natural log in R), then explain the predicted mpg value. The interpretation should include:
+
+- A statement like: “A car with 200 horsepower is expected to achieve approximately ___ mpg.”
+- A reflection on feasibility: “This is within the observed range of mpg, so the prediction appears reasonable.”
+
+**Rubric:**
+
+| Criterion                                                                 | Points |
+|---------------------------------------------------------------------------|--------|
+| Applies natural log transformation to horsepower and calculates mpg      | 0.5    |
+| Interprets the prediction and assesses reasonableness within the data    | 0.5    |
+
+---
+
+## Q4. Interpretation of log(horsepower) in MLR with weight
+
+**Solution:**
+
+The coefficient of log(horsepower) represents the expected change in mpg for a one-unit increase in log(horsepower), **holding weight constant**. This means that among cars with the same weight, increasing horsepower by a factor of *e* (because log is natural log) is associated with a change in mpg by the value of the coefficient.
+
+Example: “Holding weight constant, a one-unit increase in log(horsepower) (i.e., multiplying horsepower by e) is associated with a [decrease/increase] of ___ mpg.”
+
+**Rubric:**
+
+| Criterion                                                                      | Points |
+|--------------------------------------------------------------------------------|--------|
+| Accurately uses the phrase “holding weight constant”                           | 0.5    |
+| Correctly interprets the log-transformed coefficient in multiple regression    | 0.5    |
+
