@@ -1,0 +1,34 @@
+---
+title: "Lab 2 Solutions - STAT 252"
+format: docx
+editor: visual
+---
+
+
+## Question 12
+
+What makes the Chi-Square Test of Independence different from the other statistical techniques we discussed so far? Explain your answer.
+
+### **Solution (Full Credit – 3/3)**
+
+The **Chi-Square Test of Independence** is different from other statistical techniques discussed so far because it is used to assess whether **two categorical variables** are associated or independent. Unlike t-tests or z-tests, which compare **means** of numerical data, the Chi-Square Test works with **counts (frequencies)** in a contingency table.
+
+It does **not assume normality** and does not involve means, proportions, or standard deviations directly. Instead, it compares **observed counts** in each cell of a table to **expected counts** under the assumption of independence.
+
+In summary, the key differences are:
+
+* It’s used for **two categorical variables**
+* It analyzes **frequency data**, not means or proportions
+* It uses a **Chi-Square distribution** for the test statistic
+
+---
+
+## **Rubric (Total: 3 points)**
+
+| **Component**                              | **Criteria**                                                                                                      | **Points** |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------- | ---------- |
+| **Use with Categorical Variables**         | Clearly states that the test is for **two categorical variables**                                                 | 1.0        |
+| **Compares Counts, Not Means/Proportions** | Explains that the test is based on **frequencies or counts**, not means or numerical data                         | 1.0        |
+| **Different Distribution or Framing**      | Identifies that it uses the **Chi-Square distribution** or contrasts it with **t/z-tests** used for other methods | 1.0        |
+
+
