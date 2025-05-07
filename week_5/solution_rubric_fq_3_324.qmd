@@ -15,7 +15,7 @@ Here are **model solutions and rubrics** for your three open-ended questions —
 The slope of 0.004 means that for every 1-unit increase in RPM, the log₁₀ of the vibration intensity increases by 0.004. This tells us that as motor speed increases, the vibration intensity increases on a logarithmic scale, not directly in original units. The intercept of –0.75 indicates the predicted log₁₀ of vibration when RPM is 0, but this value is not meaningful in context since RPM = 0 is outside the realistic operating range **Rubric:**
 
 | Component | Points |
-|--------------------------------------------------------|----------------|
+|------------------------------------------------------|------------------|
 | Correct interpretation of slope (multiplicative change per RPM) | 1 |
 | Clear back-transformation from log₁₀ to original scale | 1 |
 | Reasonable interpretation of intercept with acknowledgment of extrapolation | 1 |
