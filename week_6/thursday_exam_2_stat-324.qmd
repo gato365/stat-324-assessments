@@ -1,133 +1,129 @@
 ---
-title: "Thursday Exam 2 - STAT 324"
+title: "Thursday Exam 2 - STAT 324 (Swiss Dataset)"
 format: docx
 editor: visual
 ---
 
+
+
+## **Overview of the `swiss` Dataset**
+
+To answer the first five questions on the test, you can rely entirely on the regression modeling and selection procedures implemented in this packet using the `swiss` dataset. Begin by reviewing the overview and variable selection sections to understand the context and role of each variable—particularly that `Fertility` is the response variable and all others are quantitative predictors. This structure supports your ability to interpret regression coefficients and evaluate model utility based on the variables’ relationships.
+
+The `swiss` dataset is a built-in R dataset containing standardized fertility measure and socio-economic indicators for 47 French-speaking provinces of Switzerland around 1888. All variables are numeric, and there are no missing values, making it convenient for regression analysis.
+
+Our primary goal is to predict the `Fertility` measure based on other socio-economic indicators.
+
+**Variable Selection**
+
+We will use the following variables from the `swiss` dataset:
+
+* `Fertility` (Common standardized fertility measure) - **Response Variable**
+* `Agriculture` (% of males involved in agriculture as occupation) - Predictor
+* `Examination` (% draftees receiving highest mark on army examination) - Predictor
+* `Education` (% education beyond primary school for draftees) - Predictor
+* `Catholic` (% 'catholic' (as opposed to 'protestant')) - Predictor
+* `Infant.Mortality` (live births who live less than 1 year) - Predictor
+
+## Preliminary Analysis
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
-library(openintro)            ## Data Extraction
 library(dplyr)                ## Data Transformation
-library(ggplot2)           ## Data Extraction
-library(GGally)
-library(ggfortify)
-library(leaps)
-library(caret)
-library(boot)                   ## Data Analysis
+library(ggplot2)              ## Data Visualization
+library(GGally)               ## Data Visualization
+library(ggfortify)            ## Data Visualization
+library(leaps)                ## Data Analysis
+library(MASS)                 ## Data Analysis
+library(broom)                ## Data Analysis
+library(car)                  ## Data Analysis
 ```
 
-## 1. Overview of the Loan Dataset
 
-The `loan_full_schema` dataset contains information on borrowers and loan characteristics collected by a lending institution. It includes numeric variables such as loan amount, interest rate, annual income, and credit score, allowing us to explore how financial and personal variables impact loan outcomes.
+### **1. Data Summaries**
 
-For this analysis, we take a **random sample of 1,000 observations** from the full dataset to make computation more efficient while retaining data variability.
-
-This data is suitable for regression analysis involving transformations, subset selection, and assumption diagnostics. Our primary goal is to predict the **interest rate** based on other loan-related metrics.
-
-## 2. Variable Selection
-
-We will use the following four variables:
-
-* `interest_rate` (response variable)
-* `loan_amount`
-* `annual_income`
-* `number_years_credit_line` which is  2025 - `earliest_credit_line`
-
-```{r subset}
-set.seed(324)
-data("loans_full_schema")
-loan_df <- loans_full_schema %>%
-  select(interest_rate, loan_amount, annual_income, earliest_credit_line) %>%
-  sample_n(1000) %>% 
-  mutate(number_years_credit_line = 2025 - earliest_credit_line) %>% 
-  select(-earliest_credit_line)
-
-mod_1_loan_df <- loan_df %>% 
-  transmute(log10_loan_amount = log10(loan_amount),
-         log10_interest_rate = log10(interest_rate),
-         log10_annual_income = log10(annual_income),
-         sqrt_number_years_credit_line = sqrt(number_years_credit_line)
-         )
-
-head(loan_df)
+```{r data_preparation_swiss}
+swiss_df <- swiss 
+summary(swiss_df)
 ```
 
-## 3. Viz & Summaries
+### **2. Visualizations**
 
-```{r pairplot, message=FALSE, warning=FALSE}
-GGally::ggpairs(loan_df)
+
+```{r pairplot_original_swiss, message=FALSE, warning=FALSE}
+ggpairs(swiss_df)
 ```
+
+### **3. Regular Model — MLR (Multiple Linear Regression)**
+
+Fit a multiple linear regression model with `Fertility` as the response and all other selected predictors.
+
+```{r mlr_swiss}
+model_mlr_swiss <- lm(Fertility ~ Agriculture + Examination + Education + Catholic + Infant.Mortality, data = swiss_df)
+summary(model_mlr_swiss)
+```
+
+
+
+### **4. BIC Best Subset**
+
+We use `regsubsets` to find the best subset of predictors based on the Bayesian Information Criterion (BIC).
+
+```{r bic-best-swiss}
+regfit_full_swiss <- regsubsets(Fertility ~ Agriculture + Examination + Education + Catholic + Infant.Mortality, data = swiss_df, nvmax = 5) # Max number of predictors
+
+plot(regfit_full_swiss)
+```
+
+
+### **5. AIC Stepwise Regression**
+
+Perform stepwise model selection using AIC, starting from the full model.
+
+```{r aic-stepwise-swiss}
+
+initial_model_swiss <- lm(Fertility ~ Agriculture + Examination + Education + Catholic + Infant.Mortality, data = swiss_df)
+
+step_mod_swiss <- MASS::stepAIC(initial_model_swiss, direction = "both", trace = TRUE) 
+
+```
+
+## **Analysis of Best Model**
+
+### **Evaluating of Best Model**
+```{r}
+best_model_swiss <- lm(Fertility ~ Agriculture + Education + Catholic + Infant.Mortality, data = swiss_df)
+summary(best_model_swiss)
+```
+
+
+### **Evaluating Variance Inflation Factor**
 
 ```{r}
-GGally::ggpairs(mod_1_loan_df)
-```
-
-
-## 4. Regular Model — MLR (Multiple Linear Regression)
-
-```{r mlr}
-model_mlr <- lm(interest_rate ~ loan_amount + annual_income + number_years_credit_line, data = loan_df)
-summary(model_mlr)
+vif(best_model_swiss)
 ```
 
 
 
+### **Evaluating Residual Plots**
 
-
-## 5. Log₁₀ of X — SLR
-
-We choose `loan_amount` as the best predictor for illustration.
-
-```{r slr_logx}
-model_logx <- lm(interest_rate ~ log10_loan_amount, data = mod_1_loan_df)
-summary(model_logx)
-```
-
-## 6. Log₁₀ of X & Log₁₀ of Y — SLR
-
-```{r slr_logx_logy}
-model_logxy <- lm(log10_interest_rate ~ log10_loan_amount, data = mod_1_loan_df)
-summary(model_logxy)
+```{r}
+autoplot(best_model_swiss) + 
+  theme_bw()
 ```
 
 
-## 7. BIC Best Subset
+### **Evaluating Outliers, Leverage and Influential Points**
+```{r}
+# Add standardized residuals
+augmented_df <- augment(best_model_swiss) ## from broom package
 
-```{r aic-best}
-regfit_full <- regsubsets(interest_rate ~ loan_amount + annual_income + number_years_credit_line, data = loan_df, nvmax = 4)
+rownames(augmented_df) <- NULL
+
+augmented_df %>% 
+  dplyr::select(-`.rownames`, -Fertility,-Agriculture,-Education,-Catholic,-Infant.Mortality) %>%
+  arrange(desc(.cooksd)) %>% 
+  head(10) %>% 
+  round(3)
 ```
 
-
-```{r bic-best-2}
-plot(x = regfit_full,        ## Specify Model Fit
-     scale = "bic"     ## Specify Selection Metric
-)
-```
-
-
-
-
-
-## 8. AIC Stepwise
-
-```{r aic-stepwise}
-model_mlr <- lm(interest_rate ~ loan_amount + annual_income + number_years_credit_line, data = loan_df)
-
-step_mod <- MASS::stepAIC(model_mlr, direction = "both", trace = TRUE)
-
-```
-
-## 10. Selected Model: BIC Best Subset
-
-Refitting the model based on the lowest BIC subset.
-
-```{r best-bic-model}
-model_bic <- lm(interest_rate ~ loan_amount + number_years_credit_line, data = loan_df)  # Example: change based on actual best
-summary(model_bic)
-```
-
-## 11. Assumption Graphics
-
-```{r assumptions}
-autoplot(model_bic) + theme_bw()
-```
