@@ -1,0 +1,104 @@
+---
+title: "Friday Quiz 5 - Solutions - STAT 324"
+format: docx
+editor: visual
+---
+
+
+
+### **Question 3 – 3 pts**
+
+**Prompt:** In the seals study, what does the coefficient for `ColonyD` (10.55) mean in context? Be specific about the reference group and the interpretation of the shift.
+
+#### **Solution:**
+
+The coefficient for `ColonyD` (10.55) represents the estimated difference in baseline dive depth between Colony D and the reference group, Colony A. When Age = 0, seals in Colony D are predicted to dive 10.55 meters deeper than those in Colony A. Since all colonies share the same slope for Age, this difference is purely a vertical shift in the intercept.
+
+####  **Rubric (3 pts):**
+
+* **1 pt** — Identifies the reference group (Colony A)
+* **1 pt** — Correctly states it's a difference in intercept or baseline dive depth
+* **1 pt** — Includes context of Age = 0 or explains what the shift means in terms of the outcome
+
+---
+
+### **Question 7 – 3 pts**
+
+**Prompt:** Interpret the coefficient for `WebsiteVisitors` in the business model. Specify the null and alternative hypotheses.
+
+#### ️ **Solution:**
+
+The coefficient for `WebsiteVisitors` (0.89) means that for every additional unique visitor to the website, weekly sales revenue is expected to increase by \$0.89, assuming advertising spend remains constant.
+
+**Hypotheses:**
+
+* **Null Hypothesis (H₀):** The coefficient for `WebsiteVisitors` is 0 (no relationship between visitors and sales).
+* **Alternative Hypothesis (H₁):** The coefficient for `WebsiteVisitors` is not 0 (there is a relationship).
+
+####  **Rubric (3 pts):**
+
+* **1 pt** — Correctly interprets the coefficient in context
+* **1 pt** — Correctly states null hypothesis
+* **1 pt** — Correctly states alternative hypothesis
+
+---
+
+### **Question 9 – 3 pts**
+
+**Prompt:** Provide and interpret the full regression model. Also, how would you evaluate the fit of the business model using R-squared and adjusted R-squared? Is this model a good predictor of sales?
+
+#### **Solution:**
+
+**Full model:**
+
+$$
+\hat{SalesRevenue} = 12580.5 + 5.78 \times AdvertisingSpend + 0.89 \times WebsiteVisitors
+$$
+
+**Interpretation:**
+
+* Each \$1 increase in advertising spend increases sales by \$5.78, holding visitors constant.
+* Each additional visitor increases sales by \$0.89, holding ad spend constant.
+* The intercept (12580.5) represents the predicted sales when both inputs are 0.
+
+**Model fit:**
+
+* **R² = 0.6529**: About 65% of the variation in sales is explained by the model.
+* **Adjusted R² = 0.6494**: Adjusts for number of predictors; still quite high.
+* Yes, this is a good model for prediction based on these values and significance of predictors.
+
+####  **Rubric (3 pts):**
+
+* **1 pt** — Writes full model with correct coefficients
+* **1 pt** — Provides contextual interpretation of coefficients and intercept
+* **1 pt** — Evaluates R²/Adjusted R² and states it is a good model
+
+---
+
+### **Question 10 – 3 pts**
+
+**Prompt:** Using the business model, what is the predicted sales revenue for a week with \$1,000 in advertising spend and 2,000 website visitors? Show your work and interpret the result. What assumptions about the values did you make?
+
+####  **Solution:**
+
+$$
+\hat{SalesRevenue} = 12580.5 + 5.78(1000) + 0.89(2000) \\
+= 12580.5 + 5780 + 1780 = 20140.5
+$$
+
+**Interpretation:**
+With \$1,000 in advertising spend and 2,000 visitors, the model predicts weekly sales revenue of **\$20,140.50**.
+
+**Assumptions:**
+
+* AdvertisingSpend and WebsiteVisitors are measured in raw units (USD) are within the min and max.
+
+#### **Rubric (3 pts):**
+
+* **1 pt** — Correct formula and substitution
+* **1 pt** — Correct numerical result and interpretation
+* **1 pt** — States clear assumption(s) about variable scales or applicability
+
+---
+
+Let me know if you want this exported to a `.md` file or formatted for Canvas rubrics.

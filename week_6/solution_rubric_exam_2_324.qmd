@@ -12,7 +12,7 @@ Based on the best model output and supporting diagnostics (e.g., VIF values), is
 
 **Total Points:** 15
 
----
+------------------------------------------------------------------------
 
 ### Solution:
 
@@ -21,10 +21,11 @@ Based on the provided model output and VIF values, multicollinearity is **not co
 Here's the reasoning:
 
 1.  **Examination of VIF Values:** The Variance Inflation Factors (VIFs) for the predictor variables are as follows:
-    * Agriculture: 2.147
-    * Education: 1.816
-    * Catholic: 1.299
-    * Infant.Mortality: 1.108
+
+    -   Agriculture: 2.147
+    -   Education: 1.816
+    -   Catholic: 1.299
+    -   Infant.Mortality: 1.108
 
 2.  **Interpretation of VIF Values:** VIF values quantify how much the variance of the estimate of a regression coefficient is increased due to multicollinearity. A commonly accepted guideline is that VIF values above 5 or 10 indicate problematic levels of multicollinearity.
 
@@ -32,32 +33,31 @@ Here's the reasoning:
 
 **In summary, the low VIF values indicate that multicollinearity is not a significant concern for the `best_model_swiss`.**
 
----
+------------------------------------------------------------------------
 
 ### Rubric:
 
-| Criteria                                     | Points | Descriptors                                                                                                                                |
-| :------------------------------------------- | :----- | :----------------------------------------------------------------------------------------------------------------------------------------- |
-| **Identification of VIF Values** | 3      | Correctly identifies and lists the VIF values for each predictor variable from the output.                                                 |
-| **Understanding of Multicollinearity & VIF** | 5      | Explains what multicollinearity is and how VIF values are used to detect it. Mentions common VIF thresholds (e.g., 5 or 10).                |
-| **Analysis of VIF Values** | 4      | Compares the observed VIF values to the accepted thresholds. Correctly states whether the values indicate a multicollinearity problem.         |
-| **Clear Explanation and Conclusion** | 3      | Provides a clear and concise explanation of the reasoning. Draws a correct conclusion about the presence or absence of problematic multicollinearity in the model. |
-| **Overall Clarity and Organization** |        | (Implicitly assessed throughout) Response is well-organized and easy to understand.                                                        |
+| Criteria | Points | Descriptors |
+|:------------|:------------|:---------------------------------------------|
+| **Identification of VIF Values** | 3 | Correctly identifies and lists the VIF values for each predictor variable from the output. |
+| **Understanding of Multicollinearity & VIF** | 5 | Explains what multicollinearity is and how VIF values are used to detect it. Mentions common VIF thresholds (e.g., 5 or 10). |
+| **Analysis of VIF Values** | 4 | Compares the observed VIF values to the accepted thresholds. Correctly states whether the values indicate a multicollinearity problem. |
+| **Clear Explanation and Conclusion** | 3 | Provides a clear and concise explanation of the reasoning. Draws a correct conclusion about the presence or absence of problematic multicollinearity in the model. |
+| **Overall Clarity and Organization** |  | (Implicitly assessed throughout) Response is well-organized and easy to understand. |
 
 \newpage
-
-
 
 ## Question 8
 
 ### Question:
+
 Plant scientists are investigating how the rate of photosynthesis (Y, measured in mols) in a newly developed rice variety responds to different light intensities (X, measured in lux). The experiments cover a wide range of light intensities, from very low light (e.g., 50 lux) up to moderately high levels (e.g., 15,000 lux), as rice photosynthesis tends to saturate. They found that the model fits the observed data extremely well across this broad spectrum of light. This model effectively captures the initial steep rise in photosynthesis at low light levels and the subsequent diminishing returns as light intensity increases further, before other factors become limiting.
 
 Suppose we want to predict the photosynthetic rate for this rice variety at a light intensity of 7,500 lux. Show your work and explained your answer while mention any assumptions you are making.
 
 A fake R output for this model might look like:
 
-```r
+``` r
 # Model: lm(formula = photosynthetic_rate ~ log10(light_intensity_lux), data = rice_photosynthesis_study)
 # Coefficients:
 # (Intercept)                   log10(light_intensity_lux)
@@ -66,13 +66,9 @@ A fake R output for this model might look like:
 # Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 # ---
 # Residual standard error: 1.85 on 78 degrees of freedom
-# Multiple R-squared: 0.844,	Adjusted R-squared: 0.842
+# Multiple R-squared: 0.844,    Adjusted R-squared: 0.842
 # F-statistic: 423.2 on 1 and 78 DF,  p-value: < 2.2e-16
 ```
-
-
-
-
 
 ### Solution:
 
@@ -80,25 +76,15 @@ The model relates photosynthetic rate ($Y$) to the base-10 logarithm of light in
 
 $Y = \beta_0 + \beta_1 \times \log_{10}(X)$
 
-where:
-- $Y$ is the predicted photosynthetic rate
-- $X$ is the light intensity in lux
-- $\beta_0$ is the intercept coefficient
-- $\beta_1$ is the coefficient for $\log_{10}(X)$
+where: - $Y$ is the predicted photosynthetic rate - $X$ is the light intensity in lux - $\beta_0$ is the intercept coefficient - $\beta_1$ is the coefficient for $\log_{10}(X)$
 
-From the provided R output:
-- Estimated Intercept ($\hat{\beta}_0$): -8.500
-- Estimated coefficient for $\log_{10}(\text{light\_intensity\_lux})$ ($\hat{\beta}_1$): 7.200
+From the provided R output: - Estimated Intercept ($\hat{\beta}_0$): -8.500 - Estimated coefficient for $\log_{10}(\text{light\_intensity\_lux})$ ($\hat{\beta}_1$): 7.200
 
 We want to predict the photosynthetic rate when the light intensity ($X$) is 7,500 lux.
 
-First, calculate the base-10 logarithm of 7,500:
-$\log_{10}(7500) \approx 3.875$
+First, calculate the base-10 logarithm of 7,500: $\log_{10}(7500) \approx 3.875$
 
-Now, substitute this value and the estimated coefficients into the model equation:
-$Y = -8.500 + 7.200 \times 3.875$
-$Y = -8.500 + 27.900$
-$Y = 19.400$
+Now, substitute this value and the estimated coefficients into the model equation: $Y = -8.500 + 7.200 \times 3.875$ $Y = -8.500 + 27.900$ $Y = 19.400$
 
 Therefore, the predicted photosynthetic rate at a light intensity of 7,500 lux is approximately 19.400 mols.
 
@@ -106,23 +92,17 @@ Therefore, the predicted photosynthetic rate at a light intensity of 7,500 lux i
 
 **Assumption:** A key assumption being made is that the linear relationship between the photosynthetic rate and the log of light intensity, as modeled, holds true and is generalizable to a light intensity of 7,500 lux, which falls within or is close to the range of light intensities the model was trained on (50 to 15,000 lux). We also assume that other factors not included in this simple model (like CO2 concentration, temperature, etc.) are not limiting or are held constant in a way consistent with the data used to build the model.
 
-
-
 ### Rubric:
 
-| Criteria                                                              | Points | Descriptors                                                                                                                                                              |
-| :-------------------------------------------------------------------- | :----- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Identification of Model Structure** | 2      | Correctly identifies the model as a linear relationship between photosynthetic rate and the log10 of light intensity ($Y = \beta_0 + \beta_1 \times \log_{10}(X)$). |
-| **Extraction of Coefficients** | 2      | Correctly extracts both the intercept and the log10 coefficient values from the provided R output.                                                                     |
-| **Calculation of $\log_{10}$(7500)** | 3      | Correctly calculates or approximates the base-10 logarithm of 7,500 lux.                                                                                                 |
-| **Setting up and Performing Prediction Calculation** | 5      | Correctly substitutes the calculated log value and the coefficients into the model equation and performs the calculation to find the predicted photosynthetic rate.      |
-| **Showing Work** | 1      | Clearly shows the steps involved in the calculation process.                                                                                                             |
-| **Explanation of Prediction** | 1      | Provides a clear explanation of how the prediction is made and what the result represents.                                                                               |
-| **Stating Relevant Assumption(s)** | 1      | Mentions at least one relevant assumption made when performing the prediction (e.g., model validity within the range, other factors constant).                         |
-
-
-
-
+| Criteria | Points | Descriptors |
+|:---------------|:------------|:------------------------------------------|
+| **Identification of Model Structure** | 2 | Correctly identifies the model as a linear relationship between photosynthetic rate and the log10 of light intensity ($Y = \beta_0 + \beta_1 \times \log_{10}(X)$). |
+| **Extraction of Coefficients** | 2 | Correctly extracts both the intercept and the log10 coefficient values from the provided R output. |
+| **Calculation of** $\log_{10}$(7500) | 3 | Correctly calculates or approximates the base-10 logarithm of 7,500 lux. |
+| **Setting up and Performing Prediction Calculation** | 5 | Correctly substitutes the calculated log value and the coefficients into the model equation and performs the calculation to find the predicted photosynthetic rate. |
+| **Showing Work** | 1 | Clearly shows the steps involved in the calculation process. |
+| **Explanation of Prediction** | 1 | Provides a clear explanation of how the prediction is made and what the result represents. |
+| **Stating Relevant Assumption(s)** | 1 | Mentions at least one relevant assumption made when performing the prediction (e.g., model validity within the range, other factors constant). |
 
 ## Question 9
 
@@ -132,12 +112,11 @@ Based on the previous model, the slope coefficient for log$_{10}$(light_intensit
 
 **Total Points:** 15
 
----
+------------------------------------------------------------------------
 
 ### Solution:
 
-The model is given by:
-Photosynthetic Rate $= \beta_0 + \beta_1 \times \log_{10}(\text{Light Intensity})$
+The model is given by: Photosynthetic Rate $= \beta_0 + \beta_1 \times \log_{10}(\text{Light Intensity})$
 
 From the previous question, the estimated slope coefficient ($\hat{\beta}_1$) for $\log_{10}(\text{light\_intensity\_lux})$ is 7.200.
 
@@ -147,35 +126,31 @@ Therefore, the interpretation of the slope coefficient 7.200 in this context is:
 
 For every tenfold increase in light intensity (measured in lux), the photosynthetic rate (measured in mols) is estimated to increase by 7.200 units, holding other factors constant (although no other factors are in this simple model).
 
-**Explanation using context:**
-The log$_{10}$ transformation is used here likely because the relationship between light intensity and photosynthetic rate is not linear in its original scale; it typically shows a rapid increase at low light levels and then plateaus or saturates at higher levels. The log transformation helps to linearize this relationship. The coefficient of 7.200 signifies the average change in photosynthetic rate for a proportional increase in light intensity (specifically, a 10-fold increase). This means that increasing light intensity from, say, 100 lux to 1000 lux is associated with an estimated 7.200 mols increase in photosynthetic rate, just as increasing it from 500 lux to 5000 lux is associated with a similar estimated increase of 7.200 mols. This reflects the diminishing *absolute* return as light intensity increases, although the return per tenfold increase remains constant in this log-linear model.
+**Explanation using context:** The log$_{10}$ transformation is used here likely because the relationship between light intensity and photosynthetic rate is not linear in its original scale; it typically shows a rapid increase at low light levels and then plateaus or saturates at higher levels. The log transformation helps to linearize this relationship. The coefficient of 7.200 signifies the average change in photosynthetic rate for a proportional increase in light intensity (specifically, a 10-fold increase). This means that increasing light intensity from, say, 100 lux to 1000 lux is associated with an estimated 7.200 mols increase in photosynthetic rate, just as increasing it from 500 lux to 5000 lux is associated with a similar estimated increase of 7.200 mols. This reflects the diminishing *absolute* return as light intensity increases, although the return per tenfold increase remains constant in this log-linear model.
 
----
+------------------------------------------------------------------------
 
 ### Rubric:
 
-| Criteria                                                                      | Points | Descriptors                                                                                                                                                                                                 |
-| :---------------------------------------------------------------------------- | :----- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Identification of Slope Coefficient** | 2      | Correctly identifies the slope coefficient value for $\log_{10}(\text{light\_intensity\_lux})$ as 7.2 or 7.200.                                                                                                 |
-| **Understanding of $\log_{10}$ Interpretation** | 5      | Explains the general principle of interpreting a slope when the predictor is $\log_{10}$ transformed – relates a unit change in the log scale to a tenfold change in the original scale.                               |
-| **Contextual Interpretation (Photosynthetic Rate & Light Intensity)** | 4      | Applies the interpretation specifically to the variables in the problem (photosynthetic rate and light intensity).                                                                                          |
-| **Using the Specific Coefficient Value** | 3      | Includes the specific value of the coefficient (7.200) in the interpretation statement.                                                                                                                   |
-| **Explanation of Log Transformation Role** | 1      | Briefly explains why a log transformation might be used in this context (e.g., to handle non-linearity or diminishing returns) or clarifies the meaning of the coefficient in the context of the non-linear relationship. |
+| Criteria | Points | Descriptors |
+|:--------------|:------------|:-------------------------------------------|
+| **Identification of Slope Coefficient** | 2 | Correctly identifies the slope coefficient value for $\log_{10}(\text{light\_intensity\_lux})$ as 7.2 or 7.200. |
+| **Understanding of** $\log_{10}$ Interpretation | 5 | Explains the general principle of interpreting a slope when the predictor is $\log_{10}$ transformed – relates a unit change in the log scale to a tenfold change in the original scale. |
+| **Contextual Interpretation (Photosynthetic Rate & Light Intensity)** | 4 | Applies the interpretation specifically to the variables in the problem (photosynthetic rate and light intensity). |
+| **Using the Specific Coefficient Value** | 3 | Includes the specific value of the coefficient (7.200) in the interpretation statement. |
+| **Explanation of Log Transformation Role** | 1 | Briefly explains why a log transformation might be used in this context (e.g., to handle non-linearity or diminishing returns) or clarifies the meaning of the coefficient in the context of the non-linear relationship. |
 
-
-
-
-
-## Question 10 
+## Question 10
 
 ### Question
+
 A market analyst is studying the relationship between the number of unique monthly visitors to e-commerce websites (X) and their total monthly sales revenue (Y, in US dollars). The dataset includes a diverse range of websites, from small niche stores with a few thousand visitors (e.g., 1,000) to larger platforms attracting up to 1,000,000 or more visitors per month. The analyst found that a log-log model that provides a very strong and interpretable fit. This model suggests that a percentage change in website traffic tends to correspond to a relatively consistent percentage change in sales revenue across websites of different sizes.
 
 Suppose we want to predict the monthly sales revenue for a website that receives 90,000 unique monthly visitors. Show your work and explained your answer while mention any assumptions you are making.
 
 A fake R output for this model might look like:
 
-```r
+``` r
 # Model: lm(formula = log10(monthly_sales_usd) ~ log10(unique_monthly_visitors), data = ecommerce_traffic_sales)
 # Coefficients:
 # (Intercept)                   log10(unique_monthly_visitors)
@@ -184,44 +159,38 @@ A fake R output for this model might look like:
 # Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 # ---
 # Residual standard error: 0.18 on 148 degrees of freedom
-# Multiple R-squared: 0.950,	Adjusted R-squared: 0.950
+# Multiple R-squared: 0.950,    Adjusted R-squared: 0.950
 # F-statistic: 2844 on 1 and 148 DF,  p-value: < 2.2e-16
 ```
 
 **Total Points:** 15
 
----
+------------------------------------------------------------------------
 
 ### Solution:
 
-The model is $\log_{10}(Y) = \beta_0 + \beta_1 \times \log_{10}(X)$, where $Y$ is sales revenue and $X$ is unique visitors.
-From the R output, the estimated coefficients are $\hat{\beta}_0 = 0.1500$ and $\hat{\beta}_1 = 1.1200$.
+The model is $\log_{10}(Y) = \beta_0 + \beta_1 \times \log_{10}(X)$, where $Y$ is sales revenue and $X$ is unique visitors. From the R output, the estimated coefficients are $\hat{\beta}_0 = 0.1500$ and $\hat{\beta}_1 = 1.1200$.
 
 We need to predict $Y$ for $X = 90,000$.
 
-1.  Calculate $\log_{10}(90000)$:
-    $\log_{10}(90000) \approx 4.9542$
+1.  Calculate $\log_{10}(90000)$: $\log_{10}(90000) \approx 4.9542$
 
-2.  Calculate the predicted $\log_{10}(Y)$:
-    $\log_{10}(\hat{Y}) = 0.1500 + 1.1200 \times 4.9542$
-    $\log_{10}(\hat{Y}) = 0.1500 + 5.5487$
-    $\log_{10}(\hat{Y}) = 5.6987$
+2.  Calculate the predicted $\log_{10}(Y)$: $\log_{10}(\hat{Y}) = 0.1500 + 1.1200 \times 4.9542$ $\log_{10}(\hat{Y}) = 0.1500 + 5.5487$ $\log_{10}(\hat{Y}) = 5.6987$
 
-3.  Exponentiate to find the predicted $Y$:
-    $\hat{Y} = 10^{5.6987} \approx 500000$
+3.  Exponentiate to find the predicted $Y$: $\hat{Y} = 10^{5.6987} \approx 500000$
 
-The predicted monthly sales revenue for a website with 90,000 unique monthly visitors is approximately $500,000. The log-log model indicates a proportional relationship; here, a 1% increase in visitors is associated with an estimated 1.12% increase in sales.
+The predicted monthly sales revenue for a website with 90,000 unique monthly visitors is approximately \$500,000. The log-log model indicates a proportional relationship; here, a 1% increase in visitors is associated with an estimated 1.12% increase in sales.
 
 **Assumption:** The model is valid for predicting at 90,000 visitors, and other factors influencing sales are consistent with the model's data.
 
----
+------------------------------------------------------------------------
 
 ### Rubric:
 
-| Criteria                                                              | Points | Descriptors                                                                                                                                 |
-| :-------------------------------------------------------------------- | :----- | :------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Identify Model & Coefficients** | 4      | Correctly identifies the log-log model structure ($\log_{10}(Y) \sim \log_{10}(X)$) and extracts the intercept (0.1500) and slope (1.1200) coefficients.          |
-| **Calculate $\log_{10}$(90000)** | 3      | Correctly calculates or approximates $\log_{10}(90000)$.                                                                                                    |
-| **Predict $\log_{10}$(Y)** | 4      | Correctly sets up and calculates the predicted value of $\log_{10}(Y)$ using the extracted coefficients and the calculated log visitor count.                                  |
-| **Exponentiate to find Predicted Y** | 3      | Correctly performs the base-10 exponentiation to convert the predicted $\log_{10}(Y)$ back to the original sales revenue scale ($Y$).                          |
-| **Show Work & State Assumption** | 1      | Clearly shows the main calculation steps and states a relevant assumption for the prediction.                                                               |
+| Criteria | Points | Descriptors |
+|:-----------------|:------------|:----------------------------------------|
+| **Identify Model & Coefficients** | 4 | Correctly identifies the log-log model structure ($\log_{10}(Y) \sim \log_{10}(X)$) and extracts the intercept (0.1500) and slope (1.1200) coefficients. |
+| **Calculate** $\log_{10}$(90000) | 3 | Correctly calculates or approximates $\log_{10}(90000)$. |
+| **Predict** $\log_{10}$(Y) | 4 | Correctly sets up and calculates the predicted value of $\log_{10}(Y)$ using the extracted coefficients and the calculated log visitor count. |
+| **Exponentiate to find Predicted Y** | 3 | Correctly performs the base-10 exponentiation to convert the predicted $\log_{10}(Y)$ back to the original sales revenue scale ($Y$). |
+| **Show Work & State Assumption** | 1 | Clearly shows the main calculation steps and states a relevant assumption for the prediction. |
