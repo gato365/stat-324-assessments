@@ -1,0 +1,147 @@
+---
+title: "Homework 7 - Solutions - STAT 324"
+format: docx
+---
+
+
+
+### **Question 1: Interaction Term in Model 3**
+
+**PTS: 1.25**
+
+**Prompt:**
+What does the interaction term `wt:vsv-shaped` in Model 3 represent in the context of this regression model?
+
+**✅ Solution:**
+The interaction term `wt:vsv-shaped` captures how the effect (slope) of `wt` on `mpg` differs between v-shaped and straight engine cars. In other words, it tells us whether the relationship between weight and fuel efficiency (mpg) depends on engine type. If the interaction coefficient is significant, it means that the rate at which mpg decreases with weight is not the same for both engine types.
+
+* For straight engines (baseline), the slope is just the coefficient on `wt`.
+* For v-shaped engines, the slope is the sum of the coefficients for `wt` and `wt:vsv-shaped`.
+
+**🔍 Rubric (1.25 pts):**
+
+* 0.5 pts – Mentions the interaction term allows the slope to vary by engine type
+* 0.5 pts – Explains how the slope is interpreted for each group (baseline vs v-shaped)
+* 0.25 pts – Uses correct model terms or coefficients in the explanation
+
+---
+
+### **Question 5: Intercepts in Model 2**
+
+**PTS: 1.25**
+
+**Prompt:**
+In Model 2 (`mpg ~ wt + vs`), how is the intercept adjusted for v-shaped engines compared to straight engines? Include equations for each group.
+
+**✅ Solution:**
+In Model 2:
+
+* The intercept for straight engines is the base intercept (36.16).
+* For v-shaped engines, the intercept is **adjusted downward** by 3.15 units (from the coefficient `vsv-shaped = -3.15`), giving a new intercept of 33.01.
+
+**Equations:**
+
+* Straight engines: `mpg = 36.16 - 4.44 * wt`
+* V-shaped engines: `mpg = (36.16 - 3.15) - 4.44 * wt = 33.01 - 4.44 * wt`
+
+**🔍 Rubric (1.25 pts):**
+
+* 0.5 pts – Gives the correct interpretation of the intercept change for v-shaped
+* 0.5 pts – Provides both equations (for straight and v-shaped engines)
+* 0.25 pts – Explanation clearly connects coefficient to equation change
+
+---
+
+### **Question 6: Predict mpg for v-shaped car in Model 2**
+
+**PTS: 1.25**
+
+**Prompt:**
+Using Model 2, predict the mpg for a car with `wt = 3.0` and a v-shaped engine. Show all your work.
+
+**✅ Solution:**
+From Model 2:
+`mpg = 36.16 - 4.44 * wt - 3.15 * (vsv-shaped)`
+
+For `wt = 3.0` and v-shaped:
+`mpg = 36.16 - 4.44 * 3.0 - 3.15 = 36.16 - 13.32 - 3.15 = 19.69`
+
+**🔍 Rubric (1.25 pts):**
+
+* 0.25 pts – Correct model equation written out
+* 0.5 pts – Shows substitution of values and arithmetic
+* 0.5 pts – Final answer is correct and rounded to two decimal places: **19.69**
+
+---
+
+### **Question 8: Full Model 3 Equation and Interpretation**
+
+**PTS: 1.25**
+
+**Prompt:**
+Write the full regression equation for Model 3. Include equations for both engine types and interpret the slope for the steeper group.
+
+**✅ Solution:**
+
+Model 3 coefficients:
+
+* Intercept: 41.30
+* wt: -6.41
+* vsv-shaped: -11.77
+* wt\:vsv-shaped: +2.91
+
+**Equations:**
+
+* Straight engine: `mpg = 41.30 - 6.41 * wt`
+* V-shaped engine: `mpg = (41.30 - 11.77) + (-6.41 + 2.91) * wt = 29.53 - 3.50 * wt`
+
+**Interpretation:**
+
+* The **straight engine group has the steeper slope** (−6.41), indicating a greater drop in mpg for every additional 1000 lbs of weight.
+
+**🔍 Rubric (1.25 pts):**
+
+* 0.5 pts – Both equations written correctly
+* 0.5 pts – Correct identification of steeper slope group
+* 0.25 pts – Interpretation of slope with context (e.g., mpg drops faster for heavier cars)
+
+---
+
+### **Question 10: Purpose of Interaction Terms**
+
+**PTS: 1.25**
+
+**Prompt:**
+Explain the purpose of including an interaction term (e.g., `x1*x2`) in a regression model. What does it capture and how is it interpreted?
+
+**✅ Solution:**
+An interaction term allows the model to capture situations where the effect of one predictor depends on the level of another. For example, the impact of weight on mpg may be different for different engine types. The coefficient on the interaction tells us how the slope of one variable changes across levels of the other variable.
+
+**🔍 Rubric (1.25 pts):**
+
+* 0.5 pts – Explains interaction captures “effect of x1 depends on x2”
+* 0.5 pts – Describes how to interpret the interaction coefficient
+* 0.25 pts – Example or correct use of context (e.g., different engine types)
+
+---
+
+### **Question 12: Explaining Model Results in Business Terms**
+
+**PTS: 1.5**
+
+**Prompt:**
+You are modeling ROI using ad spend, traffic, and platform type. How do you explain model results in plain language?
+
+**✅ Solution Example:**
+The model shows how ad spend and website traffic affect ROI, and whether these effects change across platforms. For example, higher ad spend may increase ROI more on search engines than social media. The categorical variable allows the model to compare base ROI across platforms (different intercepts), and interactions show whether slopes vary. The model's overall fit (e.g., R²) tells us how well it explains ROI variability.
+
+**🔍 Rubric (1.5 pts):**
+
+* 0.5 pts – Describes the direction of effects of each predictor
+* 0.5 pts – Mentions potential differences across platforms (intercepts/slopes)
+* 0.25 pts – Uses plain language appropriate for a business team
+* 0.25 pts – Discusses model strength or how well it explains variation (e.g., R²)
+
+
+
+

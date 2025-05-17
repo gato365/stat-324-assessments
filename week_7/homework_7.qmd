@@ -16,6 +16,7 @@ library(ggplot2)                            ## Data Visualization
 ```
 
 \newpage
+
 ```{r}
 mod_1_mtcars <- mtcars %>% 
   mutate(vs = case_when(
@@ -24,15 +25,13 @@ mod_1_mtcars <- mtcars %>%
   ))
 ```
 
+## Model 1: mpg \~ wt
 
-## Model 1: mpg ~ wt 
 ```{r}
 
 model_1 <- lm(mpg ~ wt, data = mod_1_mtcars)
 summary(model_1)
 ```
-
-
 
 ```{r}
 # Plot Model 1
@@ -46,46 +45,45 @@ ggplot(mod_1_mtcars, aes(x = wt, y = mpg)) +
 
 \newpage
 
-## Model 2: mpg ~ wt + vs 
+## Model 2: mpg \~ wt + vs
+
 ```{r}
 model_2 <- lm(mpg ~ wt + vs, data = mod_1_mtcars)
 summary(model_2)
 ```
 
-
-
 ```{r}
+# Generate prediction lines
+newdata <- expand.grid(
+  wt = seq(min(mod_1_mtcars$wt), max(mod_1_mtcars$wt), length.out = 100),
+  vs = c("straight", "v-shaped")
+)
+newdata$pred <- predict(model_2, newdata)
+
+# Plot with same slope, different intercepts
 ggplot(mod_1_mtcars, aes(x = wt, y = mpg, color = vs)) +
   geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
-  ggtitle("Model 2: mpg ~ wt + vs") + 
+  geom_line(data = newdata, aes(x = wt, y = pred, color = vs), size = 1) +
+  ggtitle("Model 2: mpg ~ wt + vs") +
   theme_bw() +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-
 \newpage
 
-## Model 3: mpg ~ wt * vs 
+## Model 3: mpg \~ wt \* vs
+
 ```{r}
 model_3 <- lm(mpg ~ wt * vs, data = mod_1_mtcars)
 summary(model_3)
 ```
 
-
 ```{r}
 # Plot Model 3
 ggplot(mod_1_mtcars, aes(x = wt, y = mpg, color = vs)) +
   geom_point() +
-  geom_smooth(method = "lm", se = FALSE, formula = y ~ x * vs) +
+  geom_smooth(method = "lm", se = FALSE) +
   ggtitle("Model 3: mpg ~ wt * vs") + 
   theme_bw() +
   theme(plot.title = element_text(hjust = 0.5))
 ```
-
-
-
-
-
-
-
