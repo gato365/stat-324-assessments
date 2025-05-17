@@ -1,0 +1,91 @@
+---
+title: "Homework 7"
+format: docx
+editor: visual
+---
+
+The `mtcars` dataset is a classic and widely used dataset in R that contains specifications and performance data for 32 different car models from the 1974 Motor Trend magazine. Each row represents a unique vehicle, and each column records a specific attribute related to engine performance, design, or efficiency. Some key variables include `mpg` (miles per gallon), `hp` (gross horsepower), `wt` (weight in 1000 lbs), `drat` (rear axle ratio), and `qsec` (quarter-mile time). Additionally, the dataset includes categorical variables encoded as numeric values, such as `cyl` (number of cylinders), `am` (transmission type), and `gear` (number of forward gears).
+
+This dataset is frequently used in regression modeling and statistical learning due to its compact size, real-world relevance, and mixture of quantitative and categorical variables. Analysts often model fuel efficiency (`mpg`) as a function of other variables to understand how engine power, vehicle weight, or gear ratios impact gas mileage. With its balance of complexity and interpretability, `mtcars` serves as a great playground for developing skills in exploratory data analysis, model selection, variable interpretation, and diagnostics in both teaching and applied settings.
+
+```{r message=FALSE, warning=FALSE}
+library(dplyr)                              ## Data Transformation
+library(tidyr)                              ## Data Transformation
+library(stringr)                            ## Data Transformation
+library(ggplot2)                            ## Data Visualization
+```
+
+\newpage
+```{r}
+mod_1_mtcars <- mtcars %>% 
+  mutate(vs = case_when(
+    vs == 1 ~ "straight",
+    TRUE ~ "v-shaped"
+  ))
+```
+
+
+## Model 1: mpg ~ wt 
+```{r}
+
+model_1 <- lm(mpg ~ wt, data = mod_1_mtcars)
+summary(model_1)
+```
+
+
+
+```{r}
+# Plot Model 1
+ggplot(mod_1_mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  ggtitle("Model 1: mpg ~ wt") + 
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+\newpage
+
+## Model 2: mpg ~ wt + vs 
+```{r}
+model_2 <- lm(mpg ~ wt + vs, data = mod_1_mtcars)
+summary(model_2)
+```
+
+
+
+```{r}
+ggplot(mod_1_mtcars, aes(x = wt, y = mpg, color = vs)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  ggtitle("Model 2: mpg ~ wt + vs") + 
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+
+\newpage
+
+## Model 3: mpg ~ wt * vs 
+```{r}
+model_3 <- lm(mpg ~ wt * vs, data = mod_1_mtcars)
+summary(model_3)
+```
+
+
+```{r}
+# Plot Model 3
+ggplot(mod_1_mtcars, aes(x = wt, y = mpg, color = vs)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, formula = y ~ x * vs) +
+  ggtitle("Model 3: mpg ~ wt * vs") + 
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+
+
+
+
+
+
