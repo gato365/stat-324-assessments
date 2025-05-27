@@ -1,0 +1,140 @@
+---
+title: "Homework 8"
+format: docx
+editor: visual
+---
+
+
+You will be working with a dataset that explores the **compressive strength of concrete mixtures**, originally published by Yeh (2006) in a civil engineering journal and later featured in *Applied Predictive Modeling* by Kuhn and Johnson (2013). This dataset comes from a series of experiments designed to understand how different components in concrete—such as cement, slag, fly ash, water, and aggregates—affect its overall strength.
+
+Each row in the dataset represents a unique concrete mixture used in an experimental test. In addition to the quantities of the various mix components, the dataset includes the **age of the mixture in days**, which reflects the curing time before testing. The main outcome of interest is the **compressive strength** of the concrete, a key measure of its durability and performance in structural applications.
+
+This real-world dataset provides a meaningful context to explore predictive modeling in regression. It captures the complexity of physical materials, the interaction between ingredients, and the effects of aging—offering a rich setting for applying and interpreting linear models.
+
+
+
+```{r}
+library(tidymodels)   ## Data Extraction     --- E
+library(dplyr)        ## Data Transformation --- T
+library(ggplot2)      ## Data Visualization  --- V
+library(GGally)       ## Data Visualization  --- V
+```
+
+
+\newpage
+
+In this project, we aim to predict **compressive strength**, a measure of how much pressure a concrete mixture can withstand. To build a meaningful model, it’s important to choose explanatory variables that have a logical and scientific connection to the strength of the concrete. The four variables we selected—**cement**, **water**, **age**, and **superplasticizer**—are not only commonly discussed in concrete design literature, but they also reflect fundamental aspects of how concrete hardens and gains strength.
+
+We included **cement** because it acts as the primary binding agent in concrete. A higher cement content typically results in stronger concrete, as more cement leads to a denser and more cohesive mixture. **Water** is also critical—concrete needs water to undergo hydration, the chemical reaction that causes hardening. However, excess water can dilute the mixture and create pores, reducing strength. The **age** of the concrete is another essential factor because compressive strength develops over time. Most concrete gains the majority of its strength within the first 28 days, so age allows us to capture how curing time affects performance. Finally, **superplasticizer** is a chemical additive that allows for easier mixing and flow without increasing water content. This can improve strength by enabling workability while preserving a low water-to-cement ratio.
+
+Together, these variables capture a balance of chemical composition, material proportions, and time—three critical elements that influence how concrete sets and performs. By including them, we are making informed hypotheses grounded in engineering principles, which will help us build a more accurate and interpretable regression model.
+
+
+```{r}
+# Create a new dataframe with selected variables
+concrete_df <- concrete %>%
+  select(compressive_strength, cement, water, age, superplasticizer)
+
+```
+
+\newpage
+
+
+```{r message=FALSE, warning=FALSE}
+# Create a pairs plot
+ggpairs(concrete_df)
+```
+
+## Dissecting the **age** variable
+
+Based on the density plot of **age** in your pairs plot, we observe that the variable is highly right-skewed, with distinct clusters around low integer values. Most observations fall at or near specific values such as **1, 7, 14, 28, 56, and 90 days**, which are standard curing periods in concrete testing. These points likely correspond to meaningful time-based testing intervals used in industry and research.
+
+To simplify modeling and improve interpretability, it would make sense to **group age into ordered categorical bins** based on these observed concentrations. Here's a good choice of breaks:
+
+**Suggested Age Breaks**:
+
+* **1–7 days** → "Very Early"
+* **8–14 days** → "Early"
+* **15–28 days** → "Standard"
+* **29–56 days** → "Late"
+* **57+ days** → "Long-term"
+
+These breaks align with traditional testing windows in concrete design (especially the 28-day benchmark), balance sample sizes across bins, and retain meaningful interpretation.
+
+**R Code to Create Age Groups**:
+
+```{r}
+mod_1_concrete_df <- concrete_df %>%
+  mutate(age_group = case_when(
+    age <= 7 ~ "Very Early",
+    age <= 14 ~ "Early",
+    age <= 28 ~ "Standard",
+    age <= 56 ~ "Late",
+    TRUE ~ "Long-term"
+  )) 
+```
+
+We chose these age breaks to reflect commonly used industry curing times while reducing the skewness of the original variable. Grouping age in this way helps us capture non-linear changes in strength over time without forcing a linear relationship. It also improves interpretability, as students can connect strength differences to concrete's development stages (e.g., initial set vs. full cure).
+
+
+
+```{r message=FALSE, warning=FALSE}
+# Create a pairs plot
+ggpairs(mod_1_concrete_df)
+```
+
+
+Upon closer examination of the pairs plot, we observe that **compressive strength peaks in the “Early” age group** before declining in later stages. This non-monotonic trend suggests that a simple linear relationship with age may not fully capture the underlying dynamics—opening the door to a more nuanced model that treats age as a categorical or non-linear predictor. Additionally, we notice that **water content is negatively correlated with both compressive strength and superplasticizer**, which aligns with the known trade-off between workability and strength. Another key observation is that **superplasticizer use appears skewed and concentrated at lower values**, potentially indicating sporadic or specialized usage in certain mixes rather than being uniformly applied across all age groups.
+
+
+\newpage
+
+These five models were selected to reflect patterns observed in the exploratory data visualizations while exploring a range of modeling strategies. **Model 1** serves as a baseline, incorporating three continuous predictors—cement, water, and age—based on their linear relationships with compressive strength. **Model 2** builds on this by introducing an interaction between cement and water, motivated by the negative correlation between the two and the engineering relevance of the water-to-cement ratio.
+
+From the plots, we saw that compressive strength varied across the `age_group` categories in a non-linear pattern, with strength peaking in the "Early" group. This observation motivated **Model 3**, which replaces age with `age_group` to capture non-linear effects. **Model 4** takes this further by allowing the effect of cement on strength to vary across age groups (via interaction), acknowledging that the role of cement may differ depending on how long the concrete has cured. Similarly, **Model 5** tests whether the relationship between water content and compressive strength changes across age groups, based on the patterns in the boxplots. Together, these models provide a structured way to compare additive and interaction effects while incorporating both quantitative and categorical predictors.
+
+```{r}
+# Model 1: 
+model_1 <- lm(compressive_strength ~ cement + water + age, data = mod_1_concrete_df)
+# Model 2: 
+model_2 <- lm(compressive_strength ~ cement * water, data = mod_1_concrete_df)
+# Model 3: 
+model_3 <- lm(compressive_strength ~ cement + water + age_group, data = mod_1_concrete_df)
+# Model 4: 
+model_4 <- lm(compressive_strength ~ age_group * cement , data = mod_1_concrete_df)
+# Model 5: 
+model_5 <- lm(compressive_strength ~ age_group * water, data = mod_1_concrete_df)
+
+```
+
+
+\newpage
+## Model 1
+```{r}
+summary(model_1)
+```
+
+\newpage
+## Model 2
+```{r}
+summary(model_2)
+```
+
+\newpage
+## Model 3
+```{r}
+summary(model_3)
+```
+
+\newpage
+## Model 4
+```{r}
+summary(model_4)
+```
+
+\newpage
+## Model 5
+```{r}
+summary(model_5)
+```
+
