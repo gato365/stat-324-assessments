@@ -1,0 +1,90 @@
+---
+title: "Thursday Exam 3 - STAT 252"
+format: docx
+---
+
+### Description of the Data & Transformation
+
+The code provided transforms the `Sacramento` housing dataset using `tidyverse` tools to prepare it for analysis or modeling. Specifically, it uses the `mutate()` function to add new variables that capture both geographic and numerical context. The first transformation creates a new variable, `RegionGroup`, which classifies each city in the dataset into one of five geographic clusters based on its location in or around the Sacramento area. These groups—such as "Sacramento Core," "Roseville Area," "Auburn & Foothills", "South & Rural", and "El Dorado Corridor"—are based on regional proximity and serve to simplify the diversity of neighborhoods into meaningful clusters for analysis. This kind of grouping is especially helpful in modeling and exploratory analysis when regional differences may influence housing prices or property characteristics.
+
+
+The `Sacramento` dataset contains real estate transaction information for 932 homes in the Sacramento, California area. Originally compiled by the SpatialKey software team, the dataset includes housing sales reported over a five-day period by the *Sacramento Bee*. It was later cleaned and supplemented using Google to fill in missing or inaccurate location data. The dataset is structured as a tibble (a modern type of data frame in R) and includes key variables such as `city`, `zip` code, number of `beds` and `baths`, `sqft` (square footage), `type` of property (e.g., Residential or Condo), and `price`. It also contains geographic coordinates (`latitude` and `longitude`) that allow for spatial analysis.
+
+
+\newpage
+
+## Transformation of Data
+
+```{r}
+library(tidymodels)
+```
+
+```{r}
+sacramento_df <- Sacramento %>%
+  mutate(
+    RegionGroup = case_when(
+      # Group 1: Sacramento Core & Nearby Suburbs
+      city %in% c("SACRAMENTO", "ELK_GROVE", "RANCHO_CORDOVA", "NORTH_HIGHLANDS", "RIO_LINDA",
+                  "CITRUS_HEIGHTS", "FAIR_OAKS", "ORANGEVALE", "CARMICHAEL", "GOLD_RIVER",
+                  "MATHER", "WEST_SACRAMENTO") ~ "Group 1 - Sacramento Core",
+
+      # Group 2: Roseville-Rocklin-Lincoln Area
+      city %in% c("ROSEVILLE", "ROCKLIN", "LINCOLN", "LOOMIS", "GRANITE_BAY", "ANTELOPE") ~ "Group 2 - Roseville Area",
+
+      # Group 3: Folsom to El Dorado Corridor
+      city %in% c("FOLSOM", "EL_DORADO_HILLS", "CAMERON_PARK", "EL_DORADO", "DIAMOND_SPRINGS",
+                  "POLLOCK_PINES", "PLACERVILLE", "COOL") ~ "Group 3 - El Dorado Corridor",
+
+      # Group 4: Auburn-Rural East & Northeast
+      city %in% c("AUBURN", "MEADOW_VISTA", "FORESTHILL", "PENRYN", "GREENWOOD", "GARDEN_VALLEY") ~ "Group 4 - Auburn & Foothills",
+
+      # Group 5: South County & Rural Edges
+      city %in% c("GALT", "WILTON", "WALNUT_GROVE", "RANCHO_MURIETA", "ELVERTA") ~ "Group 5 - South & Rural",
+
+      TRUE ~ "Unassigned"
+    ),
+    sqft_centered = sqft - mean(sqft, na.rm = TRUE),
+    beds_centered = beds - mean(beds, na.rm = TRUE)
+  )
+```
+
+\newpage
+
+## Models
+
+```{r}
+model_1 <- lm(price ~ sqft, data = sacramento_df)
+model_2 <- lm(price ~ sqft + beds, data = sacramento_df)
+model_3 <- lm(price ~ sqft + beds + baths, data = sacramento_df)
+model_4 <- lm(price ~ sqft + RegionGroup, data = sacramento_df)
+model_5 <- lm(price ~ sqft * RegionGroup, data = sacramento_df)
+```
+
+\newpage
+
+## Model 1
+```{r}
+summary(model_1)
+```
+\newpage
+## Model 2
+```{r}
+summary(model_2)
+```
+\newpage
+
+## Model 3
+```{r}
+summary(model_3)
+```
+\newpage
+## Model 4
+```{r}
+summary(model_4)
+```
+\newpage
+## Model 5
+```{r}
+summary(model_5)
+```
+
