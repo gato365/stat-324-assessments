@@ -1,5 +1,5 @@
 ---
-title: "Friday Quiz - Solutions - STAT 252"
+title: "Friday Quiz 8 - Solutions - STAT 252"
 format: docx
 editor: visual
 ---

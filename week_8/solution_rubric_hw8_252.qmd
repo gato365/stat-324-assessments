@@ -1,0 +1,32 @@
+---
+title: "Homework 8 - Solutions - STAT 252"
+format: docx
+editor: visual
+---
+
+
+
+
+## Question 12
+
+
+## **Solution**
+
+If $r = 1$, this means there is a **perfect positive linear relationship** between the **explanatory** and **response** variables in simple linear regression.
+
+This implies that:
+
+* All data points lie exactly on a **line with a positive slope**.
+* As the explanatory variable increases, the response variable increases in a **perfectly consistent** and **proportional** manner.
+* The correlation is not just strong — it's **perfect**, meaning the regression line **predicts every value without error**.
+* The **coefficient of determination $R^2$** would be 1, meaning **100% of the variability** in the response variable is explained by the explanatory variable.
+
+
+## Rubric
+
+| **Component**                         | **Criteria**                                                                                  | **Points** |
+| ------------------------------------- | --------------------------------------------------------------------------------------------- | ---------- |
+| **Perfect Positive Relationship**     | States that the relationship is **perfectly linear and positive**                             | 1.0        |
+| **Implications for Prediction & Fit** | Mentions implications like **all points lie on the line**, or **perfect prediction / R² = 1** | 1.0        |
+
+
