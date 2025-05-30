@@ -1,0 +1,31 @@
+---
+title: "Friday Quiz 7 - Solutions - STAT 252"
+format: docx
+editor: visual
+---
+
+
+
+## Question 12
+
+For part 3, if ptratio was 30, could you make a prediction on the median value of owner-occupied homes? If so, explain why you can do this and compute the value. If not, why not? Show all work.
+
+## Solution
+
+No, we **should not** make a prediction for `ptratio = 30` using this linear model.
+
+Although we can plug 30 into the regression equation to compute a value mathematically, the scatterplot shows that **all observed ptratio values are well below 30**, meaning that 30 is **outside the range of the data**.
+
+Using the regression model beyond the range of observed data is called **extrapolation**, and the results may be **unreliable or unrealistic**. Therefore, it would not be appropriate to interpret a prediction for a ptratio of 30 in this context.
+
+
+
+## Rubric
+
+| **Component**                               | **Criteria**                                                                                        | **Points** |
+| ------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------- |
+| **Extrapolation Recognized**                | Correctly identifies that 30 is **outside the range of observed ptratio values**, based on the plot | 1.0        |
+| **Model Use Justification**                 | Explains why a prediction is **not appropriate** due to extrapolation                               | 1.0        |
+| **Interpretation of Prediction Limitation** | Demonstrates understanding that predictions beyond data range are **unreliable** or **not valid**   | 1.0        |
+| **Connection to Plot/Data Range**           | Refers to the **plot** or observed values to support the reasoning                                  | 1.0        |
+
