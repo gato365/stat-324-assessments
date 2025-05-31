@@ -4,43 +4,32 @@ format: docx
 editor: visual
 ---
 
-
-
-
 ## Question 10
+
 An educator wants to test whether three different teaching methods (Method A, Method B, Method C) lead to the same mean exam score for students. Formulate the null and alternative hypotheses for the one-way ANOVA test of this research question. (Provide your answers in words or symbols.)
 
 ## **Solution**
 
 ### **Null Hypothesis (H₀):**
 
-The **population mean exam scores are the same** for all three teaching methods.
-In symbols:
+The **population mean exam scores are the same** for all three teaching methods. In symbols:
 
 $$
 H_0: \mu_A = \mu_B = \mu_C
 $$
 
-
-
-
-
 ### **Alternative Hypothesis (H₁):**
 
-**At least one** teaching method has a **different population mean exam score**.
-In symbols:
+**At least one** teaching method has a **different population mean exam score**. In symbols:
 
 $$
 H_1: \text{At least one } \mu \text{ is different}
 $$
 
-
-
 ## **Rubric**
 
-| **Component**                        | **Criteria**                                                                                        | **Points** |
-| ------------------------------------ | --------------------------------------------------------------------------------------------------- | ---------- |
-| **Correct Null Hypothesis**          | States that **all population means are equal** (either in words or symbols)                         | 1.0        |
-| **Correct Alternative Hypothesis**   | States that **at least one population mean is different** (not all equal)                           | 1.0        |
-| **Contextual Clarity or Symbol Use** | Uses either **clear context (exam scores, methods)** or correct **symbols ($\mu_A, \mu_B, \mu_C$)** | 1.0        |
-
+| **Component** | **Criteria** | **Points** |
+|--------------|--------------------------------------------|--------------|
+| **Correct Null Hypothesis** | States that **all population means are equal** (either in words or symbols) | 1.0 |
+| **Correct Alternative Hypothesis** | States that **at least one population mean is different** (not all equal) | 1.0 |
+| **Contextual Clarity or Symbol Use** | Uses either **clear context (exam scores, methods)** or correct **symbols (**$\mu_A, \mu_B, \mu_C$) | 1.0 |
