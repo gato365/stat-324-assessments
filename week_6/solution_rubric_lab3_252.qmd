@@ -1,0 +1,41 @@
+---
+title: "Lab 3- Solutions - STAT 252"
+format: docx
+editor: visual
+---
+
+
+
+
+
+### **Question:**
+
+**Which of these two explanatory variables should be used to predict miles per gallon (mpg)? Explain your idea.**
+
+
+
+### **Solution **
+
+We should use **`wt` (weight)** to predict `mpg`, because the linear model using `wt` provides a **better overall fit** than the model using `hp` (horsepower), based on the following reasons:
+
+1. **Higher R-squared**:
+
+   * The model with `wt` has an **R² of 0.7528**, meaning it explains about **75.3%** of the variability in `mpg`.
+   * The model with `hp` only explains **60.2%** of the variability in `mpg`.
+
+2. **Lower Residual Standard Error (RSE)**:
+
+   * The residual standard error for the `wt` model is **3.046**, while it is **3.863** for the `hp` model.
+   * This means predictions from the `wt` model are **more precise**, with less typical error.
+
+
+
+### **Rubric:*
+
+| **Component**                            | **Criteria**                                                                                                     | **Points** |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------- |
+| **R-squared Comparison**                 | Correctly compares R² values and explains that **`wt` explains more variability in mpg**                         | 1.5       |
+| **Residual Standard Error Comparison**   | Recognizes that **`wt` has a lower RSE**, indicating more precise predictions                                    | 1.5       |
+
+
+
