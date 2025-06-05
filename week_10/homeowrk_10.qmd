@@ -1,0 +1,441 @@
+---
+title: "Homework 8-9-10"
+format: docx
+editor: visual
+---
+
+## 0) Data
+
+This regression analysis consists of two different samples of 200 randomly selected observations from the `nycflights13` dataset, filtered to include only flights operated by American Airlines (`AA`), United Airlines (`UA`), and Envoy Air (`MQ`). The 1st analysis includes the variables: `arr_delay` (arrival delay), `dep_delay` (departure delay), `air_time` (duration of flight in minutes), and `carrier` (airline). The 2nd analysis includes the variables: `dep_delay`, `air_time`, `distance`, `hour` (hour of the day), and `day` (day of the month).
+
+
+The goal of the 1st analysis is to perform an investigation is to explore how departure delays and air time may be associated with arrival delays, focusing specifically on these three carriers. While `carrier` is included as a categorical variable for potential future use, the primary focus in this assignment will be on building and interpreting models that treat `arr_delay` as the response variable. Additional models incorporating `carrier` or other variables may be explored in subsequent analyses to deepen our understanding of flight delay patterns.
+
+The goal of the 2nd analysis will be discussed in section 3.
+
+```{r warning=FALSE, message=FALSE}
+# Load necessary packages
+library(nycflights13)         ## Data Extraction     --- E
+library(dplyr)                ## Data Transformation --- T
+library(tidyr)                ## Data Transformation --- T
+library(ggplot2)              ## Data Visualization  --- V
+library(ggfortify)            ## Data Visualization  --- V
+library(MASS)                 ## Data Analysis       --- A
+library(leaps)                ## Data Analysis       --- A
+library(lmtest)               ## Data Analysis       --- A
+library(broom)                ## Data Analysis       --- A
+library(car)                  ## Data Analysis       --- A
+```
+
+```{r}
+# Set seed for reproducibility
+set.seed(324) 
+
+# Sample 200 rows and select relevant variables
+flight_df<- flights %>%
+  dplyr::select(arr_delay, dep_delay, air_time, carrier) %>%
+  filter(carrier %in% c("AA","UA","MQ")) %>% 
+  drop_na() %>%                   
+  sample_n(200)
+
+```
+
+\newpage
+
+## 1) Simple Linear Regression
+
+### 1a. Visualization
+
+```{r}
+ggplot(flight_df, aes(x = dep_delay, y = arr_delay)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(
+    title = "Arrival Delay vs. Departure Delay",
+    x = "Departure Delay (minutes)",
+    y = "Arrival Delay (minutes)"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+\newpage
+
+### 1b. Analysis
+
+```{r}
+# Fit the simple linear regression model
+model_1 <- lm(arr_delay ~ dep_delay, data = flight_df)
+
+# View the summary of the model
+summary(model_1)
+```
+
+## 2) Multiple Linear Regression
+
+We are going to investigate the following models:
+
+| Model \# | Formula | Description |
+|-------------:|-----------------------|------------------------------------|
+| **1** | `arr_delay ~ dep_delay + air_time` | Both `dep_delay` and `air_time` are **quantitative**. |
+| **2** | `arr_delay ~ dep_delay + carrier` | `dep_delay` is **quantitative**, `carrier` is **categorical**. |
+| **3** | `arr_delay ~ dep_delay + air_time + dep_delay:air_time` | Interaction between **two quantitative** variables. |
+| **4** | `arr_delay ~ dep_delay + carrier + dep_delay:carrier` | Interaction between **quantitative** and **categorical** predictor. |
+| **5** | `arr_delay ~ dep_delay_c + air_time_c + dep_delay_c:air_time_c` | Mean-centered `dep_delay` and `air_time`; includes interaction between centered variables. |
+| **6** | `arr_delay ~ dep_delay + I(dep_delay^2)` | Polynomial regression on `dep_delay`. |
+| **7** | `arr_delay ~ dep_delay_gc + carrier + dep_delay_gc:carrier` | Group-mean centered `dep_delay` within each `carrier` group; includes interaction. |
+| **8** | `arr_delay ~ dep_delay + air_time_group + dep_delay:air_time_group` | `air_time` binned into 4 categories; interaction with `dep_delay`. |
+
+\newpage
+#### Model 1: Two Quantitative Predictors
+
+```{r}
+# Model 1: arr_delay ~ dep_delay + air_time
+model1 <- lm(arr_delay ~ dep_delay + air_time, data = flight_df)
+summary(model1)
+```
+
+------------------------------------------------------------------------
+
+#### Model 2: One Quant + One Categorical
+
+```{r}
+# Model 2: arr_delay ~ dep_delay + carrier
+model2 <- lm(arr_delay ~ dep_delay + carrier, data = flight_df)
+summary(model2)
+```
+
+------------------------------------------------------------------------
+
+#### Model 3: Quant + Quant + Interaction
+
+```{r}
+# Model 3: arr_delay ~ dep_delay * air_time
+model3 <- lm(arr_delay ~ dep_delay * air_time, data = flight_df)
+summary(model3)
+```
+
+------------------------------------------------------------------------
+
+#### Model 4: Quant + Categorical + Interaction
+
+```{r}
+# Model 4: arr_delay ~ dep_delay * carrier
+model4 <- lm(arr_delay ~ dep_delay * carrier, data = flight_df)
+summary(model4)
+```
+
+------------------------------------------------------------------------
+
+#### Model 5: Centered Interaction (both quant)
+
+```{r}
+# Model 5: Center and fit interaction
+flight_df <- flight_df %>%
+  mutate(
+    dep_delay_c = dep_delay - mean(dep_delay, na.rm = TRUE),
+    air_time_c  = air_time - mean(air_time, na.rm = TRUE)
+  )
+
+model5 <- lm(arr_delay ~ dep_delay_c * air_time_c, data = flight_df)
+summary(model5)
+```
+
+------------------------------------------------------------------------
+
+#### Model 6: Polynomial Term
+
+```{r}
+# Model 6: arr_delay ~ dep_delay + dep_delay^2
+model6 <- lm(arr_delay ~ dep_delay + I(dep_delay^2), data = flight_df)
+summary(model6)
+```
+
+------------------------------------------------------------------------
+
+#### Model 7: Group-Centered by Carrier
+
+```{r}
+# Model 7: Group-centered dep_delay within carrier
+flight_df <- flight_df %>%
+  group_by(carrier) %>%
+  mutate(dep_delay_gc = dep_delay - mean(dep_delay, na.rm = TRUE)) %>%
+  ungroup()
+
+model7 <- lm(arr_delay ~ dep_delay_gc * carrier, data = flight_df)
+summary(model7)
+```
+
+------------------------------------------------------------------------
+
+#### Model 8: Piecewise Regression (binned air_time)
+
+```{r}
+# Model 8: Bin air_time into 4 groups
+flight_df <- flight_df %>%
+  mutate(air_time_group = ntile(air_time, 4))
+
+model8 <- lm(arr_delay ~ dep_delay * as.factor(air_time_group), data = flight_df)
+summary(model8)
+```
+
+
+
+
+\newpage
+## 3) Model Selection Techniques & Metrics
+
+
+This analysis uses the **second random sample of 200 observations** from the `nycflights13` dataset, again focusing on flights from three major carriers: American Airlines (`AA`), United Airlines (`UA`), and Envoy Air (`MQ`). This time, we expand our investigation by considering **five explanatory variables**: `dep_delay`, `air_time`, `distance`, `hour`, and `day`. These variables offer a mix of timing, duration, and scheduling information that may explain variation in the response variable, `arr_delay`. By working with a fresh sample, we simulate the real-world variability encountered in practice and apply techniques like **stepwise regression** and **best subset selection** to identify the most parsimonious and predictive subset of variables for modeling arrival delay. This approach allows us to evaluate model quality using criteria such as AIC, adjusted R², and BIC.
+
+
+```{r}
+flight_mod_df <- flights %>%
+  dplyr::select(arr_delay, dep_delay, air_time, distance, hour, day, carrier) %>%
+  filter(carrier %in% c("AA", "UA", "MQ")) %>%
+  drop_na() %>%
+  sample_n(200)
+```
+
+
+### 3a. Stepwise Regression
+
+
+```{r}
+# Start with a full model
+full_model <- lm(arr_delay ~ dep_delay + air_time + distance + hour + day, data = flight_mod_df)
+
+# Stepwise model using both directions (backward & forward)
+step_model <- stepAIC(full_model, direction = "both", trace = TRUE)
+
+# Summary of final selected model
+summary(step_model)
+```
+
+
+### 3b. Best Subset
+
+
+```{r}
+# Fit all subsets model
+subset_model <- regsubsets(
+  arr_delay ~ dep_delay + air_time + distance + hour + day,
+  data = flight_mod_df,
+  nvmax = 5
+)
+
+plot(x = subset_model,        ## Specify Model Fit
+     scale = "adjr2"          ## Specify Selection Metric
+)
+```
+
+
+
+\newpage
+
+## 4) Residual Assumptions
+
+
+In practice, selecting the most appropriate regression model involves balancing model complexity, interpretability, and predictive performance. From the eight models we previously constructed—ranging from simple additive models to interactions and group-centered terms—each offers a different lens on how explanatory variables relate to arrival delay. To illustrate how model assumptions influence model choice, we will now evaluate the residual assumptions of **Model 4**, which includes an interaction between a quantitative predictor (`dep_delay`) and a categorical predictor (`carrier`). This example will highlight the importance of checking conditions like linearity, constant variance, and normality before trusting a model’s inferences.
+
+
+```{r}
+autoplot(model4) + ## from ggfortify
+  theme_bw()
+```
+
+```{r}
+resettest(model4)   # From lmtest package
+```
+
+
+```{r}
+dwtest(model4)   # From lmtest package
+```
+
+
+```{r}
+shapiro.test(resid(model4))   # Base R
+```
+
+
+```{r}
+bptest(model4)   # From lmtest package
+```
+\newpage
+
+## 5) Transformations
+
+We will focus on simple linear regression using `arr_delay` as the response and `dep_delay` as the explanatory variable. We will begin by applying an **ad hoc log transformation** to both variables, using `log(dep_delay + 60)` and `log(arr_delay + 60)` to stabilize variance and address the nonlinear pattern observed in the scatterplot. This transformation is guided by visual diagnostics and practical reasoning rather than a formal algorithm. Following this, we will implement a **Box-Cox transformation**, which systematically searches for the optimal power transformation of the response variable based on model fit. Together, these approaches will allow us to compare how different transformations impact model assumptions and interpretability.
+
+
+
+### 5a. Ad Hoc Transformations
+
+
+
+The scatterplot of `arr_delay` versus `dep_delay` reveals a strong, nonlinear relationship with increasing variance as departure delay increases—a pattern known as *heteroscedasticity*. The spread of arrival delays appears tightly clustered for small values of `dep_delay`, but fans out widely for larger delays. This violates the constant variance assumption of linear regression and suggests that our model's residuals may be non-constant and potentially non-normal. To stabilize the variance and improve linearity, we consider applying transformations to the predictor and/or response variable. In doing so, we add 60 to both `arr_delay` and `dep_delay` before taking logarithms to avoid issues with log(0) or negative values. Importantly, this shift is a **linear transformation** and does not affect the underlying relationship between the variables—it simply rescales the data to make log transformation valid.
+
+
+```{r}
+# Add small constant to avoid log(0) issues
+mod_2_flight_df <- flight_df %>%
+  mutate(
+    log_arr_delay = log(arr_delay + 60),
+    log_dep_delay = log(dep_delay + 60)
+  ) %>% 
+  mutate(arr_delay_pos = arr_delay + 60)  
+
+# Fit the transformed model
+model_loglog <- lm(log_arr_delay ~ log_dep_delay, data = mod_2_flight_df)
+summary(model_loglog)
+```
+
+
+```{r}
+ggplot(mod_2_flight_df, aes(x = log_dep_delay, y = log_arr_delay)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(
+    title = "Log-Transformed Arrival Delay\n vs. Departure Delay",
+    x = "log(Departure Delay + 60)",
+    y = "log(Arrival Delay + 60)"
+  ) +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+
+
+
+### 5b. Power Transformations – Box-Cox
+
+```{r}
+# Fit the original model again
+model_boxcox <- lm(arr_delay_pos ~ dep_delay, data = mod_2_flight_df)
+
+# Run Box-Cox to suggest power transformation for Y
+# Run Box-Cox and save result
+bc_result <- boxcox(model_boxcox, lambda = seq(-2, 2, 0.1))
+bc_result
+```
+
+
+```{r}
+# Extract the lambda value that maximizes the log-likelihood
+best_lambda <- bc_result$x[which.max(bc_result$y)]
+best_lambda
+```
+
+\newpage
+
+## 6) Miscellaneous Topics
+
+### 6a. Outliers, Leverage, and Influence
+
+```{r}
+
+best_model <- lm(arr_delay ~ dep_delay + air_time + distance, data = flight_mod_df)
+
+model_aug <- augment(best_model)
+```
+
+
+```{r}
+# Outliers: Standardized residuals > 2 or < -2
+ model_aug %>% 
+  filter(abs(.std.resid) > 2) %>% 
+  nrow()
+```
+
+
+```{r}
+# Leverage: Points with .hat > 2 * average hat value
+leverage_cutoff <- 2 * mean(model_aug$.hat)
+model_aug %>% 
+  filter(.hat > leverage_cutoff) %>% 
+  nrow()
+```
+
+
+```{r}
+# Influence: Cook's Distance > 4 / n
+influence_cutoff <- 4 / nrow(model_aug)
+model_aug %>% 
+  filter(.cooksd > influence_cutoff) %>% 
+  nrow()
+
+```
+
+
+
+### 6b. Multicollinearity
+
+```{r}
+car::vif(best_model)
+```
+
+
+
+\newpage
+
+## 7) Statistical Tests
+
+In this section, we use our selected multiple regression model—predicting `arr_delay` from `dep_delay`, `air_time`, and `distance`—to perform formal statistical inference. We begin with the **omnibus F-test**, which evaluates whether the model as a whole explains a significant amount of variability in arrival delays compared to a model with no predictors. To assess the unique contribution of `distance`, we conduct a **partial F-test**, comparing the full model to a reduced model without `distance`. This helps determine whether `distance` adds meaningful explanatory power beyond `dep_delay` and `air_time`. Finally, we interpret the results of **individual t-tests** for each coefficient, evaluating whether each predictor is significantly associated with arrival delay while holding the others constant. To visualize these effects, we use **partial regression plots**, which isolate the adjusted relationship between each predictor and the response after accounting for other variables in the model.
+
+
+```{r}
+# Fit the full model (best model)
+model_full <- lm(arr_delay ~ dep_delay + air_time + distance, data = flight_mod_df)
+
+# Fit the reduced model without 'distance' for partial F-test
+model_reduced <- lm(arr_delay ~ dep_delay + air_time, data = flight_mod_df)
+```
+
+### 7a. Omnibus Test
+
+> *"Do these predictors—taken together—explain any variation in arrival delay at all?"*
+
+> We use the **global F-test** to test whether at least one of the predictors (`dep_delay`, `air_time`, `distance`) is statistically significant, i.e., whether the full model explains more variance than a null model (with just the intercept).
+
+
+```{r}
+summary(model_full)
+```
+
+
+
+### 7b. Partial F-Test
+
+> *"Is `distance` still useful in the model once `dep_delay` and `air_time` are already included?"*
+> We compare the **full model** (`dep_delay + air_time + distance`) to a **reduced model** (`dep_delay + air_time`) using a partial F-test. This tells us whether the added predictor provides significant additional explanatory power.
+
+
+
+```{r}
+# Partial F-test using anova()
+anova(model_reduced, model_full)
+```
+
+
+### 7c. Individual t-tests
+
+> *"Is each predictor—`dep_delay`, `air_time`, and `distance`—significantly associated with `arr_delay` when holding the others constant?"*
+
+> Each coefficient in the model is tested using a **t-test** to assess whether its effect is different from zero in the context of the multiple regression.
+
+
+```{r}
+summary(model_full)
+```
+
+
+
+```{r}
+# Create partial regression plots
+avPlots(model_full,
+        terms = ~ dep_delay + air_time + distance,
+        main = "Partial Regression Plots")
+```
+

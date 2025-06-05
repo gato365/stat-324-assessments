@@ -4,17 +4,12 @@ format: docx
 editor: visual
 ---
 
-
-
-
 ## Question 7:
-a) Only, write out the full regression equation for Model 4 using the estimated coefficients.
-b) Using Model 4, what is the predicted price for a home where square footage is 2 units above the mean and number of bedrooms is also 2 units above the mean? Show all work and explain the interpretation of your result.
+
+a)  Only, write out the full regression equation for Model 4 using the estimated coefficients.
+b)  Using Model 4, what is the predicted price for a home where square footage is 2 units above the mean and number of bedrooms is also 2 units above the mean? Show all work and explain the interpretation of your result.
 
 Solution:
-
-
-
 
 ### **Solution**
 
@@ -22,24 +17,22 @@ Solution:
 
 Let:
 
-* $\hat{y}_i$ = predicted price of home $i$
-* $x_{1i}$ = sqft\_centered (i.e., square footage minus the mean sqft)
-* $x_{2i}$ = beds\_centered (i.e., number of bedrooms minus the mean number of bedrooms)
+-   $\hat{y}_i$ = predicted price of home $i$
+-   $x_{1i}$ = sqft_centered (i.e., square footage minus the mean sqft)
+-   $x_{2i}$ = beds_centered (i.e., number of bedrooms minus the mean number of bedrooms)
 
-[I did not take off points if you do not include the above but for the final exam I will expect you to do this, if you did no points will be taken away ]
+\[I did not take off points if you do not include the above but for the final exam I will expect you to do this, if you did no points will be taken away \]
 
 $$
 \hat{y}_i = 254330.425 + 173.455x_{1i} - 28105.856x_{2i} - 16.628(x_{1i}x_{2i})
 $$
 
-
-
 #### **b) Prediction for 2 Units Above the Mean on Both Variables**
 
 Given:
 
-* $x_{1i} = 2$
-* $x_{2i} = 2$
+-   $x_{1i} = 2$
+-   $x_{2i} = 2$
 
 Substitute into the equation:
 
@@ -59,20 +52,16 @@ $$
 \hat{y}_i \approx 198465.62
 $$
 
----
+------------------------------------------------------------------------
 
 ### **Interpretation**
 
 A house that is 2 sqft units above the average and has 2 more bedrooms than average is predicted to cost **approximately \$198,466**.
 
-* The negative interaction term ($-16.628$) indicates that the *marginal effect* of square footage on price **decreases** as the number of bedrooms increases (and vice versa).
-* In this case, having more of both sqft and bedrooms *together* reduces the predicted price more than if we considered them independently.
-
-
-
+-   The negative interaction term ($-16.628$) indicates that the *marginal effect* of square footage on price **decreases** as the number of bedrooms increases (and vice versa).
+-   In this case, having more of both sqft and bedrooms *together* reduces the predicted price more than if we considered them independently.
 
 PTS: 22
-
 
 ## Question 8:
 
@@ -82,14 +71,11 @@ What does the 154963.526 value in Model 7 represent? Provide as much detail as p
 
 The value 154,963.526 in Model 7 is the intercept shift for the "RegionGroup 4 – Auburn & Foothills" relative to the baseline group (RegionGroup 1 – Sacramento Core), in a regression model with an interaction between sqft and RegionGroup.
 
-
-
 PTS: 16
 
 ## Question 9:
 
 Using Model 7, predict the price for a house in RegionGroup 5 - South & Rural with 2000 sqft. Show your calculation and interpret the result.
-
 
 ### **Solution**
 
@@ -123,16 +109,11 @@ $$
 
 A home located in **RegionGroup 5 – South & Rural** with **2000 sqft** is predicted to cost approximately **\$295,204.85**.
 
-
-
-
 PTS: 22
-
 
 ## Question 10:
 
-a) Which model (from 1 to 7) would you choose to predict price and why? b) What additional criteria or steps would you use to compare the models more rigorously?
-
+a)  Which model (from 1 to 7) would you choose to predict price and why? b) What additional criteria or steps would you use to compare the models more rigorously?
 
 ### **Solution**
 
@@ -142,38 +123,36 @@ I would choose **Model 7** to predict housing prices.
 
 **Why:** **Highest R-squared**: Model 7 has the highest $Adj-R^2 = 0.6399$, indicating that it explains the largest proportion of variation in price.
 
----
+------------------------------------------------------------------------
 
 #### **b) Additional Criteria for Model Comparison**
 
 To compare the models more rigorously, I would consider the following:
 
-1. **Cross-Validation **
+1.  **Cross-Validation**
 
-   * Evaluate how well each model generalizes to new data by estimating prediction error using k-fold cross-validation or the Prediction Residual Sum of Squares (PRESS).
+    -   Evaluate how well each model generalizes to new data by estimating prediction error using k-fold cross-validation or the Prediction Residual Sum of Squares (PRESS).
 
-2. **AIC / BIC (Information Criteria)**
+2.  **AIC / BIC (Information Criteria)**
 
-   * Compare model complexity and fit. AIC and BIC penalize more complex models, helping us assess whether added complexity improves performance.
+    -   Compare model complexity and fit. AIC and BIC penalize more complex models, helping us assess whether added complexity improves performance.
 
-3. **Residual Assumptions**
+3.  **Residual Assumptions**
 
-   * Check for model assumptions: linearity, homoscedasticity (constant variance), normality of residuals, and absence of outliers or influential points.
+    -   Check for model assumptions: linearity, homoscedasticity (constant variance), normality of residuals, and absence of outliers or influential points.
 
-4. **Multicollinearity**
+4.  **Multicollinearity**
 
-   * Use Variance Inflation Factor (VIF) to ensure predictors are not overly correlated.
+    -   Use Variance Inflation Factor (VIF) to ensure predictors are not overly correlated.
 
-5. **Practicality and Interpretability**
+5.  **Practicality and Interpretability**
 
-   * Although Model 7 fits best statistically, a simpler model (e.g., Model 4 or 5) might be chosen if interpretability or data availability is a priority.
+    -   Although Model 7 fits best statistically, a simpler model (e.g., Model 4 or 5) might be chosen if interpretability or data availability is a priority.
 
-6. **Test Set Performance**
+6.  **Test Set Performance**
 
-   * Split data into training and test sets to evaluate each model’s true predictive performance on unseen data.
+    -   Split data into training and test sets to evaluate each model’s true predictive performance on unseen data.
 
-[You do not need to mention all of these just some deeper thought would suffice]
-
+\[You do not need to mention all of these just some deeper thought would suffice\]
 
 PTS: 12
-
