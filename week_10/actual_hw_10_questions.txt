@@ -1,0 +1,108 @@
+
+## Image 1. - Simple Linear Regression
+### Q1. How many variables are in this plot? - Numeric
+
+Answer: 2
+
+### Q2. Based on this image, which model best denotes how the lines are modeling the relationship? - MC
+
+### Q3. Explain the relationship between the variables in this plot? - OE
+
+
+
+
+## Image 2. - Dummy varaible
+### Q4. How many variables are in this plot? - Numeric
+
+Answer: 3
+
+### Q5. Based on this image, which model best denotes how the lines are modeling the relationship? - MC
+
+### Q6. Explain the relationship between the variables in this plot? - OE
+
+
+
+## Image 5. Interaction
+### Q7. How many variables are in this plot? - Num
+
+Answers: 3
+
+### Q8. Based on this image, which model best denotes how the lines are modeling the relationship? MC
+
+### Q9. Explain the relationship between the variables in this plot? - OE
+
+
+### Q10. What is wrong with statement? (Need ChatGPT for question) - MA
+
+Something wrong about multicolinearity. Something wrong about VIF. Something right about standard errors being inflated.
+
+
+### Q11. What is wrong with statement? (Need ChatGPT for question)- MA
+
+2 sentences that are correct about Partial Plots, 2 sentences that are not correct about Partial Plots
+
+
+### Q12. What is wrong with statement? (Need ChatGPT for question)- MA
+
+1 wrong statement about outliers, 1 statement wrong about leverage points, 1 right statemnent about influen
+
+
+### Q13. What is wrong with statement? (Need ChatGPT for question)- MA
+
+Concetpst about residual assumptions using the output
+
+
+### Q14. What is wrong with statement? (Need ChatGPT for question)- MA
+
+Concetpst about residual assumptions theoretical speaking
+
+
+### Q15. What is the best model according to best subset algorithm? Why? Explain. - OE
+
+
+### Q16. What are the differences between best subset algorithm and stepwise regression? - MA
+
+
+### Q17. According to the stepwise regression which variable is remove ? - Drop Down
+
+[1st]
+[2nd]
+[3rd]
+
+
+### Q18. Why does centering not change the model metrics (i.e., R-Squared, AIC, BIC)?
+
+
+
+
+### Q19. Write and interpret model 4 for each carrier. - OE
+
+
+
+### Q20. Predict the arr_delay when MQ is the carrier and dep_delay is 10 using model 4. - Numeric
+
+
+
+### Q21. Which of the following are model metrics? - MA
+
+
+### Q22. What is the utility behind using a piecewise regression? - MA
+### Q23. What is the utility behind using polynomial regression? - MA
+### Q24. What is the utility centering by each groups mean? - MA
+### Q25. Write the entire model for model 5. - OE
+### Q26. Predict the arrival delay for model 5. - OE
+### Q27. When you have 2 quantiative why is it importatn to center the variable? - MA
+### Q28. What is true about box-cox transformations? - MA
+### Q29. Write and interpret the model log based tranformation. - OE
+### Q30. Ominbus Test - MA
+
+
+
+
+
+
+
+### Q17.
+
+
+
