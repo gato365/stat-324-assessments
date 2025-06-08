@@ -6,6 +6,8 @@ Answer: 2
 
 ### Q2. Based on this image, which model best denotes how the lines are modeling the relationship? - MC
 
+Answere is model 1, provide 8 model options
+
 ### Q3. Explain the relationship between the variables in this plot? - OE
 
 
@@ -18,6 +20,8 @@ Answer: 3
 
 ### Q5. Based on this image, which model best denotes how the lines are modeling the relationship? - MC
 
+Answere is model 2, provide 8 model options
+
 ### Q6. Explain the relationship between the variables in this plot? - OE
 
 
@@ -29,7 +33,10 @@ Answers: 3
 
 ### Q8. Based on this image, which model best denotes how the lines are modeling the relationship? MC
 
+Answere is model 4, provide 8 model options
+
 ### Q9. Explain the relationship between the variables in this plot? - OE
+
 
 
 ### Q10. What is wrong with statement? (Need ChatGPT for question) - MA
@@ -37,9 +44,29 @@ Answers: 3
 Something wrong about multicolinearity. Something wrong about VIF. Something right about standard errors being inflated.
 
 
+Use the folllwing information
+```
+best_model <- lm(arr_delay ~ dep_delay + air_time + distance, data = flight_mod_df)
+car::vif(best_model)
+dep_delay  air_time  distance 
+ 1.032278 48.242936 48.149460 
+
+
+
+```
+
+
+
 ### Q11. What is wrong with statement? (Need ChatGPT for question)- MA
 
 2 sentences that are correct about Partial Plots, 2 sentences that are not correct about Partial Plots
+
+Use the folllwing information:
+```
+Image Provided
+
+
+```
 
 
 ### Q12. What is wrong with statement? (Need ChatGPT for question)- MA
@@ -47,20 +74,92 @@ Something wrong about multicolinearity. Something wrong about VIF. Something rig
 1 wrong statement about outliers, 1 statement wrong about leverage points, 1 right statemnent about influen
 
 
+Use the folllwing information:
+```
+best_model <- lm(arr_delay ~ dep_delay + air_time + distance, data = flight_mod_df)
+
+model_aug <- augment(best_model)
+# Outliers: Standardized residuals > 2 or < -2
+ model_aug %>% 
+  filter(abs(.std.resid) > 2) %>% 
+  nrow()
+[1] 11
+# Leverage: Points with .hat > 2 * average hat value
+leverage_cutoff <- 2 * mean(model_aug$.hat)
+model_aug %>% 
+  filter(.hat > leverage_cutoff) %>% 
+  nrow()
+[1] 14
+# Influence: Cook's Distance > 4 / n
+influence_cutoff <- 4 / nrow(model_aug)
+model_aug %>% 
+  filter(.cooksd > influence_cutoff) %>% 
+  nrow()
+[1] 13
+
+
+
+```
+
+
 ### Q13. What is wrong with statement? (Need ChatGPT for question)- MA
 
 Concetpst about residual assumptions using the output
 
+
+
+Use the folllwing information:
+```
+resettest(model4)   # From lmtest package
+
+    RESET test
+
+data:  model4
+RESET = 2.5717, df1 = 2, df2 = 192, p-value = 0.07904
+dwtest(model4)   # From lmtest package
+
+    Durbin-Watson test
+
+data:  model4
+DW = 1.8679, p-value = 0.1766
+alternative hypothesis: true autocorrelation is greater than 0
+shapiro.test(resid(model4))   # Base R
+
+    Shapiro-Wilk normality test
+
+data:  resid(model4)
+W = 0.91053, p-value = 1.244e-09
+bptest(model4)   # From lmtest package
+
+    studentized Breusch-Pagan test
+
+data:  model4
+BP = 7.204, df = 5, p-value = 0.2059
+
+
+
+```
 
 ### Q14. What is wrong with statement? (Need ChatGPT for question)- MA
 
 Concetpst about residual assumptions theoretical speaking
 
 
+
+
+
 ### Q15. What is the best model according to best subset algorithm? Why? Explain. - OE
 
 
+Use the folllwing information:
+```
+
+Image
+
+```
+
 ### Q16. What are the differences between best subset algorithm and stepwise regression? - MA
+
 
 
 ### Q17. According to the stepwise regression which variable is remove ? - Drop Down
@@ -70,39 +169,306 @@ Concetpst about residual assumptions theoretical speaking
 [3rd]
 
 
-### Q18. Why does centering not change the model metrics (i.e., R-Squared, AIC, BIC)?
+
+Use the folllwing information:
+```
+# Start with a full model
+full_model <- lm(arr_delay ~ dep_delay + air_time + distance + hour + day, data = flight_mod_df)
+
+# Stepwise model using both directions (backward & forward)
+step_model <- stepAIC(full_model, direction = "both", trace = TRUE)
+Start:  AIC=1204.29
+arr_delay ~ dep_delay + air_time + distance + hour + day
+
+            Df Sum of Sq    RSS    AIC
+- day        1       118  77751 1202.6
+- hour       1       285  77918 1203.0
+<none>                    77633 1204.3
+- air_time   1     27258 104891 1262.5
+- distance   1     27304 104937 1262.6
+- dep_delay  1    273600 351233 1504.2
+
+Step:  AIC=1202.59
+arr_delay ~ dep_delay + air_time + distance + hour
+
+            Df Sum of Sq    RSS    AIC
+- hour       1       307  78058 1201.4
+<none>                    77751 1202.6
++ day        1       118  77633 1204.3
+- air_time   1     27788 105540 1261.7
+- distance   1     27873 105624 1261.9
+- dep_delay  1    273767 351518 1502.3
+
+Step:  AIC=1201.38
+arr_delay ~ dep_delay + air_time + distance
+
+            Df Sum of Sq    RSS    AIC
+<none>                    78058 1201.4
++ hour       1       307  77751 1202.6
++ day        1       140  77918 1203.0
+- air_time   1     27939 105997 1260.6
+- distance   1     28072 106130 1260.8
+- dep_delay  1    293362 371420 1511.3
+# Summary of final selected model
+summary(step_model)
+
+Call:
+lm(formula = arr_delay ~ dep_delay + air_time + distance, data = flight_mod_df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-31.317 -12.261  -2.722   6.787 116.715 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -20.59690    3.66164  -5.625 6.33e-08 ***
+dep_delay     1.04667    0.03856  27.141  < 2e-16 ***
+air_time      0.87910    0.10496   8.376 1.04e-14 ***
+distance     -0.11256    0.01341  -8.396 9.18e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 19.96 on 196 degrees of freedom
+Multiple R-squared:  0.806, Adjusted R-squared:  0.8031 
+F-statistic: 271.5 on 3 and 196 DF,  p-value: < 2.2e-16
+
+
+
+```
+
+### Q18. Why does centering not change the model metrics (i.e., R-Squared, AIC, BIC)? - MA theorectical
 
 
 
 
 ### Q19. Write and interpret model 4 for each carrier. - OE
 
+Use the folllwing information:
+```
+# Model 4: arr_delay ~ dep_delay * carrier
+model4 <- lm(arr_delay ~ dep_delay * carrier, data = flight_df)
+summary(model4)
 
+Call:
+lm(formula = arr_delay ~ dep_delay * carrier, data = flight_df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-45.214 -11.480  -2.206   8.506 117.075 
+
+Coefficients:
+                    Estimate Std. Error t value Pr(>|t|)    
+(Intercept)         -6.31937    2.75239  -2.296  0.02275 *  
+dep_delay            0.82221    0.11095   7.411 3.77e-12 ***
+carrierMQ            6.12013    3.90036   1.569  0.11825    
+carrierUA           -0.01569    3.37527  -0.005  0.99630    
+dep_delay:carrierMQ  0.35622    0.13285   2.681  0.00796 ** 
+dep_delay:carrierUA  0.24943    0.14896   1.674  0.09565 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 18.68 on 194 degrees of freedom
+Multiple R-squared:  0.7014,    Adjusted R-squared:  0.6937 
+F-statistic: 91.12 on 5 and 194 DF,  p-value: < 2.2e-16
+
+
+
+
+```
 
 ### Q20. Predict the arr_delay when MQ is the carrier and dep_delay is 10 using model 4. - Numeric
 
+Use the folllwing information:
+```
+# Model 4: arr_delay ~ dep_delay * carrier
+model4 <- lm(arr_delay ~ dep_delay * carrier, data = flight_df)
+summary(model4)
+
+Call:
+lm(formula = arr_delay ~ dep_delay * carrier, data = flight_df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-45.214 -11.480  -2.206   8.506 117.075 
+
+Coefficients:
+                    Estimate Std. Error t value Pr(>|t|)    
+(Intercept)         -6.31937    2.75239  -2.296  0.02275 *  
+dep_delay            0.82221    0.11095   7.411 3.77e-12 ***
+carrierMQ            6.12013    3.90036   1.569  0.11825    
+carrierUA           -0.01569    3.37527  -0.005  0.99630    
+dep_delay:carrierMQ  0.35622    0.13285   2.681  0.00796 ** 
+dep_delay:carrierUA  0.24943    0.14896   1.674  0.09565 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 18.68 on 194 degrees of freedom
+Multiple R-squared:  0.7014,    Adjusted R-squared:  0.6937 
+F-statistic: 91.12 on 5 and 194 DF,  p-value: < 2.2e-16
+
+
+
+```
 
 
 ### Q21. Which of the following are model metrics? - MA
 
+Use the folllwing information:
+```
+Adjusted R-sqar
+Standard Error
+TSS
+Staandard deviation of residual
+[Provide more options and distractors-3 more optins]
 
-### Q22. What is the utility behind using a piecewise regression? - MA
-### Q23. What is the utility behind using polynomial regression? - MA
-### Q24. What is the utility centering by each groups mean? - MA
+```
+### Q22. What is the utility behind using a piecewise regression? - MA - theorectical
+### Q23. What is the utility behind using polynomial regression? - MA - theoretical
+
+### Q24. What is the utility centering by each groups mean? - MA -theoretical
+
 ### Q25. Write the entire model for model 5. - OE
-### Q26. Predict the arrival delay for model 5. - OE
-### Q27. When you have 2 quantiative why is it importatn to center the variable? - MA
-### Q28. What is true about box-cox transformations? - MA
+Use the folllwing information:
+```
+# Model 5: Center and fit interaction
+flight_df <- flight_df %>%
+  mutate(
+    dep_delay_c = dep_delay - mean(dep_delay, na.rm = TRUE),
+    air_time_c  = air_time - mean(air_time, na.rm = TRUE)
+  )
+
+model5 <- lm(arr_delay ~ dep_delay_c * air_time_c, data = flight_df)
+summary(model5)
+
+Call:
+lm(formula = arr_delay ~ dep_delay_c * air_time_c, data = flight_df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-58.658 -11.892  -1.652   9.882 116.749 
+
+Coefficients:
+                         Estimate Std. Error t value Pr(>|t|)    
+(Intercept)             3.1016811  1.3542813   2.290   0.0231 *  
+dep_delay_c             1.0542672  0.0575181  18.329   <2e-16 ***
+air_time_c              0.0003910  0.0137299   0.028   0.9773    
+dep_delay_c:air_time_c -0.0008914  0.0006281  -1.419   0.1574    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 19.14 on 196 degrees of freedom
+Multiple R-squared:  0.6831,    Adjusted R-squared:  0.6783 
+F-statistic: 140.9 on 3 and 196 DF,  p-value: < 2.2e-16
+
+
+
+```
+### Q26. Predict the arrival delay for model 5. (provide sample means and say one variable is below anf the other is above their respective means) - OE
+Use the folllwing information:
+```
+# Model 5: Center and fit interaction
+flight_df <- flight_df %>%
+  mutate(
+    dep_delay_c = dep_delay - mean(dep_delay, na.rm = TRUE),
+    air_time_c  = air_time - mean(air_time, na.rm = TRUE)
+  )
+
+model5 <- lm(arr_delay ~ dep_delay_c * air_time_c, data = flight_df)
+summary(model5)
+
+Call:
+lm(formula = arr_delay ~ dep_delay_c * air_time_c, data = flight_df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-58.658 -11.892  -1.652   9.882 116.749 
+
+Coefficients:
+                         Estimate Std. Error t value Pr(>|t|)    
+(Intercept)             3.1016811  1.3542813   2.290   0.0231 *  
+dep_delay_c             1.0542672  0.0575181  18.329   <2e-16 ***
+air_time_c              0.0003910  0.0137299   0.028   0.9773    
+dep_delay_c:air_time_c -0.0008914  0.0006281  -1.419   0.1574    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 19.14 on 196 degrees of freedom
+Multiple R-squared:  0.6831,    Adjusted R-squared:  0.6783 
+F-statistic: 140.9 on 3 and 196 DF,  p-value: < 2.2e-16
+
+
+
+```
+### Q27. When you have 2 quantiative why is it importatn to center the variable? - MA - theorectical
+
+
+### Q28. What is true about box-cox transformations? - MA - theorectical
+
+
 ### Q29. Write and interpret the model log based tranformation. - OE
+
+Use the folllwing information:
+```
+ model_loglog <- lm(log_arr_delay ~ log_dep_delay, data = mod_2_flight_df)
+summary(model_loglog)
+
+Call:
+lm(formula = log_arr_delay ~ log_dep_delay, data = mod_2_flight_df)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.09507 -0.16881  0.02414  0.20912  1.30631 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)    -0.9582     0.3655  -2.621  0.00944 ** 
+log_dep_delay   1.1984     0.0876  13.680  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.3424 on 198 degrees of freedom
+Multiple R-squared:  0.4859,    Adjusted R-squared:  0.4833 
+F-statistic: 187.1 on 1 and 198 DF,  p-value: < 2.2e-16
+
+
+
+```
 ### Q30. Ominbus Test - MA
 
+Use the folllwing information:
+```
+summary(model_full)
+
+Call:
+lm(formula = arr_delay ~ dep_delay + air_time + distance, data = flight_mod_df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-31.317 -12.261  -2.722   6.787 116.715 
+
+Coefficients:
+             Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -20.59690    3.66164  -5.625 6.33e-08 ***
+dep_delay     1.04667    0.03856  27.141  < 2e-16 ***
+air_time      0.87910    0.10496   8.376 1.04e-14 ***
+distance     -0.11256    0.01341  -8.396 9.18e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 19.96 on 196 degrees of freedom
+Multiple R-squared:  0.806, Adjusted R-squared:  0.8031 
+F-statistic: 271.5 on 3 and 196 DF,  p-value: < 2.2e-16
+
+
+
+```
 
 
 
 
 
 
-### Q17.
+
 
 
 
