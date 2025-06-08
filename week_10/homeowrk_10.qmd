@@ -39,6 +39,14 @@ flight_df<- flights %>%
 
 ```
 
+```{r}
+# --- Compute sample means (needed only for reference) -----------------
+mean_dep  <- mean(flight_df$dep_delay, na.rm = TRUE)
+mean_air  <- mean(flight_df$air_time,  na.rm = TRUE)
+cat("Mean departure delay: ", mean_dep)
+cat("Mean airtime: ", mean_air)
+```
+
 \newpage
 
 ## 1) Simple Linear Regression
@@ -75,7 +83,7 @@ summary(model_1)
 We are going to investigate the following models:
 
 | Model \# | Formula | Description |
-|----------------:|---------------------|----------------------------------|
+|-----------------:|---------------------|---------------------------------|
 | **1** | `arr_delay ~ dep_delay + air_time` | Both `dep_delay` and `air_time` are **quantitative**. |
 | **2** | `arr_delay ~ dep_delay + carrier` | `dep_delay` is **quantitative**, `carrier` is **categorical**. |
 | **3** | `arr_delay ~ dep_delay + air_time + dep_delay:air_time` | Interaction between **two quantitative** variables. |
@@ -95,10 +103,6 @@ model1 <- lm(arr_delay ~ dep_delay + air_time, data = flight_df)
 summary(model1)
 ```
 
-
-
-
-
 ------------------------------------------------------------------------
 
 #### Model 2: One Quant + One Categorical
@@ -108,7 +112,6 @@ summary(model1)
 model2 <- lm(arr_delay ~ dep_delay + carrier, data = flight_df)
 summary(model2)
 ```
-
 
 ```{r}
 
@@ -143,8 +146,6 @@ ggplot(flight_df, aes(x = dep_delay, y = arr_delay, color = carrier)) +
 
 ```
 
-
-
 ------------------------------------------------------------------------
 
 #### Model 3: Quant + Quant + Interaction
@@ -154,7 +155,6 @@ ggplot(flight_df, aes(x = dep_delay, y = arr_delay, color = carrier)) +
 model3 <- lm(arr_delay ~ dep_delay * air_time, data = flight_df)
 summary(model3)
 ```
-
 
 ```{r}
 
@@ -172,7 +172,6 @@ ggplot(flight_df, aes(x = dep_delay, y = arr_delay, color = carrier)) +
   theme(plot.title = element_text(hjust = 0.5))
 
 ```
-
 
 ------------------------------------------------------------------------
 
