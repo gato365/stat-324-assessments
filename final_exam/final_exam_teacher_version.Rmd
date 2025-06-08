@@ -1,0 +1,839 @@
+---
+title: "Final Exam Analysis Packet - Teacher Version"
+author: "STAT 252"
+date: "`r Sys.Date()`"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(corrplot)
+library(gato365dsh2024)
+library(GGally)
+library(car)
+```
+
+```{r}
+#| echo: false
+load("../../../project-55-stat-252/Data/expendshares.RData")
+
+expend_df <- data
+```
+
+
+
+In the dataset provided, the primary variable of interest is income, which represents the family income in British pounds per week. This variable serves as the response variable in the analysis, indicating it’s the outcome that the analysis seeks to explain or predict. The dataset includes a range of explanatory variables, each representing a different share of weekly expenditures as a proportion of the total. These include sfood (share of food expenditures), sfuel (share of fuel expenditures), sclothes (share of clothing expenditures), salcohol (share of alcohol expenditures), stransport (share of transportation expenditures), and sother (share of other expenditures). These variables provide insight into how household spending is distributed across various categories.
+
+Additionally, the dataset contains variables that capture the total expenditure (totexpend) of a household in British pounds per week, the age of the household head (age), and the number of children in the household (kids), which is categorized as either 1 or 2. These variables can be used to understand the demographic and economic factors that might influence the family income. The inclusion of ltotexpend and lincome, which are the natural logarithms of total expenditure and income respectively, suggests that the relationship between the logarithm of income and expenditures could be explored. Similarly, agesq, the square of the age of the household head, might be used to investigate non-linear relationships between age and income.
+
+The variable `high_sfuel` is a binary variable that categorizes the share of fuel expenditures (`sfuel`) into "high" if it's greater than the median, and "low" otherwise. This variable provides a simple way to compare households with high and low fuel expenditures. The variable `kids_binary` is another binary variable that categorizes the number of children (`kids`) into "one" if there is one child, and "two" otherwise. This variable simplifies the analysis by reducing the number of children to two categories.
+
+The variable `sclothes_group` categorizes the share of clothing expenditures (`sclothes`) into three groups: "low", "medium", and "high". This variable allows for an analysis of the impact of different levels of clothing expenditures on the response variable. The variable `age_group` categorizes the age of the household head (`age`) into three groups: "young", "middle-aged", and "old". This variable allows for an analysis of the impact of different age groups on the response variable. Finally, the variable `salcohol_group` categorizes the share of alcohol expenditures (`salcohol`) into four groups: "low", "medium", "high", and "very high". This variable allows for an analysis of the impact of different levels of alcohol expenditures on the response variable. Overall, this dataset provides a comprehensive view of household finances, with a focus on how various factors relate to family income.
+
+
+
+
+```{r}
+#| echo: false
+mod_1_expend_df <- expend_df %>%
+  mutate(high_sfuel = if_else(sfuel > median(sfuel), "high", "low")) %>% 
+  ## mutate binary variable for kids
+  mutate(kids_binary = if_else(kids == 1, "one", "two")) %>%
+  ## mutate sclothes into three groups
+  mutate(sclothes_group = case_when(
+    sclothes < 0.08 ~ "low",
+    sclothes >= 0.08 & sclothes < 0.2 ~ "medium",
+    sclothes >= 0.2 ~ "high"
+  )) %>%
+  ## mutate age into three groups
+  mutate(age_group = case_when(
+    age < 30 ~ "young",
+    age >= 30 & age < 50 ~ "middle-aged",
+    age >= 50 ~ "old"
+  )) %>% 
+  ## mutate share alcoholo intp four groups
+  mutate(salcohol_group = case_when(
+    salcohol < 0.1 ~ "low",
+    salcohol >= 0.1 & salcohol < 0.2 ~ "medium",
+    salcohol >= 0.2 & salcohol < 0.3 ~ "high",
+    salcohol >= 0.3 ~ "very high"
+  ))
+```
+
+
+\newpage
+## Analysis 1: 
+Question: Is there a significant difference in family income between households with high share of fuel expenditures and those with low?
+
+
+
+**Summary Statistics**
+
+```{r}
+
+mod_1_expend_df %>%
+  group_by(high_sfuel) %>% 
+  summarise(`Sample Size` = n(),
+            `Mean Income` = mean(income, na.rm = TRUE),
+            `SD Income` = sd(income,na.rm = TRUE)) 
+  
+
+```
+
+**Visualization**
+
+```{r message=FALSE, warning=FALSE}
+#| echo: false
+mod_1_expend_df %>% 
+  ggplot(aes(x = high_sfuel, y = income)) +
+  geom_boxplot() +
+  labs(x = 'High Fuel Expenditure', 
+       y = 'Income (£ per week)', 
+       title = 'Income Distribution by High Fuel Expenditure') +
+  theme_bw() +
+  theme_custom()
+
+```
+
+
+
+**Analysis**
+```{r}
+#| echo: false
+t.test(income ~ high_sfuel, data = mod_1_expend_df, var.equal = TRUE)
+```
+
+
+\newpage
+## Analysis 2: 
+Question: Does the presence of children significantly affect the family income?
+
+**Summary Statistics**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mod_1_expend_df %>%
+  group_by(kids_binary) %>% 
+  summarise(`Sample Size` = n(),
+            `Mean Income` = mean(income, na.rm = TRUE),
+            `SD Income` = sd(income,na.rm = TRUE))
+```
+
+**Visualization**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+mod_1_expend_df %>% 
+  ggplot(aes(x = kids_binary, y = income)) +
+  geom_boxplot() +
+  labs(x = 'Number of Kids',
+       y = 'Income (£ per week)' , title = 'Income Distribution by Number of Kids') +
+  theme_bw() +
+  theme_custom()
+```
+
+**Analysis**
+```{r}
+#| echo: false
+# Welch t-test
+t.test(income ~ kids_binary, data = mod_1_expend_df, var.equal = TRUE)
+```
+
+
+
+\newpage
+## Analysis 3: 
+Question: Is there an association between the age group of the household head and the share of alcohol expenditures?
+**Summary Statistics**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mod_1_expend_df %>% 
+  dplyr::select(age_group, salcohol_group) %>% 
+  table()
+```
+
+**Visualization**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+mod_1_toi_expend_df <- mod_1_expend_df %>%
+  dplyr::select(age_group, salcohol_group) %>%
+  table() %>%
+  as.data.frame()
+
+
+colnames(mod_1_toi_expend_df) <- c("age_group", "salcohol_group", "Count")
+
+mod_1_toi_expend_df %>% 
+ggplot( aes(x = age_group, y = Count, fill = salcohol_group)) +
+  geom_bar(stat = "identity", position = "dodge", color = "black") +
+   geom_text(aes(label=Count), vjust=-0.3, position = position_dodge(0.9), size=5) +
+  ylim(0,320) +
+  scale_fill_manual(values = c("#003831", "#FFC72C", "#FFFFFF", "#808000") ) +  # Cal Poly brand colors
+  labs(x = "Age Group", y = "Count", fill = "Alcohol Groups", title = "Bar Plot of Age Group\n by Shared of Alcohol Groups") +
+  theme_custom()
+```
+
+**Analysis**
+```{r}
+#| echo: false
+# Chi-Square Test of Independence
+chisq.test(table(mod_1_expend_df$age_group, mod_1_expend_df$salcohol_group))
+```
+
+
+
+
+
+
+
+
+
+\newpage
+## Analysis 4: 
+Question: Does the observed distribution of share of clothing expenditures match the expected distribution (30% - high, 40% - medium, 30% - low)?
+
+**Summary Statistics**
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mod_1_expend_df %>% 
+  pull(sclothes_group) %>% 
+  table()
+```
+
+**Visualization**
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Define the colors in hexadecimal
+colors_hex <- c("#50e818", "#922B22", "#80eff0")  # Replace with your actual colors
+
+
+
+# Create the bar plot
+mod_1_expend_df %>% 
+ggplot( aes(x=sclothes_group, fill=sclothes_group)) +
+  geom_bar(stat="count") +
+  theme_minimal() +
+ geom_text(stat='count', aes(label=..count..), vjust=-0.3, position = position_dodge(0.9), size=5) +
+  ylim(0,800) +
+  labs(x="Shared of Clothing Groups", y="Count", title="Bar plot of Frequency\n Shared of Clothing Groups", fill = "") +
+  scale_fill_manual(values = colors_hex) +  # Use the hexadecimal colors for each bar
+ theme_custom() +
+  ## remove legend
+  theme(legend.position = "none")
+```
+
+**Analysis**
+```{r}
+#| echo: false
+# Chi-Square Goodness of Fit
+chisq.test(table(mod_1_expend_df$sclothes_group), p = c(0.3, 0.4, 0.3))
+```
+
+
+
+
+
+
+
+\newpage
+## Analysis 5: 
+Question: Is there an association between the age group of the household head and the share of clothing expenditures?
+
+**Summary Statistics**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mod_1_expend_df %>% 
+  dplyr::select(age_group, sclothes_group) %>% 
+  table()
+```
+
+**Visualization**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+mod_2_toi_expend_df <- mod_1_expend_df %>%
+  dplyr::select(age_group, sclothes_group) %>%
+  table() %>%
+  as.data.frame()
+
+
+colnames(mod_2_toi_expend_df) <- c("age_group", "sclothes_group", "Count")
+
+mod_2_toi_expend_df %>% 
+ggplot( aes(x = age_group, y = Count, fill = sclothes_group)) +
+  geom_bar(stat = "identity", position = "dodge", color = "black") +
+   geom_text(aes(label=Count), vjust=-0.3, position = position_dodge(0.9), size=4) +
+  ylim(0,580) +
+  scale_fill_manual(values = c("#00B831", "#C9A919", "#FFBFFF") ) +  
+    labs(x = "Age Group", y = "Count", fill = "Clothing Groups", title = "Bar Plot of Age Group\n by Shared of Clothing Groups") +
+  theme_custom()
+```
+
+**Analysis**
+```{r}
+#| echo: false
+# Chi-Square Test of Independence
+chisq.test(table(mod_1_expend_df$age_group, mod_1_expend_df$sclothes_group))
+```
+
+\newpage
+## Analysis 6: 
+Question: Does the observed distribution of share of alcohol expenditures match the expected distribution (30% - high, 30% - low, 20% - medium, 20% - very high)?
+
+
+
+**Summary Statistics**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mod_1_expend_df %>% 
+  pull(salcohol_group) %>% 
+  table()
+```
+
+**Visualization**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+
+# Define the colors in hexadecimal
+colors_hex <- c("#50c878", "#228b22", "#3eb489", "#808000")  # Replace with your actual colors
+
+
+
+# Create the bar plot
+mod_1_expend_df %>% 
+ggplot( aes(x=salcohol_group, fill=salcohol_group)) +
+  geom_bar(stat="count") +
+  theme_minimal() +
+ geom_text(stat='count', aes(label=..count..), vjust=-0.3, position = position_dodge(0.9), size=5) +
+  ylim(0,1250) +
+   labs(x="Shared of Alcohol Groups", y="Count", title="Bar plot of Frequency\n Shared of Alcohol Groups", fill = "") +
+  scale_fill_manual(values = colors_hex) +  # Use the hexadecimal colors for each bar
+ theme_custom() +
+  ## remove legend
+  theme(legend.position = "none")
+```
+
+**Analysis**
+```{r}
+#| echo: false
+# Chi-Square Goodness of Fit
+chisq.test(table(mod_1_expend_df$salcohol_group),p = c(0.3, 0.3, 0.2, 0.2))
+```
+
+
+
+
+\newpage
+## Analysis 7: 
+Question: Are there significant differences in family income across different groups based on the share of alcohol expenditures?
+
+
+**Summary Statistics**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mod_1_expend_df %>% 
+  group_by(salcohol_group) %>% 
+  summarise(`Sample Size` = n(),
+            `Mean Income` = mean(income),
+            `SD Income` =sd (income))
+```
+
+**Visualization**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Define Cal Poly SLO colors
+cal_poly_colors <- c("#154734", "#BD8B13","#3A913F","#A4D65E")
+# Create the violin plot
+ggplot(mod_1_expend_df, aes(x = salcohol_group, y = income,
+                            fill = salcohol_group)) +
+  geom_violin(scale = "width", adjust = .5) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 3, color = "red") +
+  scale_fill_manual(values = cal_poly_colors) +
+  labs(title = "Violin Plot of Income by Group",
+       x = "Alcohol Group",
+       y = "Income (£ per week)",
+       fill = "Alcohol Group") +
+  theme_custom()
+```
+
+**Analysis**
+```{r}
+#| echo: false
+# One-Way ANOVA
+aov_result <- aov(income ~ as.factor(salcohol_group), data = mod_1_expend_df)
+summary(aov_result)
+```
+
+```{r}
+#| echo: false
+TukeyHSD(aov_result)
+```
+\newpage
+## Analysis 8: 
+Question: Are there significant differences in family income across different groups based on the share of clothing expenditures?
+
+
+
+
+**Summary Statistics**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mod_1_expend_df %>% 
+  group_by(sclothes_group) %>% 
+  summarise(`Sample Size` = n(),
+            `Mean Income` = mean(income),
+            `SD Income` =sd (income))
+```
+
+**Visualization**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+# Define Cal Poly SLO colors
+cal_poly_colors <- c("#154734", "#BD8B13","#3A913F")
+# Create the violin plot
+ggplot(mod_1_expend_df, aes(x = sclothes_group, y = income,
+                            fill = sclothes_group)) +
+  geom_violin(scale = "width", adjust = .5) +
+  stat_summary(fun = mean, geom = "point", shape = 18, size = 3, color = "white") +
+  scale_fill_manual(values = cal_poly_colors) +
+  labs(title = "Violin Plot of Income by Group",
+       x = "Clothing Group",
+       y = "Income (£ per week)",
+       fill = "Clothing Group") +
+  theme_custom()
+```
+
+**Analysis**
+```{r}
+#| echo: false
+# One-Way ANOVA
+aov_result <- aov(income ~ as.factor(sclothes_group), data = mod_1_expend_df)
+summary(aov_result)
+```
+
+```{r}
+#| echo: false
+TukeyHSD(aov_result)
+```
+
+
+\newpage
+## Analysis 9: 
+Question: Is there a linear relationship between total expenditure and family income?
+
+
+**Summary Statistics**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mod_1_expend_df %>% 
+  summarise(mean_x = mean(totexpend, na.rm = TRUE),
+            mean_y = mean(income, na.rm = TRUE),
+            sd_x = sd(totexpend,na.rm = TRUE),
+            sd_y = sd(income, na.rm = TRUE), cor(income,totexpend ))
+```
+
+**Visualization**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+ggplot(mod_1_expend_df, aes(x = totexpend, y = income)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(x = "Total Expenditure", y = "Income (£ per week)", title = "Simple Linear Regression") +
+  theme_custom()
+```
+
+**Analysis**
+```{r}
+#| echo: false
+# Simple Linear Regression
+lm_simple <- lm(income ~ totexpend, data = mod_1_expend_df)
+summary(lm_simple)
+```
+
+
+\newpage
+## Analysis 10: 
+Question: Is there a linear relationship between the share of food expenditures and family income?
+
+**Summary Statistics**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mod_1_expend_df %>% 
+  summarise(mean_x = mean(sfood, na.rm = TRUE),
+            mean_y = mean(income, na.rm = TRUE),
+            sd_x = sd(sfood,na.rm = TRUE),
+            sd_y = sd(income, na.rm = TRUE), cor(income,sfood ))
+```
+
+**Visualization**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+ggplot(mod_1_expend_df, aes(x = sfood, y = income)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  labs(x = "Share of Food Expenditures", y = "Income (£ per week)", title = "Simple Linear Regression") +
+  theme_custom()
+```
+
+**Analysis**
+```{r}
+#| echo: false
+# Simple Linear Regression
+lm_simple <- lm(income ~ sfood, data = mod_1_expend_df)
+summary(lm_simple)
+```
+
+
+\newpage
+## Analysis 11: 
+Question: How well can family income be predicted by the share of food expenditures, total expenditure, and share of clothing expenditures? 
+
+
+**Summary Statistics**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mlr_vars_expend_1_df <- mod_1_expend_df %>% 
+  dplyr::select(income, totexpend, sfood, sclothes)
+
+
+mlr_vars_expend_1_df  %>% 
+  summarise_all(list(mean = mean, sd = sd, min = min, max = max)) %>% 
+  pivot_longer(everything(), names_to = "Statistic", values_to = "Value") %>% 
+  separate(Statistic, into = c("variable", "statistic"), sep = "_" )  %>% 
+  pivot_wider(names_from = statistic, values_from = Value)
+```
+
+**Visualization**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+ggpairs(mlr_vars_expend_1_df)
+```
+
+**Analysis**
+```{r}
+#| echo: false
+# Multiple Linear Regression
+lm_multiple <- lm(income ~ sfood + totexpend + sclothes, data = mod_1_expend_df)
+summary(lm_multiple)
+
+predict(lm_multiple, newdata = data.frame(sfood = 0.2, totexpend = 100, sclothes = 0.1))
+```
+
+
+\newpage
+## Analysis 12: 
+Question: How well can family income be predicted by total expenditure, share of fuel expenditures, and share of clothing expenditures?
+
+
+
+**Summary Statistics**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mlr_vars_expend_2_df <- mod_1_expend_df %>% 
+  dplyr::select(income, totexpend, sfuel, sclothes)
+
+
+mlr_vars_expend_2_df  %>% 
+  summarise_all(list(mean = mean, sd = sd, min = min, max = max)) %>% 
+  pivot_longer(everything(), names_to = "Statistic", values_to = "Value") %>% 
+  separate(Statistic, into = c("variable", "statistic"), sep = "_" )  %>% 
+  pivot_wider(names_from = statistic, values_from = Value)
+```
+
+**Visualization**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+ggpairs(mlr_vars_expend_2_df)
+```
+
+**Analysis**
+```{r}
+#| echo: false
+# Multiple Linear Regression
+lm_multiple <- lm(income ~ totexpend + sfuel + sclothes, data = mod_1_expend_df)
+summary(lm_multiple)
+
+172 - predict(lm_multiple, newdata = data.frame(totexpend = 110, sfuel = 0.3, sclothes = 0.55))
+```
+
+
+
+
+
+
+
+
+
+\newpage
+## Analysis 13: 
+Question: How does total expenditure and age group predict family income when age group is treated as a categorical variable?
+
+
+
+**Summary Statistics**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mod_1_expend_df %>% 
+  select(income,totexpend,age_group) %>% 
+  group_by(age_group) %>% 
+    summarise(mean_y = mean(income,na.rm = TRUE),
+              mean_x = mean(totexpend,na.rm = TRUE),
+              sd_y = sd(income,na.rm = TRUE),
+              sd_x = sd(totexpend,na.rm = TRUE),
+              min_x = min(totexpend,na.rm = TRUE),
+              max_x = max(totexpend,na.rm = TRUE))
+```
+
+
+
+**Analysis**
+```{r}
+#| echo: false
+# Dummy Variable Model Regression
+lm_dummy <- lm(income ~ totexpend+age_group, data = mod_1_expend_df)
+summary(lm_dummy)
+
+```
+
+
+
+
+
+
+
+
+\newpage
+## Analysis 14: 
+Question: How does total expenditure and share of clothing expenditures predict family income when the share of clothing expenditures is treated as a categorical variable?
+
+**Summary Statistics**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mod_1_expend_df %>% 
+  select(income,totexpend,sclothes_group) %>% 
+  group_by(sclothes_group) %>% 
+    summarise(mean_y = mean(income,na.rm = TRUE),
+              mean_x = mean(totexpend,na.rm = TRUE),
+              sd_y = sd(income,na.rm = TRUE),
+              sd_x = sd(totexpend,na.rm = TRUE),
+              min_x = min(totexpend,na.rm = TRUE),
+              max_x = max(totexpend,na.rm = TRUE))
+```
+
+
+
+**Analysis**
+```{r}
+#| echo: false
+# Dummy Variable Model Regression
+lm_dummy <- lm(income ~ totexpend+sclothes_group, data = mod_1_expend_df)
+summary(lm_dummy)
+```
+
+
+
+
+
+\newpage
+## Analysis 15: 
+Question: Is there an interaction effect between total expenditure and share of clothing expenditures on family income?
+
+
+**Summary Statistics**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mod_1_expend_df %>% 
+  select(income,totexpend,sclothes_group) %>% 
+  group_by(sclothes_group) %>% 
+    summarise(mean_y = mean(income,na.rm = TRUE),
+              mean_x = mean(totexpend,na.rm = TRUE),
+              sd_y = sd(income,na.rm = TRUE),
+              sd_x = sd(totexpend,na.rm = TRUE),
+              min_x = min(totexpend,na.rm = TRUE),
+              max_x = max(totexpend,na.rm = TRUE))
+```
+
+**Visualization**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+mod_1_expend_df %>% 
+ggplot( aes(x = totexpend, y = income, color = sclothes_group)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) + 
+  labs(x = 'Total Expenditure', 
+       y = 'Income (£ per week)', 
+       title = 'Income Distribution by Total\n Expenditure and Clothing Group') +
+  facet_grid(.~sclothes_group ) +
+  theme_custom() +
+  ## remove legend
+  theme(legend.position = "none")
+```
+
+**Analysis**
+```{r}
+#| echo: false
+# Interaction Variable Model Regression
+lm_interaction <- lm(income ~ totexpend*sclothes_group, data = mod_1_expend_df)
+summary(lm_interaction)
+
+150 - predict(lm_interaction, newdata = data.frame(totexpend = 125, sclothes_group = "high"))
+```
+
+
+
+
+
+\newpage
+## Analysis 16: 
+Question: Is there an interaction effect between total expenditure and age group on family income?
+
+
+**Summary Statistics**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+  
+mod_1_expend_df %>% 
+  select(income,totexpend,age_group) %>% 
+  group_by(age_group) %>% 
+    summarise(mean_y = mean(income,na.rm = TRUE),
+              mean_x = mean(totexpend,na.rm = TRUE),
+              sd_y = sd(income,na.rm = TRUE),
+              sd_x = sd(totexpend,na.rm = TRUE),
+              min_x = min(totexpend,na.rm = TRUE),
+              max_x = max(totexpend,na.rm = TRUE))
+```
+
+**Visualization**
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+mod_1_expend_df %>% 
+ggplot( aes(x = totexpend, y = income, color = age_group)) +
+  geom_point() +
+  labs(x = 'Total Expenditure', 
+       y = 'Income (£ per week)', 
+       title = 'Income Distribution by Total\n Expenditure and Age Group') +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_grid(.~age_group ) +
+  theme_custom() +
+  ## remove legend
+  theme(legend.position = "none")
+```
+
+**Analysis**
+```{r}
+#| echo: false
+# Interaction Variable Model Regression
+lm_interaction <- lm(income ~ totexpend*age_group, data = mod_1_expend_df)
+summary(lm_interaction)
+
+```

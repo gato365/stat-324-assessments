@@ -1,0 +1,222 @@
+---
+title: "Final Exam STAT 324"
+format: docx
+editor: visual
+---
+
+```{r message = FALSE, warning = FALSE}
+library(dplyr)                ## Data Transformation    --- T
+library(ggplot2)              ## Data Visualization     --- V
+```
+
+
+
+```{r}
+#| echo: false
+load("../Data/expendshares.RData")
+
+expend_df <- data
+```
+
+
+In the dataset provided, one of the primary variables of interest is income, which represents the family income in British pounds per week and `sfood`. `sfood`—the household share of total expenditure devoted to food—is a classic Engel-curve outcome: it naturally varies with purchasing power (income) and household composition (kids, age group), making it an intuitive, policy-relevant response for modeling how spending priorities shift across socioeconomic strata. This variable serves as the response variable in the analysis, indicating it’s the outcome that the analysis seeks to explain or predict. The dataset includes a range of explanatory variables, each representing a different share of weekly expenditures as a proportion of the total. These include sfuel (share of fuel expenditures), sclothes (share of clothing expenditures), salcohol (share of alcohol expenditures), stransport (share of transportation expenditures), and sother (share of other expenditures). These variables provide insight into how household spending is distributed across various categories.
+
+Additionally, the dataset contains variables that capture the total expenditure (totexpend) of a household in British pounds per week, the age of the household head (age), and the number of children in the household (kids), which is categorized as either 1 or 2. These variables can be used to understand the demographic and economic factors that might influence the family income. The inclusion of ltotexpend and lincome, which are the natural logarithms of total expenditure and income respectively, suggests that the relationship between the logarithm of income and expenditures could be explored. Similarly, agesq, the square of the age of the household head, might be used to investigate non-linear relationships between age and income.
+
+The variable `high_sfuel` is a binary variable that categorizes the share of fuel expenditures (`sfuel`) into "high" if it's greater than the median, and "low" otherwise. This variable provides a simple way to compare households with high and low fuel expenditures. The variable `kids_binary` is another binary variable that categorizes the number of children (`kids`) into "one" if there is one child, and "two" otherwise. This variable simplifies the analysis by reducing the number of children to two categories.
+
+The variable `sclothes_group` categorizes the share of clothing expenditures (`sclothes`) into three groups: "low", "medium", and "high". This variable allows for an analysis of the impact of different levels of clothing expenditures on the response variable. The variable `age_group` categorizes the age of the household head (`age`) into three groups: "young", "middle-aged", and "old". This variable allows for an analysis of the impact of different age groups on the response variable. Finally, the variable `salcohol_group` categorizes the share of alcohol expenditures (`salcohol`) into four groups: "low", "medium", "high", and "very high". This variable allows for an analysis of the impact of different levels of alcohol expenditures on the response variable. Overall, this dataset provides a comprehensive view of household finances, with a focus on how various factors relate to family income.
+
+
+
+
+
+
+
+```{r}
+#| echo: false
+mod_1_expend_df <- expend_df %>%
+  mutate(high_sfuel = if_else(sfuel > median(sfuel), "high", "low")) %>% 
+  ## mutate binary variable for kids
+  mutate(kids_binary = if_else(kids == 1, "one", "two")) %>%
+  ## mutate sclothes into three groups
+  mutate(sclothes_group = case_when(
+    sclothes < 0.08 ~ "low",
+    sclothes >= 0.08 & sclothes < 0.2 ~ "medium",
+    sclothes >= 0.2 ~ "high"
+  )) %>%
+  ## mutate age into three groups
+  mutate(age_group = case_when(
+    age < 30 ~ "young",
+    age >= 30 & age < 50 ~ "middle-aged",
+    age >= 50 ~ "old"
+  )) %>% 
+  ## mutate share alcoholo intp four groups
+  mutate(salcohol_group = case_when(
+    salcohol < 0.1 ~ "low",
+    salcohol >= 0.1 & salcohol < 0.2 ~ "medium",
+    salcohol >= 0.2 & salcohol < 0.3 ~ "high",
+    salcohol >= 0.3 ~ "very high"
+  ))
+```
+
+
+
+
+## Analysis 1: Exploration Models
+
+| Model # | Formula (new data)                                      | What it captures                                                                                                  |
+| ------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **1**   | `sfood ~ lincome + kids`                                | Two quantitative predictors.                                                                                      |
+| **2**   | `sfood ~ lincome + age_group`                           | Quantitative + categorical.                                                                                       |
+| **3**   | `sfood ~ lincome + kids + lincome:kids`                 | Interaction between two quantitative vars.                                                                        |
+| **4**   | `sfood ~ lincome + age_group + lincome:age_group`       | Quant × categorical interaction.                                                                                  |
+| **5**   | `sfood ~ lincome_c + kids_c + lincome_c:kids_c`         | Mean-centered vars + interaction (easier interpretation).                                                         |
+| **6**   | `sfood ~ lincome + I(lincome^2)`                        | Polynomial in `lincome` to allow curvature.                                                                       |
+| **7**   | `sfood ~ lincome_gc + age_group + lincome_gc:age_group` | **Group-mean-centered** `lincome` within each age group + interaction.                                            |
+| **8**   | `sfood ~ lincome + kids_group + lincome:kids_group`     | Bin `kids` into “none / one / two +” and interact with `lincome` (analogous to the old *air\_time\_group* model). |
+
+
+
+Below are **three R/ ggplot2 visualizations**—each tied to one of the modeling ideas you requested. Paste the code into an R session after loading **`mod_1_expend_df`** and the tidyverse.
+
+---
+
+### 1) Polynomial relationship (quadratic Engel curve)
+
+```{r}
+library(ggplot2)
+
+ggplot(mod_1_expend_df, aes(lincome, sfood)) +
+  geom_point(alpha = .4) +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2), se = FALSE, linewidth = 1.2) +
+  labs(
+    title = "Quadratic Engel Curve: Food-Expenditure Share vs. Log Income",
+    x = "log(income)", y = "share of food (sfood)"
+  ) +
+  theme_minimal()
+```
+
+*Shows how food-expenditure share initially falls with income but may flatten or rebound at higher income levels, capturing curvature in Model 6.*
+
+---
+
+### 2) Piecewise (broken-stick) fit with a data-driven breakpoint
+
+```{r}
+library(segmented)
+
+# Estimate a breakpoint for lincome
+base_mod  <- lm(sfood ~ lincome, data = mod_1_expend_df)
+seg_mod   <- segmented(base_mod, seg.Z = ~ lincome)   # one break
+bp        <- seg_mod$psi[,"Est."]                     # breakpoint value
+
+ggplot(mod_1_expend_df, aes(lincome, sfood)) +
+  geom_point(alpha = .4) +
+  geom_abline(
+    intercept = coef(seg_mod)[1:2] %*% c(1, -bp), 
+    slope     = coef(seg_mod)[2], 
+    linewidth = 1, linetype = "solid"
+  ) +
+  geom_abline(
+    intercept = (coef(seg_mod)[1] + coef(seg_mod)[3] * bp) - 
+                (coef(seg_mod)[2] + coef(seg_mod)[4]) * bp,
+    slope     = coef(seg_mod)[2] + coef(seg_mod)[4],
+    linewidth = 1, linetype = "solid", colour = "firebrick"
+  ) +
+  geom_vline(xintercept = bp, linetype = "dashed") +
+  annotate("text", x = bp, y = max(mod_1_expend_df$sfood),
+           label = paste0("Breakpoint ≈ ", round(bp, 2)), vjust = -0.5) +
+  labs(
+    title = "Piecewise Linear Fit for log(income)",
+    x = "log(income)", y = "share of food (sfood)"
+  ) +
+  theme_minimal()
+```
+
+*Highlights a change in slope at the estimated breakpoint—useful when consumption patterns shift beyond a certain income level.*
+
+---
+
+### 3) Group-mean–centered income lines by age group
+
+```{r}
+mod_1_expend_df <- mod_1_expend_df |>
+  group_by(age_group) |>
+  mutate(lincome_gc = lincome - mean(lincome, na.rm = TRUE)) |>
+  ungroup()
+
+ggplot(mod_1_expend_df, aes(lincome_gc, sfood, colour = age_group)) +
+  geom_point(alpha = .5) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 1.1) +
+  labs(
+    title = "Within-Age-Group Relationship (Group-Mean Centered lincome)",
+    x = "log(income) – group mean", y = "share of food (sfood)",
+    colour = "Age group"
+  ) +
+  theme_minimal()
+```
+
+*Displays how the income–food-share slope differs **within** age groups while removing between-group income gaps—mirroring Model 7’s logic.*
+
+---
+
+> **Tip:** If you prefer Python, translate each snippet with seaborn / matplotlib using `statsmodels` for the polynomial and piecewise fits; the visual story remains the same.
+
+
+```{r}
+## ---------- 2. Fit the eight models ----------
+# Model 1: two quantitative predictors
+model_1 <- lm(sfood ~ lincome + kids, data = mod_1_expend_df)
+summary(model_1)
+```
+
+
+```{r}
+# Model 2: quantitative + categorical
+model_2 <- lm(sfood ~ lincome + age_group, data = mod_1_expend_df)
+summary(model_2)
+```
+
+
+```{r}
+# Model 3: interaction between two quantitative variables
+model_3 <- lm(sfood ~ lincome + kids + lincome:kids, data = mod_1_expend_df)
+summary(model_3)
+```
+
+
+```{r}
+# Model 4: interaction between quantitative and categorical predictor
+model_4 <- lm(sfood ~ lincome + age_group + lincome:age_group, data = mod_1_expend_df)
+summary(model_4)
+```
+
+
+```{r}
+# Model 5: centered variables with interaction
+model_5 <- lm(sfood ~ lincome_c + kids_c + lincome_c:kids_c, data = mod_1_expend_df)
+summary(model_5)
+```
+
+
+```{r}
+# Model 6: polynomial (quadratic) term for lincome
+model_6 <- lm(sfood ~ lincome + I(lincome^2), data = mod_1_expend_df)
+summary(model_6)
+```
+
+
+```{r}
+# Model 7: group-mean–centered lincome within age_group + interaction
+model_7 <- lm(sfood ~ lincome_gc + age_group + lincome_gc:age_group, data = mod_1_expend_df)
+summary(model_7)
+```
+
+
+```{r}
+# Model 8: lincome × binned kids category
+model_8 <- lm(sfood ~ lincome + kids_group + lincome:kids_group, data = mod_1_expend_df)
+summary(model_8)
+```
+
