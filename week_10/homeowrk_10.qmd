@@ -83,7 +83,7 @@ summary(model_1)
 We are going to investigate the following models:
 
 | Model \# | Formula | Description |
-|------------------:|---------------------|---------------------------------|
+|---:|----|----|
 | **1** | `arr_delay ~ dep_delay + air_time` | Both `dep_delay` and `air_time` are **quantitative**. |
 | **2** | `arr_delay ~ dep_delay + carrier` | `dep_delay` is **quantitative**, `carrier` is **categorical**. |
 | **3** | `arr_delay ~ dep_delay + air_time + dep_delay:air_time` | Interaction between **two quantitative** variables. |
