@@ -27,17 +27,16 @@ library(broom)                ## Data Analysis          --- A
 library(car)                  ## Data Analysis          --- A
 ```
 
-
 ## 2. Data Description
 
 Briefly describe the 1,519-household dataset, noting each key variable (shares, totals, logs, groups) and highlighting categorical groupings created for fuel, clothing, alcohol, kids, and age. Emphasize that these groupings enable flexible modeling of nonlinear or subgroup-specific patterns.
+
 ```{r message = FALSE, warning = FALSE}
 #| echo: false
 load("../Data/expendshares.RData")
 
 expend_df <- data
 ```
-
 
 ## 3. Data Preparation
 
@@ -69,9 +68,6 @@ mod_1_expend_df <- expend_df %>%
   ))
 ```
 
-
-
-
 ```{r message = FALSE, warning = FALSE}
 
 mod_2_expend_df <- mod_1_expend_df %>% 
@@ -99,13 +95,15 @@ ggplot(mod_1_expend_df, aes(x = totexpend, y = sfood)) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 ```
+
 \newpage
+
 ```{r}
 ggplot(mod_1_expend_df, aes(x = totexpend, y = sfood, colour = sclothes_group)) +
   geom_point(alpha = .5) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 1.1) +
     labs(
-    title  = "Food-Share vs. Total Expenditure by Clothing-Spend Group",
+    title  = "Food-Share vs. Total Expenditure by\n Clothing-Spend Group",
     x      = "Total Expenditure (totexpend)",
     y      = "Share of Food Expenditure (sfood)",
     colour = "Clothing-Spend Group"
@@ -113,13 +111,15 @@ ggplot(mod_1_expend_df, aes(x = totexpend, y = sfood, colour = sclothes_group)) 
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 ```
+
 \newpage
+
 ```{r}
 ggplot(mod_2_expend_df, aes(totexpend_gc, sfood, colour = sclothes_group)) +
   geom_point(alpha = .5) +
   geom_smooth(method = "lm", se = FALSE, linewidth = 1.1) +
  labs(
-    title  = "Food-Share vs. Group-Mean-Centered Total Expenditure",
+    title  = "Food-Share vs. Group-Mean-Centered\n Total Expenditure",
     x      = "Total Expenditure (group-mean centered, totexpend_gc)",
     y      = "Share of Food Expenditure (sfood)",
     colour = "Clothing-Spend Group"
@@ -129,11 +129,10 @@ ggplot(mod_2_expend_df, aes(totexpend_gc, sfood, colour = sclothes_group)) +
 
 \newpage
 
-
 ## 5. Investigation into Hypothesized Models
 
 | Model \# | Formula (new data) | What it captures |
-|------------|------------|------------------------------------------------|
+|----|----|----|
 | **1** | `sfood ~ totexpend + stransport` | Two quantitative predictors (`totexpend`, `stransport`). |
 | **2** | `sfood ~ totexpend + sclothes_group` | Quantitative predictor (`totexpend`) plus a categorical grouping (`sclothes_group`). |
 | **3** | `sfood ~ totexpend * stransport` | Interaction between two quantitative variables (does the food-share response to total spending vary with transportation share?). |
@@ -149,31 +148,41 @@ options(scipen = 9)
 model_1 <- lm(sfood ~ totexpend + stransport, data = mod_2_expend_df)
 summary(model_1)
 ```
+
 \newpage
+
 ```{r}
 # Model 2: quantitative + categorical
 model_2 <- lm(sfood ~ totexpend + sclothes_group, data = mod_2_expend_df)
 summary(model_2)
 ```
+
 \newpage
+
 ```{r}
 # Model 3: interaction between two quantitative variables
 model_3 <- lm(sfood ~ totexpend * stransport, data = mod_2_expend_df)
 summary(model_3)
 ```
+
 \newpage
+
 ```{r}
 # Model 4: interaction between quantitative and categorical predictor
 model_4 <- lm(sfood ~ totexpend * sclothes_group, data = mod_2_expend_df)
 summary(model_4)
 ```
+
 \newpage
+
 ```{r}
 # Model 5: centered variables with interaction
 model_5 <- lm(sfood ~ totexpend_c*stransport_c, data = mod_2_expend_df)
 summary(model_5)
 ```
+
 \newpage
+
 ```{r}
 # Model 6: polynomial (quadratic) term for lincome
 model_6 <- lm(sfood ~ totexpend + I(totexpend^2), data = mod_2_expend_df)
@@ -186,8 +195,7 @@ summary(model_6)
 
 ### a. Stepwise Regression
 
-Explain the stepwise AIC search and best-subsets (adjusted-R^2) approach run on an expanded predictor set. Note that these automated tools cross-check the hand-built models and suggest a parsimonious final candidate.
-
+Explain the stepwise AIC search and best-subsets (adjusted-R\^2) approach run on an expanded predictor set. Note that these automated tools cross-check the hand-built models and suggest a parsimonious final candidate.
 
 ```{r}
 # Start with a full model
@@ -202,15 +210,11 @@ summary(step_model)
 
 #### i. Multicollinearity Check
 
-
-
 ```{r}
 car::vif(step_model)
 ```
 
-
 \newpage
-
 
 #### ii. Outliers, Leverage, and Influence
 
@@ -228,7 +232,9 @@ augmented_df %>%
   head(15) %>% 
   round(3)
 ```
+
 \newpage
+
 #### iii. Diagnostics & Assumption Tests
 
 List the residual tests performed (RESET for functional form, Durbin-Watson for autocorrelation, Shapiro for normality, Breusch-Pagan for heteroskedasticity). State that plots and p-values guide whether assumptions hold or require remediation.
@@ -237,6 +243,7 @@ List the residual tests performed (RESET for functional form, Durbin-Watson for 
 autoplot(step_model) + 
   theme_bw()
 ```
+
 \newpage
 
 ```{r}
@@ -245,6 +252,7 @@ dwtest(step_model)                   # From lmtest package
 shapiro.test(resid(step_model))      # Base R
 bptest(step_model)                   # From lmtest package
 ```
+
 \newpage
 
 ### b. Model Selection Best Subset

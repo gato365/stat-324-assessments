@@ -4,8 +4,6 @@ format: docx
 editor: visual
 ---
 
-
-
 ## **Overview of the `swiss` Dataset**
 
 To answer the first five questions on the test, you can rely entirely on the regression modeling and selection procedures implemented in this packet using the `swiss` dataset. Begin by reviewing the overview and variable selection sections to understand the context and role of each variable—particularly that `Fertility` is the response variable and all others are quantitative predictors. This structure supports your ability to interpret regression coefficients and evaluate model utility based on the variables’ relationships.
@@ -18,12 +16,12 @@ Our primary goal is to predict the `Fertility` measure based on other socio-econ
 
 We will use the following variables from the `swiss` dataset:
 
-* `Fertility` (Common standardized fertility measure) - **Response Variable**
-* `Agriculture` (% of males involved in agriculture as occupation) - Predictor
-* `Examination` (% draftees receiving highest mark on army examination) - Predictor
-* `Education` (% education beyond primary school for draftees) - Predictor
-* `Catholic` (% 'catholic' (as opposed to 'protestant')) - Predictor
-* `Infant.Mortality` (live births who live less than 1 year) - Predictor
+-   `Fertility` (Common standardized fertility measure) - **Response Variable**
+-   `Agriculture` (% of males involved in agriculture as occupation) - Predictor
+-   `Examination` (% draftees receiving highest mark on army examination) - Predictor
+-   `Education` (% education beyond primary school for draftees) - Predictor
+-   `Catholic` (% 'catholic' (as opposed to 'protestant')) - Predictor
+-   `Infant.Mortality` (live births who live less than 1 year) - Predictor
 
 ## Preliminary Analysis
 
@@ -39,7 +37,6 @@ library(broom)                ## Data Analysis
 library(car)                  ## Data Analysis
 ```
 
-
 ### **1. Data Summaries**
 
 ```{r data_preparation_swiss}
@@ -48,7 +45,6 @@ summary(swiss_df)
 ```
 
 ### **2. Visualizations**
-
 
 ```{r pairplot_original_swiss, message=FALSE, warning=FALSE}
 ggpairs(swiss_df)
@@ -63,8 +59,6 @@ model_mlr_swiss <- lm(Fertility ~ Agriculture + Examination + Education + Cathol
 summary(model_mlr_swiss)
 ```
 
-
-
 ### **4. BIC Best Subset**
 
 We use `regsubsets` to find the best subset of predictors based on the Bayesian Information Criterion (BIC).
@@ -74,7 +68,6 @@ regfit_full_swiss <- regsubsets(Fertility ~ Agriculture + Examination + Educatio
 
 plot(regfit_full_swiss)
 ```
-
 
 ### **5. AIC Stepwise Regression**
 
@@ -91,19 +84,17 @@ step_mod_swiss <- MASS::stepAIC(initial_model_swiss, direction = "both", trace =
 ## **Analysis of Best Model**
 
 ### **Evaluating of Best Model**
+
 ```{r}
 best_model_swiss <- lm(Fertility ~ Agriculture + Education + Catholic + Infant.Mortality, data = swiss_df)
 summary(best_model_swiss)
 ```
-
 
 ### **Evaluating Variance Inflation Factor**
 
 ```{r}
 vif(best_model_swiss)
 ```
-
-
 
 ### **Evaluating Residual Plots**
 
@@ -112,8 +103,8 @@ autoplot(best_model_swiss) +
   theme_bw()
 ```
 
-
 ### **Evaluating Outliers, Leverage and Influential Points**
+
 ```{r}
 # Add standardized residuals
 augmented_df <- augment(best_model_swiss) ## from broom package
@@ -126,4 +117,3 @@ augmented_df %>%
   head(10) %>% 
   round(3)
 ```
-
