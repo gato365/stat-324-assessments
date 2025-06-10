@@ -4,8 +4,9 @@ format: docx
 editor: visual
 ---
 
+## 1. Introduction & Research Goal
 
-In the dataset provided, one of the primary variables of interest is income, which represents the family income in British pounds per week and `sfood`. `sfood`—the household share of total expenditure devoted to food—is a classic Engel-curve outcome: it naturally varies with purchasing power (income) and household composition (kids, age group), making it an intuitive, policy-relevant response for modeling how spending priorities shift across socioeconomic strata. This variable serves as the response variable in the analysis, indicating it’s the outcome that the analysis seeks to explain or predict. The dataset includes a range of explanatory variables, each representing a different share of weekly expenditures as a proportion of the total. These include sfuel (share of fuel expenditures), sclothes (share of clothing expenditures), salcohol (share of alcohol expenditures), stransport (share of transportation expenditures), and sother (share of other expenditures). These variables provide insight into how household spending is distributed across various categories.
+In the dataset provided, the response variable is `sfood` which represents the family income in British pounds per week. `sfood`—the household share of total expenditure devoted to food—is a classic Engel-curve outcome: it naturally varies with purchasing power (income) and household composition (kids, age group), making it an intuitive, policy-relevant response for modeling how spending priorities shift across socioeconomic strata. This variable serves as the response variable in the analysis, indicating it’s the outcome that the analysis seeks to explain or predict. The dataset includes a range of explanatory variables, each representing a different share of weekly expenditures as a proportion of the total. These include sfuel (share of fuel expenditures), sclothes (share of clothing expenditures), salcohol (share of alcohol expenditures), stransport (share of transportation expenditures), and sother (share of other expenditures). These variables provide insight into how household spending is distributed across various categories.
 
 Additionally, the dataset contains variables that capture the total expenditure (totexpend) of a household in British pounds per week, the age of the household head (age), and the number of children in the household (kids), which is categorized as either 1 or 2. These variables can be used to understand the demographic and economic factors that might influence the family income. The inclusion of ltotexpend and lincome, which are the natural logarithms of total expenditure and income respectively, suggests that the relationship between the logarithm of income and expenditures could be explored. Similarly, agesq, the square of the age of the household head, might be used to investigate non-linear relationships between age and income.
 
@@ -13,10 +14,12 @@ The variable `high_sfuel` is a binary variable that categorizes the share of fue
 
 The variable `sclothes_group` categorizes the share of clothing expenditures (`sclothes`) into three groups: "low", "medium", and "high". This variable allows for an analysis of the impact of different levels of clothing expenditures on the response variable. The variable `age_group` categorizes the age of the household head (`age`) into three groups: "young", "middle-aged", and "old". This variable allows for an analysis of the impact of different age groups on the response variable. `stransport` measures the fraction of a household’s total outlays devoted to transportation. A larger `stransport` value means transportation absorbs a bigger slice of the family budget. Finally, the variable `salcohol_group` categorizes the share of alcohol expenditures (`salcohol`) into four groups: "low", "medium", "high", and "very high". This variable allows for an analysis of the impact of different levels of alcohol expenditures on the response variable. Overall, this dataset provides a comprehensive view of household finances, with a focus on how various factors relate to family income.
 
+\newpage
 
 ```{r message = FALSE, warning = FALSE}
 library(dplyr)                ## Data Transformation    --- T
 library(ggplot2)              ## Data Visualization     --- V
+library(ggfortify)            ## Data Visualization     --- V
 library(MASS)                 ## Data Analysis          --- A
 library(leaps)                ## Data Analysis          --- A
 library(lmtest)               ## Data Analysis          --- A
@@ -24,6 +27,10 @@ library(broom)                ## Data Analysis          --- A
 library(car)                  ## Data Analysis          --- A
 ```
 
+
+## 2. Data Description
+
+Briefly describe the 1,519-household dataset, noting each key variable (shares, totals, logs, groups) and highlighting categorical groupings created for fuel, clothing, alcohol, kids, and age. Emphasize that these groupings enable flexible modeling of nonlinear or subgroup-specific patterns.
 ```{r message = FALSE, warning = FALSE}
 #| echo: false
 load("../Data/expendshares.RData")
@@ -32,12 +39,15 @@ expend_df <- data
 ```
 
 
+## 3. Data Preparation
+
+Outline the cleaning and transformation steps: creation of binary and multi-level factors, grand-mean and group-mean centering, and polynomial terms. Note that these steps reduce multicollinearity and prepare predictors for interaction analyses.
+
 ```{r message = FALSE, warning = FALSE}
 mod_1_expend_df <- expend_df %>%
   mutate(high_sfuel = if_else(sfuel > median(sfuel), "high", "low")) %>% 
   ## mutate binary variable for kids
   mutate(kids_binary = if_else(kids == 1, "one", "two")) %>%
-  mutate(binary)
   ## mutate sclothes into three groups
   mutate(sclothes_group = case_when(
     sclothes < 0.08 ~ "low",
@@ -60,6 +70,8 @@ mod_1_expend_df <- expend_df %>%
 ```
 
 
+
+
 ```{r message = FALSE, warning = FALSE}
 
 mod_2_expend_df <- mod_1_expend_df %>% 
@@ -70,21 +82,11 @@ mod_2_expend_df <- mod_1_expend_df %>%
   mutate(totexpend_c = totexpend - mean(totexpend, na.rm = TRUE))  
 ```
 
+\newpage
 
+## 4. Exploratory Visualizations
 
-
-## Analysis 1: Exploration Models
-
-| Model # | Formula (new data)                   | What it captures                                                                                                                               |
-| ------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| **1**   | `sfood ~ totexpend + stransport`     | Two quantitative predictors (`totexpend`, `stransport`).                                                                                       |
-| **2**   | `sfood ~ totexpend + sclothes_group` | Quantitative predictor (`totexpend`) plus a categorical grouping (`sclothes_group`).                                                           |
-| **3**   | `sfood ~ totexpend * stransport`     | Interaction between two quantitative variables (does the food-share response to total spending vary with transportation share?).               |
-| **4**   | `sfood ~ totexpend * sclothes_group` | Interaction between a quantitative predictor and a categorical group (does the slope for total spending differ across clothing-spend groups?). |
-| **5**   | `sfood ~ totexpend_c * stransport_c` | Mean-centered versions of both quantitative predictors plus their interaction (easier interpretation, lower multicollinearity).                |
-| **6**   | `sfood ~ totexpend + I(totexpend^2)` | Polynomial term in `totexpend` to allow curvature in the Engel-type relationship.                                                              |
-
-
+List the three plots: (i) quadratic sfood–totexpend curve, (ii) stratified lines by sclothes_group, and (iii) group-mean-centered lines. Explain that these visuals reveal curvature, group-specific slopes, and within-group effects that motivate the formal models.
 
 ```{r}
 ggplot(mod_1_expend_df, aes(x = totexpend, y = sfood)) +
@@ -97,10 +99,7 @@ ggplot(mod_1_expend_df, aes(x = totexpend, y = sfood)) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 ```
-
-
-
-
+\newpage
 ```{r}
 ggplot(mod_1_expend_df, aes(x = totexpend, y = sfood, colour = sclothes_group)) +
   geom_point(alpha = .5) +
@@ -114,11 +113,7 @@ ggplot(mod_1_expend_df, aes(x = totexpend, y = sfood, colour = sclothes_group)) 
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 ```
-
-
-
-
-
+\newpage
 ```{r}
 ggplot(mod_2_expend_df, aes(totexpend_gc, sfood, colour = sclothes_group)) +
   geom_point(alpha = .5) +
@@ -132,6 +127,21 @@ ggplot(mod_2_expend_df, aes(totexpend_gc, sfood, colour = sclothes_group)) +
   theme_minimal()
 ```
 
+\newpage
+
+
+## 5. Investigation into Hypothesized Models
+
+| Model \# | Formula (new data) | What it captures |
+|------------|------------|------------------------------------------------|
+| **1** | `sfood ~ totexpend + stransport` | Two quantitative predictors (`totexpend`, `stransport`). |
+| **2** | `sfood ~ totexpend + sclothes_group` | Quantitative predictor (`totexpend`) plus a categorical grouping (`sclothes_group`). |
+| **3** | `sfood ~ totexpend * stransport` | Interaction between two quantitative variables (does the food-share response to total spending vary with transportation share?). |
+| **4** | `sfood ~ totexpend * sclothes_group` | Interaction between a quantitative predictor and a categorical group (does the slope for total spending differ across clothing-spend groups?). |
+| **5** | `sfood ~ totexpend_c * stransport_c` | Mean-centered versions of both quantitative predictors plus their interaction (easier interpretation, lower multicollinearity). |
+| **6** | `sfood ~ totexpend + I(totexpend^2)` | Polynomial term in `totexpend` to allow curvature in the Engel-type relationship. |
+
+\newpage
 
 ```{r}
 options(scipen = 9)
@@ -139,38 +149,44 @@ options(scipen = 9)
 model_1 <- lm(sfood ~ totexpend + stransport, data = mod_2_expend_df)
 summary(model_1)
 ```
-
+\newpage
 ```{r}
 # Model 2: quantitative + categorical
 model_2 <- lm(sfood ~ totexpend + sclothes_group, data = mod_2_expend_df)
 summary(model_2)
 ```
-
+\newpage
 ```{r}
 # Model 3: interaction between two quantitative variables
 model_3 <- lm(sfood ~ totexpend * stransport, data = mod_2_expend_df)
 summary(model_3)
 ```
-
+\newpage
 ```{r}
 # Model 4: interaction between quantitative and categorical predictor
 model_4 <- lm(sfood ~ totexpend * sclothes_group, data = mod_2_expend_df)
 summary(model_4)
 ```
-
+\newpage
 ```{r}
 # Model 5: centered variables with interaction
 model_5 <- lm(sfood ~ totexpend_c*stransport_c, data = mod_2_expend_df)
 summary(model_5)
 ```
-
+\newpage
 ```{r}
 # Model 6: polynomial (quadratic) term for lincome
 model_6 <- lm(sfood ~ totexpend + I(totexpend^2), data = mod_2_expend_df)
 summary(model_6)
 ```
 
+\newpage
 
+## 6. Model Selection Procedures
+
+### a. Stepwise Regression
+
+Explain the stepwise AIC search and best-subsets (adjusted-R^2) approach run on an expanded predictor set. Note that these automated tools cross-check the hand-built models and suggest a parsimonious final candidate.
 
 
 ```{r}
@@ -184,7 +200,54 @@ step_model <- stepAIC(full_model, direction = "both", trace = TRUE)
 summary(step_model)
 ```
 
+#### i. Multicollinearity Check
 
+
+
+```{r}
+car::vif(step_model)
+```
+
+
+\newpage
+
+
+#### ii. Outliers, Leverage, and Influence
+
+Note that standardized residuals, Cook’s distance, and leverage values are extracted and the most influential 15 cases tabulated; any problematic observations are flagged for further scrutiny.
+
+```{r}
+# Add standardized residuals
+augmented_df <- augment(step_model) ## from broom package
+
+rownames(augmented_df) <- NULL
+
+augmented_df %>% 
+  dplyr::select( -totexpend, -stransport, -sclothes, -income, -age,-sfood) %>%
+  arrange(desc(.cooksd)) %>% 
+  head(15) %>% 
+  round(3)
+```
+\newpage
+#### iii. Diagnostics & Assumption Tests
+
+List the residual tests performed (RESET for functional form, Durbin-Watson for autocorrelation, Shapiro for normality, Breusch-Pagan for heteroskedasticity). State that plots and p-values guide whether assumptions hold or require remediation.
+
+```{r}
+autoplot(step_model) + 
+  theme_bw()
+```
+\newpage
+
+```{r}
+resettest(step_model)                # From lmtest package
+dwtest(step_model)                   # From lmtest package
+shapiro.test(resid(step_model))      # Base R
+bptest(step_model)                   # From lmtest package
+```
+\newpage
+
+### b. Model Selection Best Subset
 
 ```{r}
 # Fit all subsets model
@@ -197,4 +260,3 @@ plot(x = subset_model,        ## Specify Model Fit
      scale = "adjr2"          ## Specify Selection Metric
 )
 ```
-
